@@ -7,43 +7,309 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-body { background: #000; color: #fff; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; overflow: hidden; }
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+body { background: #000; color: #fff; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 16px; overflow: hidden; }
+
 .bg-animation { position: fixed; inset: 0; z-index: 0; overflow: hidden; }
-.bg-animation::before, .bg-animation::after { content: ''; position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.4; }
-.bg-animation::before { width: 500px; height: 500px; background: #ff0000; top: -250px; right: -100px; animation: float 8s ease-in-out infinite; }
-.bg-animation::after { width: 400px; height: 400px; background: #4285f4; bottom: -200px; left: -100px; animation: float 10s ease-in-out infinite reverse; }
-@keyframes float { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(50px, 50px) scale(1.1); } }
-.login-container { max-width: 440px; width: 100%; background: rgba(20, 20, 20, 0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 24px; padding: 48px 36px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 30px 80px rgba(0,0,0,0.5); position: relative; z-index: 1; }
-.logo-section { text-align: center; margin-bottom: 36px; }
-.f12-logo-wrapper { display: inline-block; padding: 3px; border-radius: 28px; background: linear-gradient(90deg, #ffffff 0%, #d0d0d0 40%, #a0a0a0 49%, #ff3333 51%, #cc0000 70%, #880000 100%); box-shadow: 0 0 40px rgba(255,0,0,0.3); margin-bottom: 20px; }
-.f12-logo-inner { display: inline-flex; align-items: center; padding: 16px 32px; background: #000; border-radius: 26px; position: relative; overflow: hidden; }
-.f12-logo-inner::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 50%; background: linear-gradient(180deg, rgba(255,255,255,0.12), transparent); pointer-events: none; }
-.f12-text { font-family: 'Orbitron', sans-serif; font-size: 42px; font-weight: 900; letter-spacing: -3px; font-style: italic; line-height: 1; display: flex; position: relative; z-index: 2; }
-.f12-text .f { background: linear-gradient(180deg, #ffffff 0%, #e8e8e8 50%, #a8a8a8 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.8)); margin-right: 2px; }
-.f12-text .num { background: linear-gradient(180deg, #ff4444 0%, #cc0000 50%, #880000 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.8)); }
-.logo-title { font-size: 36px; font-weight: 900; letter-spacing: -1.5px; margin-bottom: 6px; }
+.bg-animation::before, .bg-animation::after { content: ''; position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.35; }
+.bg-animation::before { width: 400px; height: 400px; background: #ff0000; top: -200px; right: -100px; animation: float 8s ease-in-out infinite; }
+.bg-animation::after { width: 350px; height: 350px; background: #4285f4; bottom: -150px; left: -100px; animation: float 10s ease-in-out infinite reverse; }
+@keyframes float { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(40px, 40px) scale(1.1); } }
+
+.login-container {
+    max-width: 400px; width: 100%;
+    background: rgba(20, 20, 20, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 36px 28px;
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+    position: relative;
+    z-index: 1;
+}
+
+.logo-section { text-align: center; margin-bottom: 28px; }
+
+/* ============ F12 LOGO WITH ANIMATION ============ */
+.f12-logo-wrapper {
+    display: inline-block;
+    padding: 3px;
+    border-radius: 24px;
+    background: linear-gradient(90deg, #ffffff 0%, #d0d0d0 40%, #a0a0a0 49%, #ff3333 51%, #cc0000 70%, #880000 100%);
+    box-shadow: 0 0 40px rgba(255,0,0,0.4), 0 0 20px rgba(255,255,255,0.1);
+    margin-bottom: 18px;
+    animation: logoFloat 3s ease-in-out infinite, logoGlow 2s ease-in-out infinite;
+    position: relative;
+}
+
+@keyframes logoFloat {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-8px) rotate(2deg); }
+}
+
+@keyframes logoGlow {
+    0%, 100% { box-shadow: 0 0 40px rgba(255,0,0,0.4), 0 0 20px rgba(255,255,255,0.1); }
+    50% { box-shadow: 0 0 60px rgba(255,0,0,0.7), 0 0 30px rgba(255,255,255,0.2); }
+}
+
+.f12-logo-wrapper::before {
+    content: '';
+    position: absolute;
+    inset: -8px;
+    border-radius: 30px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    opacity: 0;
+    animation: shimmerLogo 3s linear infinite;
+}
+
+@keyframes shimmerLogo {
+    0% { opacity: 0; transform: translateX(-100%); }
+    50% { opacity: 1; }
+    100% { opacity: 0; transform: translateX(100%); }
+}
+
+.f12-logo-inner {
+    display: inline-flex;
+    align-items: center;
+    padding: 14px 28px;
+    background: #000;
+    border-radius: 22px;
+    position: relative;
+    overflow: hidden;
+}
+
+.f12-logo-inner::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 50%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.15), transparent);
+    pointer-events: none;
+}
+
+.f12-text {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 36px;
+    font-weight: 900;
+    letter-spacing: -2px;
+    font-style: italic;
+    line-height: 1;
+    display: flex;
+    position: relative;
+    z-index: 2;
+}
+
+.f12-text .f {
+    background: linear-gradient(180deg, #ffffff 0%, #e8e8e8 50%, #a8a8a8 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 2px 3px rgba(0,0,0,0.8));
+    margin-right: 2px;
+    animation: textPulse 2s ease-in-out infinite;
+}
+
+.f12-text .num {
+    background: linear-gradient(180deg, #ff4444 0%, #cc0000 50%, #880000 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 2px 3px rgba(0,0,0,0.8));
+    animation: textPulse 2s ease-in-out infinite 1s;
+}
+
+@keyframes textPulse {
+    0%, 100% { filter: drop-shadow(0 2px 3px rgba(0,0,0,0.8)); }
+    50% { filter: drop-shadow(0 2px 8px rgba(255,255,255,0.4)); }
+}
+/* ============ END LOGO ============ */
+
+.logo-title {
+    font-size: 28px;
+    font-weight: 900;
+    letter-spacing: -1px;
+    margin-bottom: 4px;
+    animation: titleFade 1s ease-out;
+}
+
+@keyframes titleFade {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 .logo-title span { color: #ff0000; }
-.logo-subtitle { color: rgba(255,255,255,0.5); font-size: 14px; font-weight: 500; }
-.form-section h2 { font-size: 22px; font-weight: 700; margin-bottom: 6px; text-align: center; }
-.form-section p { color: rgba(255,255,255,0.5); font-size: 14px; text-align: center; margin-bottom: 28px; }
-#google-signin-btn { display: flex; justify-content: center; margin-bottom: 16px; min-height: 44px; }
-.google-fallback { background: white; color: #1f1f1f; border: none; padding: 14px 24px; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; gap: 12px; transition: all 0.2s; margin-bottom: 16px; }
-.google-fallback:hover { background: #f5f5f5; transform: translateY(-1px); }
-.google-fallback svg { width: 20px; height: 20px; }
-.divider { display: flex; align-items: center; margin: 24px 0; color: rgba(255,255,255,0.3); font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; }
-.divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.1); }
-.divider span { padding: 0 16px; }
-.form-group { margin-bottom: 16px; }
-.form-group input { width: 100%; padding: 16px 18px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #fff; font-size: 15px; font-weight: 500; outline: none; transition: all 0.2s; }
+
+.logo-subtitle {
+    color: rgba(255,255,255,0.5);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.form-section h2 { font-size: 20px; font-weight: 700; margin-bottom: 6px; text-align: center; }
+.form-section p { color: rgba(255,255,255,0.5); font-size: 13px; text-align: center; margin-bottom: 24px; }
+
+/* Google Button - Compact & Beautiful */
+#google-signin-btn { display: flex; justify-content: center; margin-bottom: 12px; min-height: 0; }
+#google-signin-btn iframe { transform: scale(0.95); }
+
+.google-fallback {
+    background: white;
+    color: #1f1f1f;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.2s;
+    margin-bottom: 12px;
+    box-shadow: 0 4px 12px rgba(255,255,255,0.1);
+}
+
+.google-fallback:hover {
+    background: #f5f5f5;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(255,255,255,0.15);
+}
+
+.google-fallback:active { transform: translateY(0); }
+
+.google-fallback svg { width: 18px; height: 18px; }
+
+.divider {
+    display: flex;
+    align-items: center;
+    margin: 18px 0;
+    color: rgba(255,255,255,0.3);
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.08); }
+.divider span { padding: 0 12px; }
+
+.form-group { margin-bottom: 12px; }
+.form-group input {
+    width: 100%;
+    padding: 14px 16px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    outline: none;
+    transition: all 0.2s;
+}
 .form-group input::placeholder { color: rgba(255,255,255,0.3); }
 .form-group input:focus { border-color: #ff0000; background: rgba(255,255,255,0.08); }
-.guest-btn { background: linear-gradient(135deg, #ff0000, #cc0000); color: white; border: none; padding: 16px 24px; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; width: 100%; box-shadow: 0 8px 24px rgba(255,0,0,0.3); transition: all 0.2s; }
-.guest-btn:hover { transform: translateY(-2px); }
-.features-list { margin-top: 32px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.08); }
-.feature-item { display: flex; align-items: center; gap: 12px; padding: 8px 0; color: rgba(255,255,255,0.6); font-size: 13px; font-weight: 500; }
-.feature-item .check { color: #00ff88; font-weight: 900; font-size: 14px; }
-.privacy-note { text-align: center; color: rgba(255,255,255,0.3); font-size: 11px; margin-top: 20px; line-height: 1.6; }
+
+.guest-btn {
+    background: linear-gradient(135deg, #ff0000, #cc0000);
+    color: white;
+    border: none;
+    padding: 14px 24px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    width: 100%;
+    box-shadow: 0 6px 20px rgba(255,0,0,0.3);
+    transition: all 0.2s;
+}
+.guest-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,0,0,0.4); }
+.guest-btn:active { transform: translateY(0); }
+
+.features-list {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+}
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 0;
+    color: rgba(255,255,255,0.6);
+    font-size: 12px;
+    font-weight: 500;
+}
+.feature-item .check { color: #00ff88; font-weight: 900; font-size: 13px; }
+
+.privacy-note {
+    text-align: center;
+    color: rgba(255,255,255,0.3);
+    font-size: 10px;
+    margin-top: 16px;
+    line-height: 1.6;
+}
+
+/* ============ MOBILE OPTIMIZATIONS ============ */
+@media (max-width: 480px) {
+    body { padding: 12px; }
+    
+    .login-container {
+        padding: 28px 20px;
+        border-radius: 18px;
+        max-width: 100%;
+    }
+    
+    .logo-section { margin-bottom: 24px; }
+    
+    /* Smaller F12 logo on mobile */
+    .f12-logo-inner { padding: 10px 22px; }
+    .f12-text { font-size: 28px; letter-spacing: -1.5px; }
+    
+    .logo-title { font-size: 22px; }
+    .logo-subtitle { font-size: 10px; }
+    
+    .form-section h2 { font-size: 18px; }
+    .form-section p { font-size: 12px; margin-bottom: 20px; }
+    
+    /* Google button mobile */
+    .google-fallback {
+        padding: 11px 16px;
+        font-size: 13px;
+        gap: 8px;
+    }
+    .google-fallback svg { width: 16px; height: 16px; }
+    
+    /* Smaller Google sign-in button */
+    #google-signin-btn iframe { transform: scale(0.9); }
+    
+    .form-group input {
+        padding: 12px 14px;
+        font-size: 14px;
+    }
+    
+    .guest-btn {
+        padding: 13px 20px;
+        font-size: 13px;
+    }
+    
+    .divider { margin: 14px 0; font-size: 10px; }
+    
+    .features-list { margin-top: 20px; padding-top: 16px; }
+    .feature-item { font-size: 11px; padding: 5px 0; }
+    
+    .privacy-note { font-size: 9px; }
+}
+
+/* Very small screens */
+@media (max-width: 360px) {
+    .f12-text { font-size: 24px; }
+    .f12-logo-inner { padding: 8px 18px; }
+    .logo-title { font-size: 20px; }
+}
 </style>
 </head>
 <body>
@@ -62,7 +328,7 @@ body { background: #000; color: #fff; min-height: 100vh; display: flex; align-it
 </div>
 <div class="form-section">
 <h2>Welcome back</h2>
-<p>Sign in to continue to F12 ORBIT</p>
+<p>Sign in to continue</p>
 
 <div id="google-signin-btn"></div>
 
@@ -76,7 +342,7 @@ body { background: #000; color: #fff; min-height: 100vh; display: flex; align-it
 Continue with Google
 </button>
 
-<div class="divider"><span>or continue as guest</span></div>
+<div class="divider"><span>or as guest</span></div>
 
 <div class="form-group">
 <input type="text" id="user-name" placeholder="Enter your name" maxlength="20">
@@ -85,10 +351,9 @@ Continue with Google
 <button class="guest-btn" onclick="loginGuest()">Enter as Guest</button>
 
 <div class="features-list">
-<div class="feature-item"><span class="check">✓</span><span>HD Live Streaming with Audio</span></div>
-<div class="feature-item"><span class="check">✓</span><span>Real-time Direct Messaging</span></div>
-<div class="feature-item"><span class="check">✓</span><span>See online users instantly</span></div>
-<div class="feature-item"><span class="check">✓</span><span>Live notifications</span></div>
+<div class="feature-item"><span class="check">✓</span><span>HD Live Streaming</span></div>
+<div class="feature-item"><span class="check">✓</span><span>Direct Messaging</span></div>
+<div class="feature-item"><span class="check">✓</span><span>See who's online</span></div>
 </div>
 
 <div class="privacy-note">
@@ -135,7 +400,6 @@ function decodeJwtResponse(token) {
 function handleGoogleSignIn(response) {
     try {
         const userData = decodeJwtResponse(response.credential);
-        console.log('Google sign-in successful:', userData.name);
         localStorage.setItem('f12_username', userData.name);
         localStorage.setItem('f12_email', userData.email);
         localStorage.setItem('f12_photo', userData.picture);
@@ -154,7 +418,7 @@ function manualGoogleSignIn() {
     if (typeof google !== 'undefined') {
         google.accounts.id.prompt();
     } else {
-        alert('Google Sign-In is loading. Please wait a moment and try again.');
+        alert('Google Sign-In is loading. Please wait and try again.');
     }
 }
 
@@ -167,14 +431,15 @@ window.addEventListener('load', () => {
                 auto_select: false
             });
             
+            const isMobile = window.innerWidth <= 480;
             google.accounts.id.renderButton(
                 document.getElementById('google-signin-btn'),
                 { 
                     theme: 'filled_black', 
                     size: 'large', 
-                    width: 360, 
+                    width: isMobile ? 280 : 320, 
                     text: 'continue_with',
-                    shape: 'rectangular'
+                    shape: 'pill'
                 }
             );
             
