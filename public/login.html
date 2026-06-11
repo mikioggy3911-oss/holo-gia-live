@@ -100,11 +100,7 @@ Your videos are NOT saved.
 </div>
 
 <script>
-// ============================================================
-// ✅ YOUR GOOGLE CLIENT ID - READY TO USE!
-// ============================================================
 const GOOGLE_CLIENT_ID = '945132021311-ohtqcdmijm1tmdbl4onhrjhke597f679.apps.googleusercontent.com';
-// ============================================================
 
 const savedName = localStorage.getItem('f12_username');
 if (savedName) { document.getElementById('user-name').value = savedName; }
@@ -117,6 +113,9 @@ function loginGuest() {
     localStorage.setItem('f12_avatar', name.charAt(0).toUpperCase());
     localStorage.removeItem('f12_photo');
     localStorage.removeItem('f12_email');
+    if (!localStorage.getItem('f12_member_since')) {
+        localStorage.setItem('f12_member_since', new Date().toISOString());
+    }
     window.location.href = '/';
 }
 
@@ -141,6 +140,9 @@ function handleGoogleSignIn(response) {
         localStorage.setItem('f12_email', userData.email);
         localStorage.setItem('f12_photo', userData.picture);
         localStorage.setItem('f12_avatar', userData.name.charAt(0).toUpperCase());
+        if (!localStorage.getItem('f12_member_since')) {
+            localStorage.setItem('f12_member_since', new Date().toISOString());
+        }
         window.location.href = '/';
     } catch (e) {
         console.error('Sign-in error:', e);

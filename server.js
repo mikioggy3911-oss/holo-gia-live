@@ -1,193 +1,198 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sign in - F12 ORBIT</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
-<script src="https://accounts.google.com/gsi/client" async defer></script>
-<style>
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-body { background: #000; color: #fff; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; overflow: hidden; }
-.bg-animation { position: fixed; inset: 0; z-index: 0; overflow: hidden; }
-.bg-animation::before, .bg-animation::after { content: ''; position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.4; }
-.bg-animation::before { width: 500px; height: 500px; background: #ff0000; top: -250px; right: -100px; animation: float 8s ease-in-out infinite; }
-.bg-animation::after { width: 400px; height: 400px; background: #4285f4; bottom: -200px; left: -100px; animation: float 10s ease-in-out infinite reverse; }
-@keyframes float { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(50px, 50px) scale(1.1); } }
-.login-container { max-width: 440px; width: 100%; background: rgba(20, 20, 20, 0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 24px; padding: 48px 36px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 30px 80px rgba(0,0,0,0.5); position: relative; z-index: 1; }
-.logo-section { text-align: center; margin-bottom: 36px; }
-.f12-logo-wrapper { display: inline-block; padding: 3px; border-radius: 28px; background: linear-gradient(90deg, #ffffff 0%, #d0d0d0 40%, #a0a0a0 49%, #ff3333 51%, #cc0000 70%, #880000 100%); box-shadow: 0 0 40px rgba(255,0,0,0.3); margin-bottom: 20px; }
-.f12-logo-inner { display: inline-flex; align-items: center; padding: 16px 32px; background: #000; border-radius: 26px; position: relative; overflow: hidden; }
-.f12-logo-inner::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 50%; background: linear-gradient(180deg, rgba(255,255,255,0.12), transparent); pointer-events: none; }
-.f12-text { font-family: 'Orbitron', sans-serif; font-size: 42px; font-weight: 900; letter-spacing: -3px; font-style: italic; line-height: 1; display: flex; position: relative; z-index: 2; }
-.f12-text .f { background: linear-gradient(180deg, #ffffff 0%, #e8e8e8 50%, #a8a8a8 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.8)); margin-right: 2px; }
-.f12-text .num { background: linear-gradient(180deg, #ff4444 0%, #cc0000 50%, #880000 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.8)); }
-.logo-title { font-size: 36px; font-weight: 900; letter-spacing: -1.5px; margin-bottom: 6px; }
-.logo-title span { color: #ff0000; }
-.logo-subtitle { color: rgba(255,255,255,0.5); font-size: 14px; font-weight: 500; }
-.form-section h2 { font-size: 22px; font-weight: 700; margin-bottom: 6px; text-align: center; }
-.form-section p { color: rgba(255,255,255,0.5); font-size: 14px; text-align: center; margin-bottom: 28px; }
-#google-signin-btn { display: flex; justify-content: center; margin-bottom: 16px; min-height: 44px; }
-.google-fallback { background: white; color: #1f1f1f; border: none; padding: 14px 24px; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; gap: 12px; transition: all 0.2s; margin-bottom: 16px; }
-.google-fallback:hover { background: #f5f5f5; transform: translateY(-1px); }
-.google-fallback svg { width: 20px; height: 20px; }
-.divider { display: flex; align-items: center; margin: 24px 0; color: rgba(255,255,255,0.3); font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; }
-.divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.1); }
-.divider span { padding: 0 16px; }
-.form-group { margin-bottom: 16px; }
-.form-group input { width: 100%; padding: 16px 18px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #fff; font-size: 15px; font-weight: 500; outline: none; transition: all 0.2s; }
-.form-group input::placeholder { color: rgba(255,255,255,0.3); }
-.form-group input:focus { border-color: #ff0000; background: rgba(255,255,255,0.08); }
-.guest-btn { background: linear-gradient(135deg, #ff0000, #cc0000); color: white; border: none; padding: 16px 24px; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; width: 100%; box-shadow: 0 8px 24px rgba(255,0,0,0.3); transition: all 0.2s; }
-.guest-btn:hover { transform: translateY(-2px); }
-.features-list { margin-top: 32px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.08); }
-.feature-item { display: flex; align-items: center; gap: 12px; padding: 8px 0; color: rgba(255,255,255,0.6); font-size: 13px; font-weight: 500; }
-.feature-item .check { color: #00ff88; font-weight: 900; font-size: 14px; }
-.privacy-note { text-align: center; color: rgba(255,255,255,0.3); font-size: 11px; margin-top: 20px; line-height: 1.6; }
-</style>
-</head>
-<body>
-<div class="bg-animation"></div>
-<div class="login-container">
-<div class="logo-section">
-<div class="f12-logo-wrapper">
-<div class="f12-logo-inner">
-<div class="f12-text">
-<span class="f">F</span><span class="num">12</span>
-</div>
-</div>
-</div>
-<div class="logo-title">F12 <span>ORBIT</span></div>
-<div class="logo-subtitle">Live • Connect • Share</div>
-</div>
-<div class="form-section">
-<h2>Welcome back</h2>
-<p>Sign in to continue to F12 ORBIT</p>
+const express = require('express');
+const http = require('http');
+const socketIO = require('socket.io');
+const { v4: uuidv4 } = require('uuid');
+const path = require('path');
 
-<div id="google-signin-btn"></div>
-
-<button class="google-fallback" id="google-fallback-btn" onclick="manualGoogleSignIn()">
-<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-<path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/>
-<path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/>
-<path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/>
-<path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/>
-</svg>
-Continue with Google
-</button>
-
-<div class="divider"><span>or continue as guest</span></div>
-
-<div class="form-group">
-<input type="text" id="user-name" placeholder="Enter your name" maxlength="20">
-</div>
-
-<button class="guest-btn" onclick="loginGuest()">Enter as Guest</button>
-
-<div class="features-list">
-<div class="feature-item"><span class="check">✓</span><span>HD Live Streaming with Audio</span></div>
-<div class="feature-item"><span class="check">✓</span><span>Real-time Direct Messaging</span></div>
-<div class="feature-item"><span class="check">✓</span><span>See online users instantly</span></div>
-<div class="feature-item"><span class="check">✓</span><span>Live notifications</span></div>
-</div>
-
-<div class="privacy-note">
-By continuing, you agree to F12 ORBIT's terms.<br>
-Your videos are NOT saved.
-</div>
-
-</div>
-</div>
-
-<script>
-// ============================================================
-// ✅ YOUR GOOGLE CLIENT ID - READY TO USE!
-// ============================================================
-const GOOGLE_CLIENT_ID = '945132021311-ohtqcdmijm1tmdbl4onhrjhke597f679.apps.googleusercontent.com';
-// ============================================================
-
-const savedName = localStorage.getItem('f12_username');
-if (savedName) { document.getElementById('user-name').value = savedName; }
-
-function loginGuest() {
-    const name = document.getElementById('user-name').value.trim();
-    if (!name) { alert('Please enter your name!'); return; }
-    if (name.length < 2) { alert('Name must be at least 2 characters!'); return; }
-    localStorage.setItem('f12_username', name);
-    localStorage.setItem('f12_avatar', name.charAt(0).toUpperCase());
-    localStorage.removeItem('f12_photo');
-    localStorage.removeItem('f12_email');
-    window.location.href = '/';
-}
-
-document.getElementById('user-name').addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') loginGuest();
+const app = express();
+const server = http.createServer(app);
+const io = socketIO(server, {
+    cors: { origin: "*", methods: ["GET", "POST"] }
 });
 
-function decodeJwtResponse(token) {
-    const base64Url = token.split('.')[1];
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-    }).join(''));
-    return JSON.parse(jsonPayload);
-}
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.json({ limit: '10mb' }));
 
-function handleGoogleSignIn(response) {
-    try {
-        const userData = decodeJwtResponse(response.credential);
-        console.log('Google sign-in successful:', userData.name);
-        localStorage.setItem('f12_username', userData.name);
-        localStorage.setItem('f12_email', userData.email);
-        localStorage.setItem('f12_photo', userData.picture);
-        localStorage.setItem('f12_avatar', userData.name.charAt(0).toUpperCase());
-        window.location.href = '/';
-    } catch (e) {
-        console.error('Sign-in error:', e);
-        alert('Sign-in failed. Please try again.');
-    }
-}
+const liveStreams = new Map();
+const onlineUsers = new Map();
 
-function manualGoogleSignIn() {
-    if (typeof google !== 'undefined') {
-        google.accounts.id.prompt();
-    } else {
-        alert('Google Sign-In is loading. Please wait a moment and try again.');
-    }
-}
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
+app.get('/login', (req, res) => res.sendFile(path.join(__dirname, 'public', 'login.html')));
+app.get('/profile', (req, res) => res.sendFile(path.join(__dirname, 'public', 'profile.html')));
+app.get('/go-live', (req, res) => res.sendFile(path.join(__dirname, 'public', 'go-live.html')));
+app.get('/watch/:streamId', (req, res) => res.sendFile(path.join(__dirname, 'public', 'watch.html')));
+app.get('/health', (req, res) => res.json({ status: 'ok' }));
 
-window.addEventListener('load', () => {
-    try {
-        if (typeof google !== 'undefined') {
-            google.accounts.id.initialize({
-                client_id: GOOGLE_CLIENT_ID,
-                callback: handleGoogleSignIn,
-                auto_select: false
-            });
-            
-            google.accounts.id.renderButton(
-                document.getElementById('google-signin-btn'),
-                { 
-                    theme: 'filled_black', 
-                    size: 'large', 
-                    width: 360, 
-                    text: 'continue_with',
-                    shape: 'rectangular'
-                }
-            );
-            
-            setTimeout(() => {
-                const googleBtn = document.getElementById('google-signin-btn');
-                if (googleBtn && googleBtn.children.length > 0) {
-                    document.getElementById('google-fallback-btn').style.display = 'none';
-                }
-            }, 1500);
+app.get('/api/streams', (req, res) => {
+    const streams = [];
+    liveStreams.forEach((stream, id) => {
+        streams.push({
+            id: id,
+            title: stream.title,
+            streamerName: stream.streamerName,
+            streamerPhoto: stream.streamerPhoto,
+            viewers: stream.viewers,
+            startedAt: stream.startedAt,
+            category: stream.category
+        });
+    });
+    res.json(streams);
+});
+
+app.get('/api/online-users', (req, res) => {
+    const users = [];
+    onlineUsers.forEach((user, socketId) => {
+        users.push({
+            socketId: socketId,
+            name: user.name,
+            avatar: user.avatar,
+            photo: user.photo,
+            status: user.status || 'online',
+            bio: user.bio || ''
+        });
+    });
+    res.json(users);
+});
+
+io.on('connection', (socket) => {
+    console.log('Connected:', socket.id);
+
+    socket.on('user-online', (data) => {
+        onlineUsers.set(socket.id, {
+            name: data.name,
+            avatar: data.avatar || data.name.charAt(0).toUpperCase(),
+            photo: data.photo || null,
+            status: data.status || 'online',
+            bio: data.bio || ''
+        });
+        io.emit('users-updated');
+    });
+
+    socket.on('update-profile', (data) => {
+        const user = onlineUsers.get(socket.id);
+        if (user) {
+            user.name = data.name || user.name;
+            user.photo = data.photo || user.photo;
+            user.bio = data.bio || user.bio;
+            user.status = data.status || user.status;
+            io.emit('users-updated');
         }
-    } catch (e) {
-        console.error('Google Sign-In init error:', e);
-    }
-});
-</script>
+    });
 
-</body>
-</html>
+    socket.on('send-message', (data) => {
+        const sender = onlineUsers.get(socket.id);
+        const recipient = io.sockets.sockets.get(data.toSocketId);
+        if (sender && recipient) {
+            const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            io.to(data.toSocketId).emit('receive-message', {
+                fromSocketId: socket.id,
+                fromName: sender.name,
+                fromAvatar: sender.avatar,
+                fromPhoto: sender.photo,
+                message: data.message,
+                time: timestamp
+            });
+            socket.emit('message-sent', {
+                toSocketId: data.toSocketId,
+                message: data.message,
+                time: timestamp
+            });
+        } else {
+            socket.emit('message-error', { message: 'User is offline' });
+        }
+    });
+
+    socket.on('typing', (data) => {
+        const sender = onlineUsers.get(socket.id);
+        if (sender) {
+            io.to(data.toSocketId).emit('user-typing', {
+                fromSocketId: socket.id,
+                fromName: sender.name
+            });
+        }
+    });
+
+    socket.on('stop-typing', (data) => {
+        io.to(data.toSocketId).emit('user-stop-typing', { fromSocketId: socket.id });
+    });
+
+    socket.on('start-stream', (data) => {
+        const streamId = uuidv4().substring(0, 8);
+        liveStreams.set(streamId, {
+            title: data.title || 'Untitled',
+            streamerName: data.streamerName || 'Anonymous',
+            streamerPhoto: data.streamerPhoto || null,
+            streamerId: socket.id,
+            viewers: 0,
+            startedAt: new Date().toISOString(),
+            category: data.category || 'Chat',
+            peerId: data.peerId
+        });
+        socket.join(streamId);
+        socket.streamId = streamId;
+        socket.emit('stream-started', { streamId: streamId });
+        io.emit('streams-updated');
+    });
+
+    socket.on('join-stream', (data) => {
+        const stream = liveStreams.get(data.streamId);
+        if (stream) {
+            stream.viewers++;
+            socket.join(data.streamId);
+            socket.watchingStream = data.streamId;
+            io.to(data.streamId).emit('viewer-count', { count: stream.viewers });
+            socket.emit('streamer-info', {
+                peerId: stream.peerId,
+                title: stream.title,
+                streamerName: stream.streamerName,
+                streamerPhoto: stream.streamerPhoto,
+                category: stream.category
+            });
+        } else {
+            socket.emit('stream-error', { message: 'Stream not found' });
+        }
+    });
+
+    socket.on('chat-message', (data) => {
+        io.to(data.streamId).emit('new-message', {
+            name: data.name,
+            photo: data.photo,
+            message: data.message,
+            time: new Date().toLocaleTimeString()
+        });
+    });
+
+    socket.on('end-stream', () => {
+        if (socket.streamId) {
+            const streamId = socket.streamId;
+            io.to(streamId).emit('stream-ended', { message: 'Stream ended' });
+            liveStreams.delete(streamId);
+            io.emit('streams-updated');
+        }
+    });
+
+    socket.on('disconnect', () => {
+        if (onlineUsers.has(socket.id)) {
+            onlineUsers.delete(socket.id);
+            io.emit('users-updated');
+        }
+        if (socket.streamId) {
+            const streamId = socket.streamId;
+            io.to(streamId).emit('stream-ended', { message: 'Streamer disconnected' });
+            liveStreams.delete(streamId);
+            io.emit('streams-updated');
+        }
+        if (socket.watchingStream) {
+            const stream = liveStreams.get(socket.watchingStream);
+            if (stream) {
+                stream.viewers = Math.max(0, stream.viewers - 1);
+                io.to(socket.watchingStream).emit('viewer-count', { count: stream.viewers });
+            }
+        }
+    });
+});
+
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, '0.0.0.0', () => {
+    console.log('F12 ORBIT v5.0 - Running on port ' + PORT);
+});

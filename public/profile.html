@@ -8,8 +8,6 @@
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
 body { background: #0a0a0a; color: #fff; min-height: 100vh; }
-
-/* HEADER */
 .header { background: rgba(10,10,10,0.85); backdrop-filter: blur(20px); padding: 0 28px; height: 68px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.06); position: sticky; top: 0; z-index: 100; }
 .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: white; }
 .f12-logo-wrapper { display: inline-block; padding: 2px; border-radius: 22px; background: linear-gradient(90deg, #ffffff 0%, #d0d0d0 40%, #a8a8a8 49%, #ff3333 51%, #cc0000 70%, #880000 100%); box-shadow: 0 0 20px rgba(255,0,0,0.3); }
@@ -22,29 +20,19 @@ body { background: #0a0a0a; color: #fff; min-height: 100vh; }
 .logo-text span { color: #ff0000; }
 .back-btn { background: rgba(255,255,255,0.05); color: #fff; border: 1px solid rgba(255,255,255,0.1); padding: 10px 18px; border-radius: 24px; text-decoration: none; font-size: 14px; font-weight: 600; }
 .back-btn:hover { background: rgba(255,255,255,0.1); }
-
-/* CONTAINER */
 .container { max-width: 800px; margin: 0 auto; padding: 32px 24px; }
-
-/* COVER PHOTO */
 .cover-photo { width: 100%; height: 240px; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #ff0000 100%); border-radius: 20px 20px 0 0; position: relative; overflow: hidden; cursor: pointer; }
 .cover-photo img { width: 100%; height: 100%; object-fit: cover; }
 .cover-edit-btn { position: absolute; top: 16px; right: 16px; background: rgba(0,0,0,0.7); backdrop-filter: blur(10px); color: white; border: none; padding: 10px 16px; border-radius: 20px; cursor: pointer; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
 .cover-edit-btn:hover { background: rgba(0,0,0,0.9); }
 @media (max-width: 600px) { .cover-photo { height: 160px; } }
-
-/* PROFILE CARD */
 .profile-card { background: rgba(20,20,20,0.5); backdrop-filter: blur(20px); border-radius: 0 0 20px 20px; padding: 20px 32px 32px; border: 1px solid rgba(255,255,255,0.08); border-top: none; position: relative; }
-
-/* PROFILE PIC */
 .profile-pic-wrapper { position: relative; margin-top: -80px; width: 160px; height: 160px; }
 .profile-pic { width: 160px; height: 160px; border-radius: 50%; background: linear-gradient(135deg, #ff0000, #cc0000); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 60px; overflow: hidden; border: 5px solid #0a0a0a; box-shadow: 0 8px 30px rgba(0,0,0,0.5); }
 .profile-pic img { width: 100%; height: 100%; object-fit: cover; }
 .profile-pic-edit { position: absolute; bottom: 8px; right: 8px; background: #ff0000; color: white; width: 40px; height: 40px; border-radius: 50%; border: 3px solid #0a0a0a; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; transition: all 0.2s; }
 .profile-pic-edit:hover { background: #cc0000; transform: scale(1.1); }
 @media (max-width: 600px) { .profile-pic-wrapper, .profile-pic { width: 120px; height: 120px; } .profile-pic { font-size: 48px; margin-top: -60px; } }
-
-/* PROFILE INFO */
 .profile-info { margin-top: 20px; }
 .profile-name { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 4px; }
 .profile-email { color: rgba(255,255,255,0.5); font-size: 14px; font-weight: 500; }
@@ -53,57 +41,41 @@ body { background: #0a0a0a; color: #fff; min-height: 100vh; }
 .stat-item { display: flex; flex-direction: column; }
 .stat-value { font-size: 20px; font-weight: 800; }
 .stat-label { font-size: 12px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
-
-/* STATUS BADGE */
 .status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; margin-top: 8px; }
 .status-online { background: rgba(0,255,136,0.15); color: #00ff88; border: 1px solid rgba(0,255,136,0.3); }
 .status-busy { background: rgba(255,193,7,0.15); color: #ffc107; border: 1px solid rgba(255,193,7,0.3); }
 .status-away { background: rgba(108,117,125,0.15); color: #9ca3af; border: 1px solid rgba(108,117,125,0.3); }
 .status-dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
-
-/* EDIT FORM */
 .edit-section { background: rgba(20,20,20,0.5); backdrop-filter: blur(20px); border-radius: 20px; padding: 32px; margin-top: 20px; border: 1px solid rgba(255,255,255,0.08); }
 .section-title { font-size: 20px; font-weight: 800; margin-bottom: 24px; letter-spacing: -0.3px; display: flex; align-items: center; gap: 10px; }
 .section-icon { font-size: 24px; }
-
 .form-group { margin-bottom: 20px; }
 .form-group label { display: block; margin-bottom: 10px; font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 0.5px; }
 .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 14px 18px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #fff; font-size: 15px; outline: none; transition: all 0.2s; font-family: 'Inter', sans-serif; }
 .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: #ff0000; background: rgba(255,255,255,0.08); }
 .form-group textarea { resize: vertical; min-height: 100px; }
 .char-count { font-size: 12px; color: rgba(255,255,255,0.4); text-align: right; margin-top: 4px; }
-
-/* STATUS SELECTOR */
 .status-options { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
 .status-option { padding: 14px; background: rgba(255,255,255,0.05); border: 2px solid rgba(255,255,255,0.1); border-radius: 12px; cursor: pointer; text-align: center; transition: all 0.2s; }
 .status-option:hover { background: rgba(255,255,255,0.08); }
 .status-option.active { border-color: #ff0000; background: rgba(255,0,0,0.1); }
 .status-option-icon { font-size: 24px; margin-bottom: 4px; }
 .status-option-label { font-size: 13px; font-weight: 600; }
-
-/* BUTTONS */
 .btn-row { display: flex; gap: 12px; margin-top: 24px; }
 .btn { padding: 14px 28px; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; border: none; transition: all 0.2s; flex: 1; }
 .btn-primary { background: linear-gradient(135deg, #ff0000, #cc0000); color: white; box-shadow: 0 8px 24px rgba(255,0,0,0.3); }
-.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(255,0,0,0.4); }
+.btn-primary:hover { transform: translateY(-2px); }
 .btn-secondary { background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.1); }
 .btn-secondary:hover { background: rgba(255,255,255,0.1); }
 .btn-danger { background: rgba(255,0,0,0.1); color: #ff5252; border: 1px solid rgba(255,0,0,0.3); }
 .btn-danger:hover { background: rgba(255,0,0,0.2); }
-
-/* SUCCESS MESSAGE */
 .success-msg { background: rgba(0,255,136,0.15); color: #00ff88; padding: 14px 20px; border-radius: 12px; margin-bottom: 20px; display: none; font-weight: 600; border: 1px solid rgba(0,255,136,0.3); }
 .success-msg.show { display: block; animation: slideDown 0.3s; }
 @keyframes slideDown { from { transform: translateY(-10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
-/* HIDDEN FILE INPUT */
 .hidden-input { display: none; }
-
-/* DANGER ZONE */
 .danger-zone { background: rgba(255,0,0,0.05); border: 1px solid rgba(255,0,0,0.2); border-radius: 16px; padding: 24px; margin-top: 20px; }
 .danger-title { color: #ff5252; font-weight: 800; font-size: 16px; margin-bottom: 8px; }
 .danger-text { color: rgba(255,255,255,0.6); font-size: 13px; margin-bottom: 16px; }
-
 @media (max-width: 768px) {
 .container { padding: 20px 16px; }
 .profile-card { padding: 16px 20px 24px; }
@@ -130,16 +102,14 @@ body { background: #0a0a0a; color: #fff; min-height: 100vh; }
 
 <div class="container">
 
-<!-- COVER PHOTO -->
-<div class="cover-photo" id="cover-photo" onclick="document.getElementById('cover-input').click()">
+<div class="cover-photo" id="cover-photo">
 <img id="cover-preview" style="display:none;" alt="Cover">
-<button class="cover-edit-btn" onclick="event.stopPropagation(); document.getElementById('cover-input').click()">
+<button class="cover-edit-btn" onclick="document.getElementById('cover-input').click()">
 📷 Edit Cover
 </button>
 <input type="file" id="cover-input" class="hidden-input" accept="image/*" onchange="handleCoverUpload(event)">
 </div>
 
-<!-- PROFILE CARD -->
 <div class="profile-card">
 
 <div class="profile-pic-wrapper">
@@ -175,12 +145,10 @@ body { background: #0a0a0a; color: #fff; min-height: 100vh; }
 
 </div>
 
-<!-- SUCCESS MESSAGE -->
 <div class="success-msg" id="success-msg">
 ✅ Profile updated successfully!
 </div>
 
-<!-- EDIT FORM -->
 <div class="edit-section">
 <div class="section-title">
 <span class="section-icon">✏️</span>
@@ -222,7 +190,6 @@ body { background: #0a0a0a; color: #fff; min-height: 100vh; }
 </div>
 </div>
 
-<!-- ACCOUNT INFO -->
 <div class="edit-section">
 <div class="section-title">
 <span class="section-icon">⚙️</span>
@@ -245,7 +212,6 @@ body { background: #0a0a0a; color: #fff; min-height: 100vh; }
 </div>
 </div>
 
-<!-- DANGER ZONE -->
 <div class="danger-zone">
 <div class="danger-title">⚠️ Danger Zone</div>
 <div class="danger-text">Sign out from F12 ORBIT. You can sign in again anytime.</div>
@@ -262,16 +228,15 @@ const userEmail = localStorage.getItem('f12_email');
 const userBio = localStorage.getItem('f12_bio') || '';
 const userStatus = localStorage.getItem('f12_status') || 'online';
 const userCover = localStorage.getItem('f12_cover');
-const memberSince = localStorage.getItem('f12_member_since') || new Date().toISOString();
 
 if (!username) {
     window.location.href = '/login';
 }
 
-// Set member since if not set
 if (!localStorage.getItem('f12_member_since')) {
-    localStorage.setItem('f12_member_since', memberSince);
+    localStorage.setItem('f12_member_since', new Date().toISOString());
 }
+const memberSince = localStorage.getItem('f12_member_since');
 
 const socket = io();
 let selectedStatus = userStatus;
@@ -288,9 +253,7 @@ socket.on('connect', () => {
     });
 });
 
-// Load profile data
 function loadProfile() {
-    // Profile pic
     const picEl = document.getElementById('profile-pic');
     if (userPhoto) {
         picEl.innerHTML = '<img src="' + userPhoto + '" alt="' + username + '">';
@@ -298,32 +261,26 @@ function loadProfile() {
         picEl.textContent = username.charAt(0).toUpperCase();
     }
     
-    // Cover photo
     if (userCover) {
         const coverEl = document.getElementById('cover-preview');
         coverEl.src = userCover;
         coverEl.style.display = 'block';
     }
     
-    // Info
     document.getElementById('display-name').textContent = username;
     document.getElementById('display-email').textContent = userEmail || 'Guest User';
     document.getElementById('display-bio').textContent = userBio || 'No bio yet. Click edit to add one!';
     
-    // Status badge
     updateStatusBadge(userStatus);
     
-    // Edit form
     document.getElementById('edit-name').value = username;
     document.getElementById('edit-bio').value = userBio;
     document.getElementById('bio-count').textContent = userBio.length;
     
-    // Set active status
     document.querySelectorAll('.status-option').forEach(opt => {
         opt.classList.toggle('active', opt.dataset.status === userStatus);
     });
     
-    // Account info
     document.getElementById('account-type').value = userEmail ? '🔵 Google Account' : '👤 Guest Account';
     document.getElementById('user-id').value = 'F12-' + (userEmail || username).substring(0, 8).toUpperCase();
     
@@ -332,7 +289,6 @@ function loadProfile() {
         year: 'numeric', month: 'long', day: 'numeric' 
     });
     
-    // Load stats from localStorage
     loadStats();
 }
 
@@ -370,12 +326,10 @@ function selectStatus(element) {
     selectedStatus = element.dataset.status;
 }
 
-// Bio character counter
 document.getElementById('edit-bio').addEventListener('input', (e) => {
     document.getElementById('bio-count').textContent = e.target.value.length;
 });
 
-// Photo upload
 function handlePhotoUpload(event) {
     const file = event.target.files[0];
     if (!file) return;
@@ -393,7 +347,6 @@ function handlePhotoUpload(event) {
     reader.readAsDataURL(file);
 }
 
-// Cover upload
 function handleCoverUpload(event) {
     const file = event.target.files[0];
     if (!file) return;
@@ -413,7 +366,6 @@ function handleCoverUpload(event) {
     reader.readAsDataURL(file);
 }
 
-// Save profile
 function saveProfile() {
     const newName = document.getElementById('edit-name').value.trim();
     const newBio = document.getElementById('edit-bio').value.trim();
@@ -428,7 +380,6 @@ function saveProfile() {
         return;
     }
     
-    // Save to localStorage
     localStorage.setItem('f12_username', newName);
     localStorage.setItem('f12_bio', newBio);
     localStorage.setItem('f12_status', selectedStatus);
@@ -442,12 +393,10 @@ function saveProfile() {
         localStorage.setItem('f12_cover', newCoverBase64);
     }
     
-    // Update display
     document.getElementById('display-name').textContent = newName;
     document.getElementById('display-bio').textContent = newBio || 'No bio yet.';
     updateStatusBadge(selectedStatus);
     
-    // Notify server
     socket.emit('update-profile', {
         name: newName,
         photo: newPhotoBase64 || userPhoto,
@@ -455,12 +404,10 @@ function saveProfile() {
         status: selectedStatus
     });
     
-    // Show success message
     const successMsg = document.getElementById('success-msg');
     successMsg.classList.add('show');
     setTimeout(() => successMsg.classList.remove('show'), 3000);
     
-    // Reload after 1 sec to refresh everywhere
     setTimeout(() => {
         window.location.reload();
     }, 1500);
@@ -479,7 +426,6 @@ function signOut() {
     }
 }
 
-// Load profile on page load
 loadProfile();
 </script>
 
