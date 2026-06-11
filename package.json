@@ -1,7 +1,7 @@
 {
   "name": "f12-orbit",
-  "version": "3.0.0",
-  "description": "F12 ORBIT - Live Streaming and Messaging Platform",
+  "version": "5.0.0",
+  "description": "F12 ORBIT - Live Streaming Platform",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

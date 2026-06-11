@@ -4,26 +4,27 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Go Live - F12 ORBIT</title>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; }
-body { background: #0f0f0f; color: #fff; min-height: 100vh; }
-.header { background: #0f0f0f; padding: 0 24px; height: 60px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #272727; }
-.logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: white; }
-.f12-logo-small { display: flex; align-items: center; justify-content: center; padding: 6px 14px; background: #000; border: 2px solid; border-image: linear-gradient(135deg, #fff 0%, #fff 50%, #ff0000 50%, #ff0000 100%) 1; border-radius: 12px; box-shadow: 0 0 15px rgba(255,0,0,0.3); }
-.f12-text-small { font-size: 20px; font-weight: 900; letter-spacing: -1px; font-style: italic; line-height: 1; }
-.f12-text-small .f { color: #fff; }
-.f12-text-small .num { color: #ff0000; }
-.logo-text { font-size: 18px; font-weight: 900; letter-spacing: -1px; }
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+body { background: #0a0a0a; color: #fff; min-height: 100vh; }
+.header { background: rgba(10,10,10,0.85); padding: 0 20px; height: 60px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: white; }
+.f12-logo-wrapper { display: inline-block; padding: 2px; border-radius: 18px; background: linear-gradient(90deg, #fff 0%, #d0d0d0 40%, #a8a8a8 49%, #ff3333 51%, #cc0000 70%, #880000 100%); }
+.f12-logo-inner { display: inline-flex; align-items: center; padding: 6px 14px; background: #000; border-radius: 16px; }
+.f12-text-logo { font-family: 'Orbitron', sans-serif; font-size: 18px; font-weight: 900; letter-spacing: -1.5px; font-style: italic; display: flex; }
+.f12-text-logo .f { color: #fff; }
+.f12-text-logo .num { color: #ff0000; }
+.logo-text { font-size: 15px; font-weight: 800; }
 .logo-text span { color: #ff0000; }
-.back-btn { background: transparent; color: #fff; border: 1px solid #303030; padding: 8px 16px; border-radius: 20px; text-decoration: none; font-size: 14px; }
+.back-btn { background: rgba(255,255,255,0.05); color: #fff; border: 1px solid rgba(255,255,255,0.1); padding: 10px 18px; border-radius: 22px; text-decoration: none; font-size: 14px; font-weight: 600; }
 .container { max-width: 1000px; margin: 0 auto; padding: 24px; }
-.setup-card { background: #1f1f1f; border-radius: 16px; padding: 32px; margin-bottom: 20px; border: 1px solid #303030; }
+.setup-card { background: rgba(20,20,20,0.5); border-radius: 16px; padding: 32px; margin-bottom: 16px; border: 1px solid rgba(255,255,255,0.08); }
 .setup-card h2 { font-size: 24px; margin-bottom: 8px; }
-.setup-card .subtitle { color: #aaa; margin-bottom: 24px; font-size: 14px; }
+.subtitle { color: rgba(255,255,255,0.5); margin-bottom: 24px; font-size: 14px; }
 .form-group { margin-bottom: 20px; }
-.form-group label { display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500; }
-.form-group input, .form-group select { width: 100%; padding: 14px 16px; background: #0f0f0f; border: 1px solid #303030; border-radius: 8px; color: #fff; font-size: 15px; outline: none; }
+.form-group label { display: block; margin-bottom: 8px; font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.7); text-transform: uppercase; }
+.form-group input, .form-group select { width: 100%; padding: 14px 16px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 11px; color: #fff; font-size: 15px; outline: none; }
 .form-group input:focus, .form-group select:focus { border-color: #ff0000; }
 .start-btn { background: linear-gradient(135deg, #ff0000, #cc0000); color: white; border: none; padding: 16px 32px; border-radius: 25px; font-size: 16px; font-weight: 700; cursor: pointer; width: 100%; }
 .start-btn:disabled { background: #555; cursor: not-allowed; }
@@ -38,37 +39,43 @@ body { background: #0f0f0f; color: #fff; min-height: 100vh; }
 .audio-indicator { position: absolute; bottom: 16px; right: 16px; background: rgba(0,0,0,0.85); padding: 8px 14px; border-radius: 20px; display: flex; align-items: center; gap: 10px; z-index: 10; }
 .audio-bars { display: flex; gap: 3px; align-items: flex-end; height: 16px; }
 .audio-bar { width: 3px; background: #00ff00; border-radius: 2px; height: 3px; }
-.controls-card { background: #1f1f1f; border-radius: 12px; padding: 16px; margin-bottom: 16px; border: 1px solid #303030; }
-.control-buttons { display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
-.ctrl-btn { background: #272727; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; flex: 1; min-width: 120px; }
-.ctrl-btn:hover { background: #404040; }
-.ctrl-btn.danger { background: #ff0000; }
+.controls-card { background: rgba(20,20,20,0.5); border-radius: 12px; padding: 16px; margin-bottom: 16px; border: 1px solid rgba(255,255,255,0.08); }
+.control-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
+.ctrl-btn { background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.1); padding: 10px 20px; border-radius: 11px; font-size: 14px; font-weight: 600; cursor: pointer; flex: 1; min-width: 120px; }
+.ctrl-btn.danger { background: #ff0000; border-color: #ff0000; }
 .ctrl-btn.muted { background: #555; opacity: 0.7; }
-.share-link-box { background: #0f0f0f; padding: 12px 16px; border-radius: 8px; display: none; align-items: center; gap: 10px; border: 1px solid #303030; }
+.share-link-box { background: rgba(0,0,0,0.5); padding: 12px 16px; border-radius: 11px; display: none; align-items: center; gap: 10px; border: 1px solid rgba(255,255,255,0.08); margin-top: 10px; }
 .share-link-box.show { display: flex; }
-.share-link-box .url { flex: 1; color: #4285f4; font-size: 14px; word-break: break-all; font-family: monospace; }
-.copy-btn { background: #ff0000; color: white; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; }
-.chat-card { background: #1f1f1f; border-radius: 12px; overflow: hidden; border: 1px solid #303030; }
-.chat-header { padding: 14px 16px; background: #272727; font-weight: 700; font-size: 14px; }
+.share-link-box .url { flex: 1; color: #4285f4; font-size: 13px; word-break: break-all; font-family: monospace; }
+.copy-btn { background: #ff0000; color: white; border: none; padding: 6px 14px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 700; }
+.chat-card { background: rgba(20,20,20,0.5); border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.08); }
+.chat-header { padding: 14px 16px; background: rgba(255,255,255,0.03); font-weight: 700; font-size: 14px; }
 .chat-messages { height: 300px; overflow-y: auto; padding: 12px 16px; }
 .chat-message { margin-bottom: 10px; display: flex; gap: 8px; }
 .chat-avatar { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, #ff0000, #cc0000); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; flex-shrink: 0; }
-.chat-content { flex: 1; }
 .chat-name { font-weight: 500; color: #4285f4; font-size: 13px; margin-right: 6px; }
 .chat-text { font-size: 14px; }
 .chat-time { font-size: 11px; color: #aaa; margin-top: 2px; }
-.chat-input-wrap { display: flex; padding: 12px; gap: 8px; background: #272727; }
-.chat-input-wrap input { flex: 1; padding: 10px 14px; background: #0f0f0f; border: 1px solid #303030; border-radius: 20px; color: white; font-size: 14px; outline: none; }
+.chat-input-wrap { display: flex; padding: 12px; gap: 8px; background: rgba(255,255,255,0.03); }
+.chat-input-wrap input { flex: 1; padding: 10px 14px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; color: white; font-size: 14px; outline: none; }
 .chat-input-wrap button { background: #ff0000; color: white; border: none; padding: 8px 20px; border-radius: 20px; cursor: pointer; font-weight: 500; }
-.status-msg { text-align: center; padding: 12px; margin: 10px 0; border-radius: 8px; display: none; font-size: 14px; }
+.status-msg { text-align: center; padding: 12px; margin: 10px 0; border-radius: 11px; display: none; font-size: 14px; }
 .status-msg.error { background: rgba(255,0,0,0.15); color: #ff5252; display: block; }
+@media (max-width: 768px) {
+.logo-text { display: none; }
+.container { padding: 16px; }
+.setup-card { padding: 22px; }
+.ctrl-btn { min-width: 100px; font-size: 13px; padding: 9px 14px; }
+}
 </style>
 </head>
 <body>
 <div class="header">
 <a href="/" class="logo">
-<div class="f12-logo-small">
-<div class="f12-text-small"><span class="f">F</span><span class="num">12</span></div>
+<div class="f12-logo-wrapper">
+<div class="f12-logo-inner">
+<div class="f12-text-logo"><span class="f">F</span><span class="num">12</span></div>
+</div>
 </div>
 <div class="logo-text">ORBIT</div>
 </a>
@@ -78,17 +85,10 @@ body { background: #0f0f0f; color: #fff; min-height: 100vh; }
 <div id="setup-section">
 <div class="setup-card">
 <h2>🔴 Go Live</h2>
-<p class="subtitle">Set up your live stream on F12 ORBIT</p>
-<div class="form-group">
-<label>Your Name *</label>
-<input type="text" id="streamer-name" placeholder="Enter your name..." maxlength="30">
-</div>
-<div class="form-group">
-<label>Stream Title *</label>
-<input type="text" id="stream-title" placeholder="What is your stream about?" maxlength="100">
-</div>
-<div class="form-group">
-<label>Category</label>
+<p class="subtitle">Set up your live stream</p>
+<div class="form-group"><label>Your Name</label><input type="text" id="streamer-name" placeholder="Your name" maxlength="30"></div>
+<div class="form-group"><label>Stream Title</label><input type="text" id="stream-title" placeholder="What's your stream about?" maxlength="100"></div>
+<div class="form-group"><label>Category</label>
 <select id="stream-category">
 <option value="Chat">Just Chatting</option>
 <option value="Gaming">Gaming</option>
@@ -112,11 +112,7 @@ body { background: #0f0f0f; color: #fff; min-height: 100vh; }
 <div class="audio-indicator">
 <span>🎤</span>
 <div class="audio-bars">
-<div class="audio-bar" id="bar1"></div>
-<div class="audio-bar" id="bar2"></div>
-<div class="audio-bar" id="bar3"></div>
-<div class="audio-bar" id="bar4"></div>
-<div class="audio-bar" id="bar5"></div>
+<div class="audio-bar" id="bar1"></div><div class="audio-bar" id="bar2"></div><div class="audio-bar" id="bar3"></div><div class="audio-bar" id="bar4"></div><div class="audio-bar" id="bar5"></div>
 </div>
 </div>
 </div>
@@ -146,158 +142,144 @@ body { background: #0f0f0f; color: #fff; min-height: 100vh; }
 <script src="/socket.io/socket.io.js"></script>
 <script>
 const username = localStorage.getItem('f12_username');
+const userPhoto = localStorage.getItem('f12_photo');
 if (username) { document.getElementById('streamer-name').value = username; }
 const socket = io();
 let localStream = null, peer = null, currentStreamId = null, streamerName = '';
 let micEnabled = true, camEnabled = true, audioContext = null, analyser = null;
 
 async function startStream() {
-streamerName = document.getElementById('streamer-name').value.trim();
-const title = document.getElementById('stream-title').value.trim();
-const status = document.getElementById('status');
-const startBtn = document.getElementById('start-stream-btn');
-if (!streamerName) { status.className = 'status-msg error'; status.textContent = 'Please enter your name!'; return; }
-if (!title) { status.className = 'status-msg error'; status.textContent = 'Please enter stream title!'; return; }
-startBtn.disabled = true;
-startBtn.textContent = '⏳ Starting...';
-try {
-localStream = await navigator.mediaDevices.getUserMedia({
-video: { width: { ideal: 1280 }, height: { ideal: 720 }, facingMode: 'user' },
-audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true, sampleRate: 48000, channelCount: 2 }
-});
-const audioTracks = localStream.getAudioTracks();
-if (audioTracks.length === 0) throw new Error('No microphone!');
-audioTracks.forEach(track => { track.enabled = true; });
-console.log('Audio tracks:', audioTracks.length, audioTracks[0].label);
-document.getElementById('local-video').srcObject = localStream;
-setupAudioVisualization(localStream);
-peer = new Peer({ config: { 'iceServers': [
-{ urls: 'stun:stun.l.google.com:19302' },
-{ urls: 'stun:stun1.l.google.com:19302' },
-{ urls: 'stun:stun2.l.google.com:19302' },
-{ urls: 'stun:stun3.l.google.com:19302' },
-{ urls: 'stun:stun4.l.google.com:19302' }
-]}});
-peer.on('open', (peerId) => {
-console.log('My peer ID:', peerId);
-socket.emit('start-stream', { title: title, streamerName: streamerName, peerId: peerId });
-});
-peer.on('call', (call) => {
-console.log('Incoming call from viewer');
-call.answer(localStream);
-call.on('stream', () => console.log('Stream answered'));
-});
-peer.on('error', (err) => console.error('Peer error:', err));
-} catch (err) {
-console.error(err);
-status.className = 'status-msg error';
-if (err.name === 'NotAllowedError') status.textContent = 'Please allow camera and microphone!';
-else if (err.name === 'NotFoundError') status.textContent = 'Camera or microphone not found!';
-else status.textContent = 'Error: ' + err.message;
-startBtn.disabled = false;
-startBtn.textContent = '🔴 Start Live Stream';
-}
+    streamerName = document.getElementById('streamer-name').value.trim();
+    const title = document.getElementById('stream-title').value.trim();
+    const category = document.getElementById('stream-category').value;
+    const status = document.getElementById('status');
+    const startBtn = document.getElementById('start-stream-btn');
+    if (!streamerName) { status.className = 'status-msg error'; status.textContent = 'Please enter your name!'; return; }
+    if (!title) { status.className = 'status-msg error'; status.textContent = 'Please enter stream title!'; return; }
+    startBtn.disabled = true;
+    startBtn.textContent = '⏳ Starting...';
+    try {
+        localStream = await navigator.mediaDevices.getUserMedia({
+            video: { width: { ideal: 1280 }, height: { ideal: 720 }, facingMode: 'user' },
+            audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true, sampleRate: 48000, channelCount: 2 }
+        });
+        const audioTracks = localStream.getAudioTracks();
+        if (audioTracks.length === 0) throw new Error('No microphone!');
+        audioTracks.forEach(track => { track.enabled = true; });
+        document.getElementById('local-video').srcObject = localStream;
+        setupAudioVisualization(localStream);
+        peer = new Peer({ config: { 'iceServers': [
+            { urls: 'stun:stun.l.google.com:19302' },
+            { urls: 'stun:stun1.l.google.com:19302' },
+            { urls: 'stun:stun2.l.google.com:19302' }
+        ]}});
+        peer.on('open', (peerId) => {
+            socket.emit('start-stream', { title: title, streamerName: streamerName, streamerPhoto: userPhoto, category: category, peerId: peerId });
+        });
+        peer.on('call', (call) => { call.answer(localStream); });
+        peer.on('error', (err) => console.error(err));
+    } catch (err) {
+        status.className = 'status-msg error';
+        if (err.name === 'NotAllowedError') status.textContent = 'Please allow camera and microphone!';
+        else status.textContent = 'Error: ' + err.message;
+        startBtn.disabled = false;
+        startBtn.textContent = '🔴 Start Live Stream';
+    }
 }
 
 function setupAudioVisualization(stream) {
-try {
-audioContext = new (window.AudioContext || window.webkitAudioContext)();
-const source = audioContext.createMediaStreamSource(stream);
-analyser = audioContext.createAnalyser();
-analyser.fftSize = 256;
-source.connect(analyser);
-const dataArray = new Uint8Array(analyser.frequencyBinCount);
-function updateBars() {
-if (!analyser) return;
-analyser.getByteFrequencyData(dataArray);
-const average = dataArray.reduce((a, b) => a + b) / dataArray.length;
-['bar1', 'bar2', 'bar3', 'bar4', 'bar5'].forEach((id, i) => {
-const bar = document.getElementById(id);
-if (bar) {
-bar.style.height = Math.min(16, (average / 10) * (i + 1) * 0.3 + 3) + 'px';
-bar.style.background = average > 30 ? '#00ff00' : '#555';
-}
-});
-requestAnimationFrame(updateBars);
-}
-updateBars();
-} catch (e) { console.error(e); }
+    try {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const source = audioContext.createMediaStreamSource(stream);
+        analyser = audioContext.createAnalyser();
+        analyser.fftSize = 256;
+        source.connect(analyser);
+        const dataArray = new Uint8Array(analyser.frequencyBinCount);
+        function updateBars() {
+            if (!analyser) return;
+            analyser.getByteFrequencyData(dataArray);
+            const average = dataArray.reduce((a, b) => a + b) / dataArray.length;
+            ['bar1', 'bar2', 'bar3', 'bar4', 'bar5'].forEach((id, i) => {
+                const bar = document.getElementById(id);
+                if (bar) {
+                    bar.style.height = Math.min(16, (average / 10) * (i + 1) * 0.3 + 3) + 'px';
+                    bar.style.background = average > 30 ? '#00ff00' : '#555';
+                }
+            });
+            requestAnimationFrame(updateBars);
+        }
+        updateBars();
+    } catch (e) {}
 }
 
 function toggleMic() {
-if (!localStream) return;
-micEnabled = !micEnabled;
-localStream.getAudioTracks().forEach(track => { track.enabled = micEnabled; });
-const btn = document.getElementById('mic-btn');
-btn.textContent = micEnabled ? '🎤 Mic ON' : '🔇 Mic OFF';
-btn.classList.toggle('muted', !micEnabled);
+    if (!localStream) return;
+    micEnabled = !micEnabled;
+    localStream.getAudioTracks().forEach(t => { t.enabled = micEnabled; });
+    const btn = document.getElementById('mic-btn');
+    btn.textContent = micEnabled ? '🎤 Mic ON' : '🔇 Mic OFF';
+    btn.classList.toggle('muted', !micEnabled);
 }
 
 function toggleCam() {
-if (!localStream) return;
-camEnabled = !camEnabled;
-localStream.getVideoTracks().forEach(track => { track.enabled = camEnabled; });
-const btn = document.getElementById('cam-btn');
-btn.textContent = camEnabled ? '📹 Camera ON' : '📷 Camera OFF';
-btn.classList.toggle('muted', !camEnabled);
+    if (!localStream) return;
+    camEnabled = !camEnabled;
+    localStream.getVideoTracks().forEach(t => { t.enabled = camEnabled; });
+    const btn = document.getElementById('cam-btn');
+    btn.textContent = camEnabled ? '📹 Camera ON' : '📷 Camera OFF';
+    btn.classList.toggle('muted', !camEnabled);
 }
 
 socket.on('stream-started', (data) => {
-currentStreamId = data.streamId;
-document.getElementById('setup-section').style.display = 'none';
-document.getElementById('live-section').style.display = 'block';
+    currentStreamId = data.streamId;
+    document.getElementById('setup-section').style.display = 'none';
+    document.getElementById('live-section').style.display = 'block';
 });
 
-socket.on('viewer-count', (data) => {
-document.getElementById('viewer-count').textContent = '👁 ' + data.count + ' watching';
-});
+socket.on('viewer-count', (data) => { document.getElementById('viewer-count').textContent = '👁 ' + data.count + ' watching'; });
 
 socket.on('new-message', (data) => {
-const chatMessages = document.getElementById('chat-messages');
-const msgDiv = document.createElement('div');
-msgDiv.className = 'chat-message';
-msgDiv.innerHTML = '<div class="chat-avatar">' + data.name.charAt(0).toUpperCase() + '</div><div class="chat-content"><span class="chat-name">' + data.name + '</span><span class="chat-text">' + data.message + '</span><div class="chat-time">' + data.time + '</div></div>';
-chatMessages.appendChild(msgDiv);
-chatMessages.scrollTop = chatMessages.scrollHeight;
+    const chatMessages = document.getElementById('chat-messages');
+    const msgDiv = document.createElement('div');
+    msgDiv.className = 'chat-message';
+    msgDiv.innerHTML = '<div class="chat-avatar">' + data.name.charAt(0).toUpperCase() + '</div><div><span class="chat-name">' + data.name + '</span><span class="chat-text">' + data.message + '</span><div class="chat-time">' + data.time + '</div></div>';
+    chatMessages.appendChild(msgDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
 });
 
 function sendChat() {
-const input = document.getElementById('chat-input');
-const message = input.value.trim();
-if (message && currentStreamId) {
-socket.emit('chat-message', { streamId: currentStreamId, name: streamerName + ' (Host)', message: message });
-input.value = '';
-}
+    const input = document.getElementById('chat-input');
+    const message = input.value.trim();
+    if (message && currentStreamId) {
+        socket.emit('chat-message', { streamId: currentStreamId, name: streamerName + ' (Host)', photo: userPhoto, message: message });
+        input.value = '';
+    }
 }
 
 function shareStream() {
-const box = document.getElementById('share-link-box');
-const url = window.location.origin + '/watch/' + currentStreamId;
-document.getElementById('share-url').textContent = url;
-box.classList.add('show');
+    const box = document.getElementById('share-link-box');
+    const url = window.location.origin + '/watch/' + currentStreamId;
+    document.getElementById('share-url').textContent = url;
+    box.classList.add('show');
 }
 
 function copyLink() {
-const url = document.getElementById('share-url').textContent;
-navigator.clipboard.writeText(url).then(() => alert('Link copied!')).catch(() => prompt('Copy:', url));
+    const url = document.getElementById('share-url').textContent;
+    navigator.clipboard.writeText(url).then(() => alert('Link copied!')).catch(() => prompt('Copy:', url));
 }
 
 function endStream() {
-if (confirm('End stream?')) {
-socket.emit('end-stream');
-if (localStream) localStream.getTracks().forEach(t => t.stop());
-if (peer) peer.destroy();
-if (audioContext) audioContext.close();
-alert('Stream ended!');
-window.location.href = '/';
-}
+    if (confirm('End stream?')) {
+        socket.emit('end-stream');
+        if (localStream) localStream.getTracks().forEach(t => t.stop());
+        if (peer) peer.destroy();
+        if (audioContext) audioContext.close();
+        window.location.href = '/';
+    }
 }
 
 window.addEventListener('beforeunload', () => {
-if (currentStreamId) {
-socket.emit('end-stream');
-if (localStream) localStream.getTracks().forEach(t => t.stop());
-}
+    if (currentStreamId) { socket.emit('end-stream'); if (localStream) localStream.getTracks().forEach(t => t.stop()); }
 });
 </script>
 </body>

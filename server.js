@@ -194,5 +194,5 @@ io.on('connection', (socket) => {
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, '0.0.0.0', () => {
-    console.log('F12 ORBIT v5.0 - Running on port ' + PORT);
+    console.log('F12 ORBIT - Running on port ' + PORT);
 });
