@@ -15,30 +15,13 @@ app.use(express.json());
 
 const liveStreams = new Map();
 const onlineUsers = new Map();
+const userMessages = new Map();
 
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
-
-app.get('/login', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'login.html'));
-});
-
-app.get('/messages', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'messages.html'));
-});
-
-app.get('/go-live', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'go-live.html'));
-});
-
-app.get('/watch/:streamId', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'watch.html'));
-});
-
-app.get('/health', (req, res) => {
-    res.json({ status: 'ok', uptime: process.uptime() });
-});
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
+app.get('/login', (req, res) => res.sendFile(path.join(__dirname, 'public', 'login.html')));
+app.get('/go-live', (req, res) => res.sendFile(path.join(__dirname, 'public', 'go-live.html')));
+app.get('/watch/:streamId', (req, res) => res.sendFile(path.join(__dirname, 'public', 'watch.html')));
+app.get('/health', (req, res) => res.json({ status: 'ok' }));
 
 app.get('/api/streams', (req, res) => {
     const streams = [];
@@ -60,8 +43,7 @@ app.get('/api/online-users', (req, res) => {
         users.push({
             socketId: socketId,
             name: user.name,
-            avatar: user.avatar,
-            status: user.status
+            avatar: user.avatar
         });
     });
     res.json(users);
@@ -73,31 +55,35 @@ io.on('connection', (socket) => {
     socket.on('user-online', (data) => {
         onlineUsers.set(socket.id, {
             name: data.name,
-            avatar: data.avatar || data.name.charAt(0).toUpperCase(),
-            status: 'online'
+            avatar: data.avatar || data.name.charAt(0).toUpperCase()
         });
-        console.log(data.name + ' is online');
         io.emit('users-updated');
     });
 
     socket.on('send-message', (data) => {
-        const recipient = data.toSocketId;
         const sender = onlineUsers.get(socket.id);
+        const recipient = io.sockets.sockets.get(data.toSocketId);
         
-        if (sender && io.sockets.sockets.get(recipient)) {
-            io.to(recipient).emit('receive-message', {
+        if (sender && recipient) {
+            const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            
+            io.to(data.toSocketId).emit('receive-message', {
                 fromSocketId: socket.id,
                 fromName: sender.name,
                 fromAvatar: sender.avatar,
                 message: data.message,
-                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                time: timestamp
             });
             
             socket.emit('message-sent', {
-                toSocketId: recipient,
+                toSocketId: data.toSocketId,
                 message: data.message,
-                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                time: timestamp
             });
+            
+            console.log(sender.name + ' -> ' + (onlineUsers.get(data.toSocketId)?.name || 'unknown') + ': ' + data.message);
+        } else {
+            socket.emit('message-error', { message: 'User is offline' });
         }
     });
 
@@ -112,33 +98,22 @@ io.on('connection', (socket) => {
     });
 
     socket.on('stop-typing', (data) => {
-        io.to(data.toSocketId).emit('user-stop-typing', {
-            fromSocketId: socket.id
-        });
+        io.to(data.toSocketId).emit('user-stop-typing', { fromSocketId: socket.id });
     });
 
     socket.on('start-stream', (data) => {
         const streamId = uuidv4().substring(0, 8);
-        
         liveStreams.set(streamId, {
-            title: data.title || 'Untitled Stream',
+            title: data.title || 'Untitled',
             streamerName: data.streamerName || 'Anonymous',
             streamerId: socket.id,
             viewers: 0,
             startedAt: new Date().toISOString(),
             peerId: data.peerId
         });
-
         socket.join(streamId);
         socket.streamId = streamId;
-
-        console.log('Stream started:', streamId);
-        
-        socket.emit('stream-started', { 
-            streamId: streamId,
-            message: 'You are now LIVE!' 
-        });
-
+        socket.emit('stream-started', { streamId: streamId });
         io.emit('streams-updated');
     });
 
@@ -148,13 +123,10 @@ io.on('connection', (socket) => {
             stream.viewers++;
             socket.join(data.streamId);
             socket.watchingStream = data.streamId;
-
             io.to(data.streamId).emit('viewer-count', { count: stream.viewers });
             socket.emit('streamer-peer-id', { peerId: stream.peerId });
         } else {
-            socket.emit('stream-error', { 
-                message: 'Stream not found or ended.' 
-            });
+            socket.emit('stream-error', { message: 'Stream not found' });
         }
     });
 
@@ -169,27 +141,23 @@ io.on('connection', (socket) => {
     socket.on('end-stream', () => {
         if (socket.streamId) {
             const streamId = socket.streamId;
-            io.to(streamId).emit('stream-ended', { message: 'Stream ended.' });
+            io.to(streamId).emit('stream-ended', { message: 'Stream ended' });
             liveStreams.delete(streamId);
             io.emit('streams-updated');
         }
     });
 
     socket.on('disconnect', () => {
-        console.log('Disconnected:', socket.id);
-
         if (onlineUsers.has(socket.id)) {
             onlineUsers.delete(socket.id);
             io.emit('users-updated');
         }
-
         if (socket.streamId) {
             const streamId = socket.streamId;
-            io.to(streamId).emit('stream-ended', { message: 'Streamer disconnected.' });
+            io.to(streamId).emit('stream-ended', { message: 'Streamer disconnected' });
             liveStreams.delete(streamId);
             io.emit('streams-updated');
         }
-
         if (socket.watchingStream) {
             const stream = liveStreams.get(socket.watchingStream);
             if (stream) {
@@ -202,5 +170,5 @@ io.on('connection', (socket) => {
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, '0.0.0.0', () => {
-    console.log('F12 ORBIT - Server running on port ' + PORT);
+    console.log('F12 ORBIT v3.0 - Server running on port ' + PORT);
 });

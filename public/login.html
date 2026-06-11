@@ -7,14 +7,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; }
-body { background: #0f0f0f; color: #fff; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
-.login-container { max-width: 420px; width: 100%; background: #1f1f1f; border-radius: 20px; padding: 40px 30px; border: 1px solid #303030; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+body { background: #000; color: #fff; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+.login-container { max-width: 420px; width: 100%; background: #1f1f1f; border-radius: 20px; padding: 40px 30px; border: 1px solid #303030; box-shadow: 0 20px 60px rgba(0,0,0,0.8); }
 .logo-section { text-align: center; margin-bottom: 30px; }
-.logo-icon-big { width: 80px; height: 80px; background: linear-gradient(135deg, #ff0000, #cc0000); border-radius: 20px; display: inline-flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 900; color: white; margin-bottom: 16px; box-shadow: 0 10px 30px rgba(255,0,0,0.3); position: relative; overflow: hidden; }
-.logo-icon-big::before { content: ''; position: absolute; width: 60px; height: 60px; border: 2px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: white; animation: orbit 3s linear infinite; }
-@keyframes orbit { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-.logo-icon-big span { position: relative; z-index: 1; }
-.logo-title { font-size: 32px; font-weight: 900; letter-spacing: -1px; margin-bottom: 8px; }
+.f12-logo { display: inline-flex; align-items: center; justify-content: center; padding: 20px 35px; background: #000; border: 4px solid; border-image: linear-gradient(135deg, #fff 0%, #fff 50%, #ff0000 50%, #ff0000 100%) 1; border-radius: 30px; position: relative; margin-bottom: 20px; box-shadow: 0 0 30px rgba(255,0,0,0.3); }
+.f12-text { font-size: 48px; font-weight: 900; letter-spacing: -2px; font-style: italic; line-height: 1; }
+.f12-text .f { color: #fff; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
+.f12-text .num { color: #ff0000; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
+.logo-title { font-size: 28px; font-weight: 900; letter-spacing: -1px; margin-bottom: 8px; }
 .logo-title span { color: #ff0000; }
 .logo-subtitle { color: #aaa; font-size: 14px; }
 .form-section h2 { font-size: 20px; margin-bottom: 8px; text-align: center; }
@@ -22,7 +22,7 @@ body { background: #0f0f0f; color: #fff; min-height: 100vh; display: flex; align
 .form-group { margin-bottom: 16px; }
 .form-group input { width: 100%; padding: 14px 16px; background: #0f0f0f; border: 1px solid #303030; border-radius: 10px; color: #fff; font-size: 15px; outline: none; }
 .form-group input:focus { border-color: #ff0000; }
-.login-btn { background: linear-gradient(135deg, #ff0000, #cc0000); color: white; border: none; padding: 14px 24px; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 16px; box-shadow: 0 4px 15px rgba(255,0,0,0.3); }
+.login-btn { background: linear-gradient(135deg, #ff0000, #cc0000); color: white; border: none; padding: 14px 24px; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; width: 100%; margin-bottom: 16px; box-shadow: 0 4px 15px rgba(255,0,0,0.3); }
 .login-btn:hover { transform: translateY(-2px); }
 .divider { display: flex; align-items: center; margin: 20px 0; color: #555; font-size: 13px; }
 .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: #303030; }
@@ -38,9 +38,11 @@ body { background: #0f0f0f; color: #fff; min-height: 100vh; display: flex; align
 <body>
 <div class="login-container">
 <div class="logo-section">
-<div class="logo-icon-big"><span>F12</span></div>
+<div class="f12-logo">
+<div class="f12-text"><span class="f">F</span><span class="num">12</span></div>
+</div>
 <div class="logo-title">F12 <span>ORBIT</span></div>
-<div class="logo-subtitle">Live Stream and Messaging</div>
+<div class="logo-subtitle">Live Stream and Messaging Platform</div>
 </div>
 <div class="form-section">
 <h2>Welcome!</h2>
@@ -53,10 +55,10 @@ body { background: #0f0f0f; color: #fff; min-height: 100vh; display: flex; align
 <button class="google-btn" onclick="googleLoginSoon()">Continue with Google</button>
 <div class="google-note">* Google login coming soon!</div>
 <div class="features-list">
-<div class="feature-item"><span class="check">v</span><span>Live Streaming with Chat</span></div>
-<div class="feature-item"><span class="check">v</span><span>Direct Messaging</span></div>
-<div class="feature-item"><span class="check">v</span><span>See who is online</span></div>
-<div class="feature-item"><span class="check">v</span><span>Free for everyone</span></div>
+<div class="feature-item"><span class="check">✓</span><span>Live Streaming with Chat</span></div>
+<div class="feature-item"><span class="check">✓</span><span>Direct Messaging</span></div>
+<div class="feature-item"><span class="check">✓</span><span>See who is online</span></div>
+<div class="feature-item"><span class="check">✓</span><span>Notifications</span></div>
 </div>
 </div>
 </div>
@@ -71,7 +73,7 @@ localStorage.setItem('f12_username', name);
 localStorage.setItem('f12_avatar', name.charAt(0).toUpperCase());
 window.location.href = '/';
 }
-function googleLoginSoon() { alert('Google Login is coming soon! For now, please use your name to continue.'); }
+function googleLoginSoon() { alert('Google Login coming soon!'); }
 document.getElementById('user-name').addEventListener('keypress', (e) => { if (e.key === 'Enter') loginUser(); });
 </script>
 </body>

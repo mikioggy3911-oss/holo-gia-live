@@ -1,6 +1,6 @@
 {
   "name": "f12-orbit",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "F12 ORBIT - Live Streaming and Messaging Platform",
   "main": "server.js",
   "scripts": {
