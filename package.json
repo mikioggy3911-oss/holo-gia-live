@@ -1,0 +1,23 @@
+{
+  "name": "holo-gia-live",
+  "version": "1.0.0",
+  "description": "Holo Gia Live Stream App - Free live streaming for everyone",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "socket.io": "^4.7.2",
+    "peer": "^1.0.2",
+    "express-session": "^1.17.3",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}

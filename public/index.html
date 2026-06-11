@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Holo Gia Live - হলো গিয়া লাইভ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #0f0f0f;
+            color: white;
+            min-height: 100vh;
+        }
+
+        /* ========== HEADER ========== */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            font-size: 35px;
+        }
+
+        .go-live-btn {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .go-live-btn:hover {
+            background: #ff6b81;
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(255,71,87,0.4);
+        }
+
+        .live-dot {
+            width: 12px;
+            height: 12px;
+            background: white;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.3); }
+        }
+
+        /* ========== MAIN CONTENT ========== */
+        .main-content {
+            padding: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title .red-dot {
+            width: 10px;
+            height: 10px;
+            background: #ff4757;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        /* ========== STREAM CARDS ========== */
+        .streams-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .stream-card {
+            background: #1a1a2e;
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .stream-card:hover {
+            transform: translateY(-5px);
+            border-color: #667eea;
+            box-shadow: 0 10px 30px rgba(102,126,234,0.3);
+        }
+
+        .stream-thumbnail {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .stream-thumbnail .live-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: #ff4757;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .stream-thumbnail .live-badge .dot {
+            width: 6px;
+            height: 6px;
+            background: white;
+            border-radius: 50%;
+            animation: pulse 1s infinite;
+        }
+
+        .stream-thumbnail .viewer-count {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.7);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .stream-thumbnail .play-icon {
+            font-size: 50px;
+            opacity: 0.8;
+        }
+
+        .stream-info {
+            padding: 15px;
+        }
+
+        .stream-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .streamer-name {
+            font-size: 14px;
+            color: #aaa;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .streamer-avatar {
+            width: 25px;
+            height: 25px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        /* ========== NO STREAMS ========== */
+        .no-streams {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .no-streams .emoji {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        .no-streams h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #888;
+        }
+
+        .no-streams p {
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 600px) {
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .streams-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .main-content {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <div class="header">
+        <div class="logo">
+            <span class="logo-icon">🎬</span>
+            <span>Holo Gia Live</span>
+        </div>
+        <a href="/go-live" class="go-live-btn">
+            <div class="live-dot"></div>
+            Go Live
+        </a>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <div class="section-title">
+            <div class="red-dot"></div>
+            <span>Live Now - এখন লাইভ আছে</span>
+        </div>
+
+        <div id="streams-container" class="streams-grid">
+            <!-- Streams will load here -->
+        </div>
+
+        <div id="no-streams" class="no-streams" style="display: none;">
+            <div class="emoji">📺</div>
+            <h2>কেউ এখন লাইভ নেই</h2>
+            <p>প্রথম হও! "Go Live" বাটনে ক্লিক করে লাইভ শুরু করো</p>
+            <a href="/go-live" class="go-live-btn" style="display: inline-flex;">
+                <div class="live-dot"></div>
+                Go Live Now
+            </a>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        const streamsContainer = document.getElementById('streams-container');
+        const noStreams = document.getElementById('no-streams');
+
+        // Streams load করো
+        function loadStreams() {
+            fetch('/api/streams')
+                .then(res => res.json())
+                .then(streams => {
+                    if (streams.length === 0) {
+                        streamsContainer.style.display = 'none';
+                        noStreams.style.display = 'block';
+                    } else {
+                        streamsContainer.style.display = 'grid';
+                        noStreams.style.display = 'none';
+                        
+                        streamsContainer.innerHTML = streams.map(stream => `
+                            <div class="stream-card" onclick="window.location.href='/watch/${stream.id}'">
+                                <div class="stream-thumbnail">
+                                    <div class="live-badge">
+                                        <div class="dot"></div>
+                                        LIVE
+                                    </div>
+                                    <span class="play-icon">▶️</span>
+                                    <div class="viewer-count">👁 ${stream.viewers} viewers</div>
+                                </div>
+                                <div class="stream-info">
+                                    <div class="stream-title">${stream.title}</div>
+                                    <div class="streamer-name">
+                                        <div class="streamer-avatar">${stream.streamerName.charAt(0).toUpperCase()}</div>
+                                        ${stream.streamerName}
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('');
+                    }
+                });
+        }
+
+        // প্রথমবার load
+        loadStreams();
+
+        // নতুন stream আসলে auto update
+        socket.on('streams-updated', () => {
+            loadStreams();
+        });
+
+        // প্রতি 5 সেকেন্ডে refresh
+        setInterval(loadStreams, 5000);
+    </script>
+
+</body>
+</html>
