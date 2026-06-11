@@ -4,67 +4,129 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Holo Gia Live - হলো গিয়া লাইভ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Roboto', 'Segoe UI', sans-serif;
         }
 
         body {
             background: #0f0f0f;
-            color: white;
+            color: #fff;
             min-height: 100vh;
         }
 
-        /* ========== HEADER ========== */
+        /* ========== HEADER (YouTube Style) ========== */
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 20px 30px;
+            background: #0f0f0f;
+            padding: 0 24px;
+            height: 56px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid #272727;
         }
 
         .logo {
-            font-size: 28px;
-            font-weight: bold;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
+            cursor: pointer;
         }
 
         .logo-icon {
-            font-size: 35px;
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(135deg, #ff0000, #cc0000);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            box-shadow: 0 2px 10px rgba(255,0,0,0.3);
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-text span {
+            color: #ff0000;
+        }
+
+        .search-bar {
+            flex: 1;
+            max-width: 600px;
+            margin: 0 40px;
+            display: flex;
+            background: #121212;
+            border: 1px solid #303030;
+            border-radius: 40px;
+            overflow: hidden;
+        }
+
+        .search-bar input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: 10px 16px;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .search-bar button {
+            background: #222;
+            border: none;
+            padding: 0 24px;
+            cursor: pointer;
+            color: #fff;
+            font-size: 16px;
+            transition: background 0.2s;
+        }
+
+        .search-bar button:hover {
+            background: #303030;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
         }
 
         .go-live-btn {
-            background: #ff4757;
+            background: #ff0000;
             color: white;
             border: none;
-            padding: 12px 30px;
-            border-radius: 25px;
-            font-size: 16px;
-            font-weight: bold;
+            padding: 9px 18px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 8px;
-            transition: all 0.3s;
+            transition: all 0.2s;
             text-decoration: none;
         }
 
         .go-live-btn:hover {
-            background: #ff6b81;
+            background: #cc0000;
             transform: scale(1.05);
-            box-shadow: 0 4px 15px rgba(255,71,87,0.4);
         }
 
         .live-dot {
-            width: 12px;
-            height: 12px;
+            width: 8px;
+            height: 8px;
             background: white;
             border-radius: 50%;
             animation: pulse 1.5s infinite;
@@ -75,76 +137,87 @@
             50% { opacity: 0.5; transform: scale(1.3); }
         }
 
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4285f4, #34a853);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        /* ========== CATEGORIES BAR ========== */
+        .categories-bar {
+            background: #0f0f0f;
+            padding: 12px 24px;
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            border-bottom: 1px solid #272727;
+            position: sticky;
+            top: 56px;
+            z-index: 99;
+        }
+
+        .categories-bar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .category-chip {
+            background: #272727;
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background 0.2s;
+            border: none;
+        }
+
+        .category-chip:hover {
+            background: #404040;
+        }
+
+        .category-chip.active {
+            background: #fff;
+            color: #0f0f0f;
+        }
+
         /* ========== MAIN CONTENT ========== */
         .main-content {
-            padding: 30px;
-            max-width: 1200px;
+            padding: 24px;
+            max-width: 1800px;
             margin: 0 auto;
         }
 
         .section-title {
-            font-size: 24px;
+            font-size: 18px;
+            font-weight: 700;
             margin-bottom: 20px;
             display: flex;
             align-items: center;
             gap: 10px;
+            color: #fff;
         }
 
-        .section-title .red-dot {
-            width: 10px;
-            height: 10px;
-            background: #ff4757;
-            border-radius: 50%;
-            animation: pulse 1.5s infinite;
-        }
-
-        /* ========== STREAM CARDS ========== */
-        .streams-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .stream-card {
-            background: #1a1a2e;
-            border-radius: 15px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: all 0.3s;
-            border: 2px solid transparent;
-        }
-
-        .stream-card:hover {
-            transform: translateY(-5px);
-            border-color: #667eea;
-            box-shadow: 0 10px 30px rgba(102,126,234,0.3);
-        }
-
-        .stream-thumbnail {
-            width: 100%;
-            height: 180px;
-            background: linear-gradient(135deg, #1e3c72, #2a5298);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
-
-        .stream-thumbnail .live-badge {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background: #ff4757;
-            padding: 4px 12px;
+        .live-indicator {
+            background: #ff0000;
+            color: white;
+            padding: 4px 10px;
             border-radius: 4px;
             font-size: 12px;
-            font-weight: bold;
+            font-weight: 700;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 6px;
         }
 
-        .stream-thumbnail .live-badge .dot {
+        .live-indicator .dot {
             width: 6px;
             height: 6px;
             background: white;
@@ -152,87 +225,221 @@
             animation: pulse 1s infinite;
         }
 
-        .stream-thumbnail .viewer-count {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            background: rgba(0,0,0,0.7);
-            padding: 4px 10px;
-            border-radius: 4px;
-            font-size: 12px;
+        /* ========== STREAM GRID (YouTube Style) ========== */
+        .streams-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 16px 12px;
         }
 
-        .stream-thumbnail .play-icon {
-            font-size: 50px;
-            opacity: 0.8;
+        .stream-card {
+            cursor: pointer;
+            transition: transform 0.2s;
         }
 
-        .stream-info {
-            padding: 15px;
+        .stream-card:hover {
+            transform: translateY(-2px);
         }
 
-        .stream-title {
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
-
-        .streamer-name {
-            font-size: 14px;
-            color: #aaa;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .streamer-avatar {
-            width: 25px;
-            height: 25px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border-radius: 50%;
+        .stream-thumbnail {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
         }
 
-        /* ========== NO STREAMS ========== */
+        .stream-thumbnail::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, rgba(255,0,0,0.1) 0%, transparent 70%);
+        }
+
+        .play-overlay {
+            font-size: 60px;
+            opacity: 0.3;
+            z-index: 1;
+            transition: all 0.3s;
+        }
+
+        .stream-card:hover .play-overlay {
+            opacity: 0.8;
+            transform: scale(1.2);
+        }
+
+        .live-badge {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            background: #ff0000;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            z-index: 2;
+        }
+
+        .live-badge .dot {
+            width: 5px;
+            height: 5px;
+            background: white;
+            border-radius: 50%;
+            animation: pulse 1s infinite;
+        }
+
+        .viewer-count {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            background: rgba(0,0,0,0.8);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            z-index: 2;
+        }
+
+        .stream-info {
+            display: flex;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .streamer-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff0000, #cc0000);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            flex-shrink: 0;
+            font-size: 16px;
+        }
+
+        .stream-meta {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .stream-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: #fff;
+            margin-bottom: 4px;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .streamer-name {
+            font-size: 13px;
+            color: #aaa;
+            margin-bottom: 2px;
+        }
+
+        .stream-stats {
+            font-size: 12px;
+            color: #aaa;
+        }
+
+        /* ========== NO STREAMS (Empty State) ========== */
         .no-streams {
             text-align: center;
-            padding: 60px 20px;
-            color: #666;
+            padding: 80px 20px;
         }
 
         .no-streams .emoji {
-            font-size: 80px;
+            font-size: 100px;
             margin-bottom: 20px;
+            opacity: 0.5;
         }
 
         .no-streams h2 {
-            font-size: 24px;
-            margin-bottom: 10px;
-            color: #888;
+            font-size: 28px;
+            margin-bottom: 12px;
+            color: #fff;
+            font-weight: 700;
         }
 
         .no-streams p {
             font-size: 16px;
             margin-bottom: 30px;
+            color: #aaa;
+        }
+
+        .start-streaming-btn {
+            background: #ff0000;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .start-streaming-btn:hover {
+            background: #cc0000;
+            transform: scale(1.05);
         }
 
         /* ========== RESPONSIVE ========== */
-        @media (max-width: 600px) {
+        @media (max-width: 768px) {
             .header {
-                flex-direction: column;
-                gap: 15px;
-                text-align: center;
+                padding: 0 12px;
+            }
+            
+            .search-bar {
+                display: none;
+            }
+
+            .logo-text {
+                font-size: 18px;
+            }
+
+            .go-live-btn {
+                padding: 8px 14px;
+                font-size: 13px;
+            }
+
+            .main-content {
+                padding: 16px;
             }
 
             .streams-grid {
                 grid-template-columns: 1fr;
+                gap: 16px;
             }
 
-            .main-content {
-                padding: 15px;
+            .categories-bar {
+                padding: 10px 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-right .user-avatar {
+                display: none;
             }
         }
     </style>
@@ -241,34 +448,58 @@
 
     <!-- HEADER -->
     <div class="header">
-        <div class="logo">
-            <span class="logo-icon">🎬</span>
-            <span>Holo Gia Live</span>
+        <div class="logo" onclick="window.location.href='/'">
+            <div class="logo-icon">🎬</div>
+            <div class="logo-text">Holo Gia <span>Live</span></div>
         </div>
-        <a href="/go-live" class="go-live-btn">
-            <div class="live-dot"></div>
-            Go Live
-        </a>
+
+        <div class="search-bar">
+            <input type="text" placeholder="Search live streams..." id="search-input">
+            <button>🔍</button>
+        </div>
+
+        <div class="header-right">
+            <a href="/go-live" class="go-live-btn">
+                <div class="live-dot"></div>
+                Go Live
+            </a>
+            <div class="user-avatar">U</div>
+        </div>
+    </div>
+
+    <!-- CATEGORIES -->
+    <div class="categories-bar">
+        <button class="category-chip active">All</button>
+        <button class="category-chip">Gaming</button>
+        <button class="category-chip">Music</button>
+        <button class="category-chip">Chat</button>
+        <button class="category-chip">Education</button>
+        <button class="category-chip">News</button>
+        <button class="category-chip">Sports</button>
+        <button class="category-chip">Cooking</button>
+        <button class="category-chip">Travel</button>
+        <button class="category-chip">Comedy</button>
     </div>
 
     <!-- MAIN CONTENT -->
     <div class="main-content">
         <div class="section-title">
-            <div class="red-dot"></div>
-            <span>Live Now - এখন লাইভ আছে</span>
+            <span class="live-indicator">
+                <span class="dot"></span>
+                LIVE NOW
+            </span>
+            <span>Live Streams - এখন লাইভ</span>
         </div>
 
-        <div id="streams-container" class="streams-grid">
-            <!-- Streams will load here -->
-        </div>
+        <div id="streams-container" class="streams-grid"></div>
 
         <div id="no-streams" class="no-streams" style="display: none;">
             <div class="emoji">📺</div>
-            <h2>কেউ এখন লাইভ নেই</h2>
-            <p>প্রথম হও! "Go Live" বাটনে ক্লিক করে লাইভ শুরু করো</p>
-            <a href="/go-live" class="go-live-btn" style="display: inline-flex;">
+            <h2>No one is live right now</h2>
+            <p>Be the first! Start streaming and share your moments with the world</p>
+            <a href="/go-live" class="start-streaming-btn">
                 <div class="live-dot"></div>
-                Go Live Now
+                Start Streaming Now
             </a>
         </div>
     </div>
@@ -279,7 +510,20 @@
         const streamsContainer = document.getElementById('streams-container');
         const noStreams = document.getElementById('no-streams');
 
-        // Streams load করো
+        function formatViewers(count) {
+            if (count >= 1000) return (count/1000).toFixed(1) + 'K';
+            return count;
+        }
+
+        function getTimeAgo(date) {
+            const seconds = Math.floor((new Date() - new Date(date)) / 1000);
+            if (seconds < 60) return seconds + 's ago';
+            const minutes = Math.floor(seconds / 60);
+            if (minutes < 60) return minutes + 'm ago';
+            const hours = Math.floor(minutes / 60);
+            return hours + 'h ago';
+        }
+
         function loadStreams() {
             fetch('/api/streams')
                 .then(res => res.json())
@@ -298,32 +542,35 @@
                                         <div class="dot"></div>
                                         LIVE
                                     </div>
-                                    <span class="play-icon">▶️</span>
-                                    <div class="viewer-count">👁 ${stream.viewers} viewers</div>
+                                    <span class="play-overlay">▶</span>
+                                    <div class="viewer-count">👁 ${formatViewers(stream.viewers)} watching</div>
                                 </div>
                                 <div class="stream-info">
-                                    <div class="stream-title">${stream.title}</div>
-                                    <div class="streamer-name">
-                                        <div class="streamer-avatar">${stream.streamerName.charAt(0).toUpperCase()}</div>
-                                        ${stream.streamerName}
+                                    <div class="streamer-avatar">${stream.streamerName.charAt(0).toUpperCase()}</div>
+                                    <div class="stream-meta">
+                                        <div class="stream-title">${stream.title}</div>
+                                        <div class="streamer-name">${stream.streamerName}</div>
+                                        <div class="stream-stats">${formatViewers(stream.viewers)} watching • Started ${getTimeAgo(stream.startedAt)}</div>
                                     </div>
                                 </div>
                             </div>
                         `).join('');
                     }
-                });
+                })
+                .catch(err => console.error('Error:', err));
         }
 
-        // প্রথমবার load
         loadStreams();
-
-        // নতুন stream আসলে auto update
-        socket.on('streams-updated', () => {
-            loadStreams();
-        });
-
-        // প্রতি 5 সেকেন্ডে refresh
+        socket.on('streams-updated', loadStreams);
         setInterval(loadStreams, 5000);
+
+        // Category chip click
+        document.querySelectorAll('.category-chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+                document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('active'));
+                chip.classList.add('active');
+            });
+        });
     </script>
 
 </body>

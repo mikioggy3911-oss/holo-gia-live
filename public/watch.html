@@ -4,130 +4,176 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Watch Live - Holo Gia Live</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Roboto', sans-serif;
         }
 
         body {
             background: #0f0f0f;
-            color: white;
+            color: #fff;
             min-height: 100vh;
         }
 
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 12px 30px;
+            background: #0f0f0f;
+            padding: 0 24px;
+            height: 56px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-bottom: 1px solid #272727;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
         .logo {
-            font-size: 20px;
-            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
             text-decoration: none;
             color: white;
         }
 
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #ff0000, #cc0000);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .logo-text span { color: #ff0000; }
+
         .back-btn {
-            background: rgba(255,255,255,0.2);
-            color: white;
-            border: none;
-            padding: 8px 20px;
+            background: transparent;
+            color: #fff;
+            border: 1px solid #303030;
+            padding: 8px 16px;
             border-radius: 20px;
             cursor: pointer;
             text-decoration: none;
             font-size: 14px;
         }
 
+        .back-btn:hover { background: #272727; }
+
         .container {
-            max-width: 900px;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 15px;
+            padding: 24px;
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 20px;
         }
 
-        /* ========== NAME INPUT ========== */
+        @media (max-width: 1024px) {
+            .container { grid-template-columns: 1fr; }
+        }
+
+        /* Name Section */
         .name-section {
-            background: #1a1a2e;
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 15px;
+            background: #1f1f1f;
+            border-radius: 16px;
+            padding: 40px;
             text-align: center;
+            border: 1px solid #303030;
         }
 
         .name-section h2 {
-            margin-bottom: 15px;
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .name-section p {
+            color: #aaa;
+            margin-bottom: 24px;
+            font-size: 14px;
         }
 
         .name-section input {
-            padding: 12px 20px;
-            background: #16213e;
-            border: 2px solid #2a2a4a;
-            border-radius: 10px;
-            color: white;
-            font-size: 16px;
+            padding: 14px 18px;
+            background: #0f0f0f;
+            border: 1px solid #303030;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 15px;
             outline: none;
             width: 100%;
-            max-width: 300px;
-            margin-bottom: 15px;
+            max-width: 350px;
+            margin-bottom: 16px;
         }
 
         .name-section input:focus {
-            border-color: #667eea;
+            border-color: #ff0000;
         }
 
         .join-btn {
-            background: #667eea;
+            background: linear-gradient(135deg, #ff0000, #cc0000);
             color: white;
             border: none;
-            padding: 12px 35px;
+            padding: 14px 32px;
             border-radius: 25px;
-            font-size: 16px;
+            font-size: 15px;
             cursor: pointer;
-            font-weight: bold;
-            display: block;
-            margin: 0 auto;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(255,0,0,0.3);
         }
 
-        /* ========== VIDEO ========== */
-        .watch-section {
-            display: none;
+        .join-btn:hover {
+            transform: scale(1.05);
         }
 
-        .video-container {
+        /* Watch Section */
+        .watch-section { display: none; }
+
+        .video-wrapper {
             position: relative;
             width: 100%;
             background: #000;
-            border-radius: 15px;
+            border-radius: 12px;
             overflow: hidden;
-            margin-bottom: 15px;
+            margin-bottom: 16px;
         }
 
-        .video-container video {
+        .video-wrapper video {
             width: 100%;
             height: auto;
-            max-height: 500px;
+            max-height: 600px;
             display: block;
         }
 
         .live-overlay {
             position: absolute;
-            top: 15px;
-            left: 15px;
+            top: 16px;
+            left: 16px;
             display: flex;
             gap: 10px;
+            z-index: 10;
         }
 
         .live-badge {
-            background: #ff4757;
-            padding: 5px 15px;
-            border-radius: 5px;
-            font-size: 14px;
-            font-weight: bold;
+            background: #ff0000;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 700;
             display: flex;
             align-items: center;
             gap: 6px;
@@ -143,190 +189,316 @@
 
         @keyframes pulse {
             0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
+            50% { opacity: 0.4; }
         }
 
         .viewer-badge {
-            background: rgba(0,0,0,0.7);
-            padding: 5px 15px;
-            border-radius: 5px;
-            font-size: 14px;
+            background: rgba(0,0,0,0.85);
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            backdrop-filter: blur(10px);
         }
 
-        /* ========== CHAT ========== */
-        .chat-container {
-            background: #1a1a2e;
-            border-radius: 15px;
+        /* Volume Control */
+        .volume-control {
+            position: absolute;
+            bottom: 16px;
+            right: 16px;
+            background: rgba(0,0,0,0.85);
+            padding: 8px 14px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            backdrop-filter: blur(10px);
+            z-index: 10;
+        }
+
+        .volume-btn {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .volume-slider {
+            width: 80px;
+            cursor: pointer;
+        }
+
+        /* Stream Info */
+        .stream-info-card {
+            background: #1f1f1f;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #303030;
+        }
+
+        .stream-title-text {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .streamer-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #303030;
+        }
+
+        .streamer-avatar-lg {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff0000, #cc0000);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 20px;
+        }
+
+        .streamer-details {
+            flex: 1;
+        }
+
+        .streamer-name-text {
+            font-weight: 700;
+            font-size: 15px;
+        }
+
+        .stream-stats-text {
+            font-size: 13px;
+            color: #aaa;
+            margin-top: 2px;
+        }
+
+        /* Chat */
+        .chat-card {
+            background: #1f1f1f;
+            border-radius: 12px;
             overflow: hidden;
+            border: 1px solid #303030;
+            display: flex;
+            flex-direction: column;
+            height: 600px;
+        }
+
+        @media (max-width: 1024px) {
+            .chat-card { height: 400px; }
         }
 
         .chat-header {
-            padding: 12px 15px;
-            background: #16213e;
-            font-weight: bold;
+            padding: 14px 16px;
+            background: #272727;
+            font-weight: 700;
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .chat-messages {
-            height: 300px;
+            flex: 1;
             overflow-y: auto;
-            padding: 10px 15px;
+            padding: 12px 16px;
+        }
+
+        .chat-messages::-webkit-scrollbar { width: 6px; }
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: #404040;
+            border-radius: 3px;
         }
 
         .chat-message {
             margin-bottom: 10px;
-            padding: 8px 12px;
-            background: #16213e;
-            border-radius: 10px;
-        }
-
-        .chat-message .name {
-            font-weight: bold;
-            color: #667eea;
-            font-size: 13px;
-        }
-
-        .chat-message .text {
-            font-size: 14px;
-            margin-top: 3px;
-        }
-
-        .chat-message .time {
-            font-size: 11px;
-            color: #666;
-            margin-top: 3px;
-        }
-
-        .chat-input-area {
             display: flex;
-            padding: 10px;
             gap: 8px;
-            background: #16213e;
         }
 
-        .chat-input-area input {
+        .chat-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4285f4, #34a853);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+
+        .chat-content { flex: 1; }
+
+        .chat-name {
+            font-weight: 500;
+            color: #4285f4;
+            font-size: 13px;
+            margin-right: 6px;
+        }
+
+        .chat-text { font-size: 14px; }
+
+        .chat-time {
+            font-size: 11px;
+            color: #aaa;
+            margin-top: 2px;
+        }
+
+        .chat-input-wrap {
+            display: flex;
+            padding: 12px;
+            gap: 8px;
+            background: #272727;
+            border-top: 1px solid #404040;
+        }
+
+        .chat-input-wrap input {
             flex: 1;
-            padding: 10px;
+            padding: 10px 14px;
             background: #0f0f0f;
-            border: none;
-            border-radius: 8px;
+            border: 1px solid #303030;
+            border-radius: 20px;
             color: white;
             font-size: 14px;
             outline: none;
         }
 
-        .chat-input-area button {
-            background: #667eea;
+        .chat-input-wrap input:focus { border-color: #ff0000; }
+
+        .chat-input-wrap button {
+            background: #ff0000;
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
+            padding: 8px 20px;
+            border-radius: 20px;
             cursor: pointer;
-            font-weight: bold;
+            font-weight: 500;
         }
 
-        /* ========== STREAM ENDED ========== */
-        .stream-ended {
-            text-align: center;
-            padding: 60px 20px;
-            display: none;
-        }
-
-        .stream-ended .emoji {
-            font-size: 80px;
-            margin-bottom: 20px;
-        }
-
-        .stream-ended h2 {
-            margin-bottom: 10px;
-            color: #ff4757;
-        }
-
-        .stream-ended p {
-            color: #888;
-            margin-bottom: 20px;
-        }
-
-        /* ========== LOADING ========== */
+        /* Loading */
         .loading {
             text-align: center;
-            padding: 40px;
+            padding: 80px 20px;
             display: none;
         }
 
         .spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid #333;
-            border-top: 4px solid #667eea;
+            width: 60px;
+            height: 60px;
+            border: 4px solid #303030;
+            border-top: 4px solid #ff0000;
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin: 0 auto 15px;
+            margin: 0 auto 20px;
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Stream Ended */
+        .stream-ended {
+            text-align: center;
+            padding: 80px 20px;
+            display: none;
         }
 
-        @media (max-width: 600px) {
-            .container { padding: 10px; }
+        .stream-ended .emoji {
+            font-size: 100px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .stream-ended h2 {
+            margin-bottom: 12px;
+            font-size: 28px;
+        }
+
+        .stream-ended p {
+            color: #aaa;
+            margin-bottom: 24px;
         }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <a href="/" class="logo">🎬 Holo Gia Live</a>
+        <a href="/" class="logo">
+            <div class="logo-icon">🎬</div>
+            <div class="logo-text">Holo Gia <span>Live</span></div>
+        </a>
         <a href="/" class="back-btn">← Home</a>
     </div>
 
     <div class="container">
 
-        <!-- NAME INPUT -->
-        <div id="name-section" class="name-section">
-            <h2>👋 তোমার নাম লেখো</h2>
-            <input type="text" id="viewer-name" placeholder="তোমার নাম..." maxlength="20">
-            <br>
-            <button class="join-btn" onclick="joinStream()">▶️ Watch Stream</button>
-        </div>
+        <!-- LEFT: Video Area -->
+        <div>
+            <div id="name-section" class="name-section">
+                <h2>👋 Welcome!</h2>
+                <p>Enter your name to join the live stream</p>
+                <input type="text" id="viewer-name" placeholder="Your name..." maxlength="20">
+                <br>
+                <button class="join-btn" onclick="joinStream()">▶️ Watch Stream</button>
+            </div>
 
-        <!-- LOADING -->
-        <div id="loading" class="loading">
-            <div class="spinner"></div>
-            <p>Stream এ connect হচ্ছে...</p>
-        </div>
+            <div id="loading" class="loading">
+                <div class="spinner"></div>
+                <p style="color: #aaa;">Connecting to stream...</p>
+            </div>
 
-        <!-- WATCH SECTION -->
-        <div id="watch-section" class="watch-section">
-            <div class="video-container">
-                <video id="remote-video" autoplay playsinline></video>
-                <div class="live-overlay">
-                    <div class="live-badge">
-                        <div class="dot"></div>
-                        LIVE
+            <div id="watch-section" class="watch-section">
+                <div class="video-wrapper">
+                    <video id="remote-video" autoplay playsinline></video>
+                    <div class="live-overlay">
+                        <div class="live-badge">
+                            <div class="dot"></div>
+                            LIVE
+                        </div>
+                        <div class="viewer-badge" id="viewer-count">👁 0</div>
                     </div>
-                    <div class="viewer-badge" id="viewer-count">👁 0</div>
+                    <div class="volume-control">
+                        <button class="volume-btn" id="volume-btn" onclick="toggleMute()">🔊</button>
+                        <input type="range" class="volume-slider" id="volume-slider" min="0" max="100" value="100" onchange="changeVolume(this.value)">
+                    </div>
+                </div>
+
+                <div class="stream-info-card">
+                    <div class="stream-title-text" id="stream-title-display">Live Stream</div>
+                    <div class="streamer-info">
+                        <div class="streamer-avatar-lg" id="streamer-avatar">S</div>
+                        <div class="streamer-details">
+                            <div class="streamer-name-text" id="streamer-name-display">Streamer</div>
+                            <div class="stream-stats-text" id="stream-stats">Live now</div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="chat-container">
-                <div class="chat-header">💬 Live Chat</div>
-                <div id="chat-messages" class="chat-messages"></div>
-                <div class="chat-input-area">
-                    <input type="text" id="chat-input" placeholder="Type a message..." 
-                           onkeypress="if(event.key==='Enter') sendChat()">
-                    <button onclick="sendChat()">Send</button>
-                </div>
+            <div id="stream-ended" class="stream-ended">
+                <div class="emoji">📺</div>
+                <h2>Stream Ended</h2>
+                <p>This live stream is no longer available.</p>
+                <a href="/" class="join-btn" style="text-decoration: none;">🏠 Back to Home</a>
             </div>
         </div>
 
-        <!-- STREAM ENDED -->
-        <div id="stream-ended" class="stream-ended">
-            <div class="emoji">📺</div>
-            <h2>Stream শেষ হয়ে গেছে</h2>
-            <p>এই stream আর চলছে না। Video save হয়নি।</p>
-            <a href="/" class="join-btn" style="display: inline-block; text-decoration: none;">
-                🏠 Go to Home
-            </a>
+        <!-- RIGHT: Chat -->
+        <div class="chat-card" id="chat-area" style="display:none;">
+            <div class="chat-header">
+                <span>💬 Live Chat</span>
+                <span id="chat-msg-count">0 messages</span>
+            </div>
+            <div id="chat-messages" class="chat-messages"></div>
+            <div class="chat-input-wrap">
+                <input type="text" id="chat-input" placeholder="Say something..." 
+                       onkeypress="if(event.key==='Enter') sendChat()">
+                <button onclick="sendChat()">Send</button>
+            </div>
         </div>
 
     </div>
@@ -338,8 +510,8 @@
         const socket = io();
         let peer = null;
         let viewerName = '';
+        let messageCount = 0;
         
-        // URL থেকে stream ID নাও
         const pathParts = window.location.pathname.split('/');
         const streamId = pathParts[pathParts.length - 1];
 
@@ -348,21 +520,27 @@
             viewerName = nameInput.value.trim();
 
             if (!viewerName) {
-                alert('❌ তোমার নাম লেখো!');
+                alert('❌ Please enter your name!');
                 return;
             }
 
-            // Name section লুকাও, loading দেখাও
             document.getElementById('name-section').style.display = 'none';
             document.getElementById('loading').style.display = 'block';
 
-            // PeerJS setup
-            peer = new Peer();
+            peer = new Peer({
+                config: {
+                    'iceServers': [
+                        { urls: 'stun:stun.l.google.com:19302' },
+                        { urls: 'stun:stun1.l.google.com:19302' },
+                        { urls: 'stun:stun2.l.google.com:19302' },
+                        { urls: 'stun:stun3.l.google.com:19302' },
+                        { urls: 'stun:stun4.l.google.com:19302' }
+                    ]
+                }
+            });
 
             peer.on('open', (myPeerId) => {
-                console.log('My Peer ID:', myPeerId);
-
-                // Server কে বলো stream join করতে চাই
+                console.log('✅ My Peer ID:', myPeerId);
                 socket.emit('join-stream', {
                     streamId: streamId,
                     viewerName: viewerName
@@ -374,23 +552,32 @@
             });
         }
 
-        // Streamer এর Peer ID পাওয়া গেলে
         socket.on('streamer-peer-id', (data) => {
-            console.log('Streamer Peer ID:', data.peerId);
+            console.log('📞 Calling streamer:', data.peerId);
 
-            // Streamer কে call করো
+            // ⭐ Call streamer with empty stream
             const call = peer.call(data.peerId, createEmptyStream());
 
             call.on('stream', (remoteStream) => {
-                console.log('✅ Got stream from streamer!');
+                console.log('✅ Got remote stream!');
+                console.log('Audio tracks:', remoteStream.getAudioTracks());
+                console.log('Video tracks:', remoteStream.getVideoTracks());
                 
-                // Video দেখাও
                 const video = document.getElementById('remote-video');
                 video.srcObject = remoteStream;
+                
+                // ⭐ Make sure audio plays
+                video.muted = false;
+                video.volume = 1.0;
+                
+                // Try to play (handle autoplay restrictions)
+                video.play().catch(err => {
+                    console.log('Autoplay blocked, user needs to interact');
+                });
 
-                // Loading লুকাও, watch section দেখাও
                 document.getElementById('loading').style.display = 'none';
                 document.getElementById('watch-section').style.display = 'block';
+                document.getElementById('chat-area').style.display = 'flex';
             });
 
             call.on('error', (err) => {
@@ -398,26 +585,34 @@
             });
         });
 
-        // Empty stream বানাও (call করতে লাগে)
         function createEmptyStream() {
             const canvas = document.createElement('canvas');
             canvas.width = 1;
             canvas.height = 1;
             const ctx = canvas.getContext('2d');
             ctx.fillRect(0, 0, 1, 1);
-            const stream = canvas.captureStream();
-            return stream;
+            return canvas.captureStream();
         }
 
-        // Viewer count update
+        function toggleMute() {
+            const video = document.getElementById('remote-video');
+            const btn = document.getElementById('volume-btn');
+            video.muted = !video.muted;
+            btn.textContent = video.muted ? '🔇' : '🔊';
+        }
+
+        function changeVolume(value) {
+            const video = document.getElementById('remote-video');
+            video.volume = value / 100;
+            const btn = document.getElementById('volume-btn');
+            btn.textContent = value == 0 ? '🔇' : value < 50 ? '🔉' : '🔊';
+        }
+
         socket.on('viewer-count', (data) => {
             const el = document.getElementById('viewer-count');
-            if (el) {
-                el.textContent = `👁 ${data.count}`;
-            }
+            if (el) el.textContent = `👁 ${data.count}`;
         });
 
-        // Stream error
         socket.on('stream-error', (data) => {
             document.getElementById('loading').style.display = 'none';
             document.getElementById('name-section').style.display = 'none';
@@ -425,40 +620,41 @@
             document.querySelector('.stream-ended h2').textContent = data.message;
         });
 
-        // Stream শেষ হলে
         socket.on('stream-ended', (data) => {
             document.getElementById('watch-section').style.display = 'none';
             document.getElementById('loading').style.display = 'none';
+            document.getElementById('chat-area').style.display = 'none';
             document.getElementById('stream-ended').style.display = 'block';
 
-            // Video বন্ধ করো
             const video = document.getElementById('remote-video');
             if (video.srcObject) {
                 video.srcObject.getTracks().forEach(track => track.stop());
             }
-
             if (peer) peer.destroy();
         });
 
-        // Chat receive
         socket.on('new-message', (data) => {
+            messageCount++;
+            document.getElementById('chat-msg-count').textContent = `${messageCount} messages`;
+            
             const chatMessages = document.getElementById('chat-messages');
             const msgDiv = document.createElement('div');
             msgDiv.className = 'chat-message';
             msgDiv.innerHTML = `
-                <div class="name">${data.name}</div>
-                <div class="text">${data.message}</div>
-                <div class="time">${data.time}</div>
+                <div class="chat-avatar">${data.name.charAt(0).toUpperCase()}</div>
+                <div class="chat-content">
+                    <span class="chat-name">${data.name}</span>
+                    <span class="chat-text">${data.message}</span>
+                    <div class="chat-time">${data.time}</div>
+                </div>
             `;
             chatMessages.appendChild(msgDiv);
             chatMessages.scrollTop = chatMessages.scrollHeight;
         });
 
-        // Chat send
         function sendChat() {
             const input = document.getElementById('chat-input');
             const message = input.value.trim();
-
             if (message && streamId) {
                 socket.emit('chat-message', {
                     streamId: streamId,
