@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Messages - F12 ORBIT</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; }
+body { background: #0f0f0f; color: #fff; min-height: 100vh; }
+.header { background: #0f0f0f; padding: 0 24px; height: 60px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #272727; }
+.logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: white; }
+.logo-icon { width: 40px; height: 40px; background: linear-gradient(135deg, #ff0000, #cc0000); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 900; color: white; }
+.logo-text { font-size: 22px; font-weight: 900; letter-spacing: -1px; }
+.logo-text span { color: #ff0000; }
+.nav-tabs { display: flex; gap: 8px; margin-left: 30px; }
+.nav-tab { background: transparent; color: #aaa; border: none; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 14px; font-weight: 500; text-decoration: none; }
+.nav-tab.active { background: #ff0000; color: white; }
+.user-info { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 4px 8px; border-radius: 20px; }
+.user-avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #4285f4, #34a853); display: flex; align-items: center; justify-content: center; font-weight: 700; }
+.messages-container { display: grid; grid-template-columns: 320px 1fr; height: calc(100vh - 60px); }
+@media (max-width: 768px) { .messages-container { grid-template-columns: 1fr; } .users-panel.hidden-mobile { display: none; } .chat-panel.hidden-mobile { display: none; } }
+.users-panel { background: #1a1a1a; border-right: 1px solid #272727; overflow-y: auto; }
+.users-panel-header { padding: 16px; border-bottom: 1px solid #272727; background: #1f1f1f; position: sticky; top: 0; }
+.users-panel-header h2 { font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+.online-dot-green { width: 8px; height: 8px; background: #00ff00; border-radius: 50%; box-shadow: 0 0 10px #00ff00; }
+.search-users { margin-top: 12px; padding: 8px 12px; background: #0f0f0f; border: 1px solid #303030; border-radius: 20px; color: white; width: 100%; outline: none; font-size: 13px; }
+.user-list-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; cursor: pointer; border-bottom: 1px solid #1a1a1a; }
+.user-list-item:hover { background: #272727; }
+.user-list-item.active { background: #ff0000; }
+.user-list-avatar { width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #4285f4, #34a853); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; position: relative; flex-shrink: 0; }
+.user-list-avatar::after { content: ''; position: absolute; bottom: 0; right: 0; width: 12px; height: 12px; background: #00ff00; border-radius: 50%; border: 2px solid #1a1a1a; }
+.user-list-info { flex: 1; min-width: 0; }
+.user-list-name { font-size: 14px; font-weight: 500; }
+.user-list-status { font-size: 12px; color: #00ff00; margin-top: 2px; }
+.user-list-item.active .user-list-status { color: white; }
+.chat-panel { display: flex; flex-direction: column; background: #0f0f0f; }
+.chat-header { padding: 16px 20px; background: #1f1f1f; border-bottom: 1px solid #272727; display: flex; align-items: center; gap: 12px; }
+.back-mobile { display: none; background: transparent; border: none; color: white; font-size: 20px; cursor: pointer; }
+@media (max-width: 768px) { .back-mobile { display: block; } }
+.chat-header-avatar { width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #4285f4, #34a853); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; }
+.chat-header-info { flex: 1; }
+.chat-header-name { font-size: 16px; font-weight: 700; }
+.chat-header-status { font-size: 12px; color: #00ff00; }
+.chat-messages { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+.message-bubble { max-width: 70%; padding: 10px 14px; border-radius: 18px; word-wrap: break-word; }
+.message-bubble.sent { background: linear-gradient(135deg, #ff0000, #cc0000); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
+.message-bubble.received { background: #272727; color: white; align-self: flex-start; border-bottom-left-radius: 4px; }
+.message-time { font-size: 10px; opacity: 0.7; margin-top: 4px; }
+.typing-indicator { padding: 8px 14px; color: #aaa; font-size: 13px; font-style: italic; display: none; }
+.typing-indicator.show { display: block; }
+.chat-input-wrap { display: flex; padding: 16px; gap: 10px; background: #1f1f1f; border-top: 1px solid #272727; }
+.chat-input-wrap input { flex: 1; padding: 12px 16px; background: #0f0f0f; border: 1px solid #303030; border-radius: 25px; color: white; font-size: 14px; outline: none; }
+.send-btn { background: #ff0000; color: white; border: none; padding: 0 24px; border-radius: 25px; cursor: pointer; font-weight: 700; }
+.empty-chat { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: #666; text-align: center; padding: 40px; }
+.empty-chat .emoji { font-size: 100px; margin-bottom: 20px; opacity: 0.3; }
+.empty-chat h2 { color: #aaa; margin-bottom: 10px; }
+.empty-chat p { color: #666; font-size: 14px; }
+</style>
+</head>
+<body>
+<div class="header">
+<a href="/" class="logo">
+<div class="logo-icon">F12</div>
+<div class="logo-text">F12 <span>ORBIT</span></div>
+</a>
+<div class="nav-tabs">
+<a href="/" class="nav-tab">Home</a>
+<a href="/messages" class="nav-tab active">Messages</a>
+</div>
+<div class="user-info" onclick="window.location.href='/login'">
+<div class="user-avatar" id="user-avatar">U</div>
+</div>
+</div>
+<div class="messages-container">
+<div class="users-panel" id="users-panel">
+<div class="users-panel-header">
+<h2><div class="online-dot-green"></div>Online Users</h2>
+<input type="text" class="search-users" placeholder="Search users..." id="search-users">
+</div>
+<div id="users-list"></div>
+</div>
+<div class="chat-panel" id="chat-panel">
+<div id="empty-chat" class="empty-chat">
+<div class="emoji">💬</div>
+<h2>Select a user to start chatting</h2>
+<p>Click on any online user from the left panel</p>
+</div>
+<div id="active-chat" style="display: none; flex-direction: column; height: 100%;">
+<div class="chat-header">
+<button class="back-mobile" onclick="backToUsers()">←</button>
+<div class="chat-header-avatar" id="chat-avatar">U</div>
+<div class="chat-header-info">
+<div class="chat-header-name" id="chat-name">User</div>
+<div class="chat-header-status">● Online</div>
+</div>
+</div>
+<div class="chat-messages" id="chat-messages"></div>
+<div class="typing-indicator" id="typing-indicator"></div>
+<div class="chat-input-wrap">
+<input type="text" id="message-input" placeholder="Type a message..." onkeypress="handleKeyPress(event)" oninput="handleTyping()">
+<button class="send-btn" onclick="sendMessage()">Send</button>
+</div>
+</div>
+</div>
+</div>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+const username = localStorage.getItem('f12_username');
+if (!username) { window.location.href = '/login'; }
+document.getElementById('user-avatar').textContent = username.charAt(0).toUpperCase();
+const socket = io();
+let currentChatUser = null, typingTimeout = null;
+const messageHistory = {};
+socket.on('connect', () => {
+socket.emit('user-online', { name: username, avatar: username.charAt(0).toUpperCase() });
+const targetId = localStorage.getItem('f12_chat_target_id');
+const targetName = localStorage.getItem('f12_chat_target_name');
+if (targetId && targetName) {
+setTimeout(() => {
+openChat(targetId, targetName);
+localStorage.removeItem('f12_chat_target_id');
+localStorage.removeItem('f12_chat_target_name');
+}, 500);
+}
+});
+function loadOnlineUsers() {
+fetch('/api/online-users').then(res => res.json()).then(users => {
+const list = document.getElementById('users-list');
+const others = users.filter(u => u.name !== username);
+if (others.length === 0) {
+list.innerHTML = '<p style="color: #666; padding: 30px 20px; text-align: center; font-size: 13px;">No other users online</p>';
+} else {
+list.innerHTML = others.map(user => '<div class="user-list-item ' + (currentChatUser && currentChatUser.id === user.socketId ? 'active' : '') + '" onclick="openChat(\'' + user.socketId + '\', \'' + user.name + '\')"><div class="user-list-avatar">' + user.avatar + '</div><div class="user-list-info"><div class="user-list-name">' + user.name + '</div><div class="user-list-status">● Online</div></div></div>').join('');
+}
+});
+}
+function openChat(socketId, name) {
+currentChatUser = { id: socketId, name: name };
+document.getElementById('empty-chat').style.display = 'none';
+document.getElementById('active-chat').style.display = 'flex';
+document.getElementById('chat-avatar').textContent = name.charAt(0).toUpperCase();
+document.getElementById('chat-name').textContent = name;
+const messages = messageHistory[socketId] || [];
+renderMessages(messages);
+if (window.innerWidth <= 768) { document.getElementById('users-panel').classList.add('hidden-mobile'); }
+loadOnlineUsers();
+document.getElementById('message-input').focus();
+}
+function backToUsers() {
+document.getElementById('users-panel').classList.remove('hidden-mobile');
+document.getElementById('active-chat').style.display = 'none';
+document.getElementById('empty-chat').style.display = 'flex';
+currentChatUser = null;
+loadOnlineUsers();
+}
+function renderMessages(messages) {
+const container = document.getElementById('chat-messages');
+container.innerHTML = messages.map(msg => '<div class="message-bubble ' + msg.type + '">' + msg.text + '<div class="message-time">' + msg.time + '</div></div>').join('');
+container.scrollTop = container.scrollHeight;
+}
+function sendMessage() {
+if (!currentChatUser) return;
+const input = document.getElementById('message-input');
+const message = input.value.trim();
+if (!message) return;
+socket.emit('send-message', { toSocketId: currentChatUser.id, message: message });
+input.value = '';
+}
+function handleKeyPress(event) { if (event.key === 'Enter') sendMessage(); }
+function handleTyping() {
+if (!currentChatUser) return;
+socket.emit('typing', { toSocketId: currentChatUser.id });
+clearTimeout(typingTimeout);
+typingTimeout = setTimeout(() => { socket.emit('stop-typing', { toSocketId: currentChatUser.id }); }, 1000);
+}
+socket.on('receive-message', (data) => {
+if (!messageHistory[data.fromSocketId]) messageHistory[data.fromSocketId] = [];
+messageHistory[data.fromSocketId].push({ type: 'received', text: data.message, time: data.time });
+if (currentChatUser && currentChatUser.id === data.fromSocketId) {
+renderMessages(messageHistory[data.fromSocketId]);
+} else {
+if (Notification.permission === 'granted') { new Notification('💬 ' + data.fromName, { body: data.message }); }
+}
+});
+socket.on('message-sent', (data) => {
+if (!messageHistory[data.toSocketId]) messageHistory[data.toSocketId] = [];
+messageHistory[data.toSocketId].push({ type: 'sent', text: data.message, time: data.time });
+if (currentChatUser && currentChatUser.id === data.toSocketId) { renderMessages(messageHistory[data.toSocketId]); }
+});
+socket.on('user-typing', (data) => {
+if (currentChatUser && currentChatUser.id === data.fromSocketId) {
+const indicator = document.getElementById('typing-indicator');
+indicator.textContent = data.fromName + ' is typing...';
+indicator.classList.add('show');
+}
+});
+socket.on('user-stop-typing', (data) => {
+if (currentChatUser && currentChatUser.id === data.fromSocketId) {
+document.getElementById('typing-indicator').classList.remove('show');
+}
+});
+if (Notification.permission === 'default') { Notification.requestPermission(); }
+socket.on('users-updated', loadOnlineUsers);
+loadOnlineUsers();
+setInterval(loadOnlineUsers, 3000);
+document.getElementById('search-users').addEventListener('input', (e) => {
+const search = e.target.value.toLowerCase();
+document.querySelectorAll('.user-list-item').forEach(item => {
+const name = item.querySelector('.user-list-name').textContent.toLowerCase();
+item.style.display = name.includes(search) ? 'flex' : 'none';
+});
+});
+</script>
+</body>
+</html>

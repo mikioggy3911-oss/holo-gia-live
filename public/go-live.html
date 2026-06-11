@@ -1,884 +1,279 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Go Live - Holo Gia Live</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Roboto', sans-serif;
-        }
-
-        body {
-            background: #0f0f0f;
-            color: #fff;
-            min-height: 100vh;
-        }
-
-        .header {
-            background: #0f0f0f;
-            padding: 0 24px;
-            height: 56px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #272727;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            text-decoration: none;
-            color: white;
-        }
-
-        .logo-icon {
-            width: 32px;
-            height: 32px;
-            background: linear-gradient(135deg, #ff0000, #cc0000);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-        }
-
-        .logo-text {
-            font-size: 18px;
-            font-weight: 700;
-        }
-
-        .logo-text span {
-            color: #ff0000;
-        }
-
-        .back-btn {
-            background: transparent;
-            color: #fff;
-            border: 1px solid #303030;
-            padding: 8px 16px;
-            border-radius: 20px;
-            cursor: pointer;
-            text-decoration: none;
-            font-size: 14px;
-            transition: all 0.2s;
-        }
-
-        .back-btn:hover {
-            background: #272727;
-        }
-
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 24px;
-        }
-
-        /* ========== SETUP FORM ========== */
-        .setup-card {
-            background: #1f1f1f;
-            border-radius: 16px;
-            padding: 32px;
-            margin-bottom: 20px;
-            border: 1px solid #303030;
-        }
-
-        .setup-card h2 {
-            font-size: 24px;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .setup-card .subtitle {
-            color: #aaa;
-            margin-bottom: 24px;
-            font-size: 14px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #fff;
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        .form-group input, .form-group select {
-            width: 100%;
-            padding: 14px 16px;
-            background: #0f0f0f;
-            border: 1px solid #303030;
-            border-radius: 8px;
-            color: #fff;
-            font-size: 15px;
-            outline: none;
-            transition: all 0.2s;
-        }
-
-        .form-group input:focus, .form-group select:focus {
-            border-color: #ff0000;
-            box-shadow: 0 0 0 3px rgba(255,0,0,0.1);
-        }
-
-        .start-btn {
-            background: linear-gradient(135deg, #ff0000, #cc0000);
-            color: white;
-            border: none;
-            padding: 16px 32px;
-            border-radius: 25px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            transition: all 0.2s;
-            box-shadow: 0 4px 15px rgba(255,0,0,0.3);
-        }
-
-        .start-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255,0,0,0.5);
-        }
-
-        .start-btn:disabled {
-            background: #555;
-            cursor: not-allowed;
-            box-shadow: none;
-            transform: none;
-        }
-
-        /* ========== LIVE SECTION ========== */
-        .live-section {
-            display: none;
-        }
-
-        .video-wrapper {
-            position: relative;
-            width: 100%;
-            background: #000;
-            border-radius: 16px;
-            overflow: hidden;
-            margin-bottom: 16px;
-            border: 2px solid #ff0000;
-            box-shadow: 0 0 30px rgba(255,0,0,0.2);
-        }
-
-        .video-wrapper video {
-            width: 100%;
-            height: auto;
-            max-height: 500px;
-            display: block;
-        }
-
-        .live-overlay {
-            position: absolute;
-            top: 16px;
-            left: 16px;
-            display: flex;
-            gap: 10px;
-            z-index: 10;
-        }
-
-        .live-badge {
-            background: #ff0000;
-            padding: 6px 14px;
-            border-radius: 6px;
-            font-size: 13px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            box-shadow: 0 0 15px rgba(255,0,0,0.5);
-        }
-
-        .live-badge .dot {
-            width: 8px;
-            height: 8px;
-            background: white;
-            border-radius: 50%;
-            animation: pulse 1s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.4; transform: scale(1.2); }
-        }
-
-        .viewer-badge {
-            background: rgba(0,0,0,0.85);
-            padding: 6px 14px;
-            border-radius: 6px;
-            font-size: 13px;
-            font-weight: 500;
-            backdrop-filter: blur(10px);
-        }
-
-        /* ========== AUDIO INDICATOR (Mic Sound) ========== */
-        .audio-indicator {
-            position: absolute;
-            bottom: 16px;
-            right: 16px;
-            background: rgba(0,0,0,0.85);
-            padding: 8px 14px;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            backdrop-filter: blur(10px);
-            z-index: 10;
-        }
-
-        .audio-icon {
-            font-size: 16px;
-        }
-
-        .audio-bars {
-            display: flex;
-            gap: 3px;
-            align-items: flex-end;
-            height: 16px;
-        }
-
-        .audio-bar {
-            width: 3px;
-            background: #00ff00;
-            border-radius: 2px;
-            transition: height 0.1s;
-            height: 3px;
-        }
-
-        /* ========== CONTROLS ========== */
-        .controls-card {
-            background: #1f1f1f;
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 16px;
-            border: 1px solid #303030;
-        }
-
-        .control-buttons {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 12px;
-            flex-wrap: wrap;
-        }
-
-        .ctrl-btn {
-            background: #272727;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.2s;
-            flex: 1;
-            justify-content: center;
-            min-width: 120px;
-        }
-
-        .ctrl-btn:hover {
-            background: #404040;
-        }
-
-        .ctrl-btn.danger {
-            background: #ff0000;
-        }
-
-        .ctrl-btn.danger:hover {
-            background: #cc0000;
-        }
-
-        .ctrl-btn.muted {
-            background: #555;
-            opacity: 0.7;
-        }
-
-        .share-link-box {
-            background: #0f0f0f;
-            padding: 12px 16px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border: 1px solid #303030;
-            display: none;
-        }
-
-        .share-link-box.show {
-            display: flex;
-        }
-
-        .share-link-box .url {
-            flex: 1;
-            color: #4285f4;
-            font-size: 14px;
-            word-break: break-all;
-            font-family: monospace;
-        }
-
-        .copy-btn {
-            background: #ff0000;
-            color: white;
-            border: none;
-            padding: 6px 14px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: 500;
-        }
-
-        /* ========== CHAT ========== */
-        .chat-card {
-            background: #1f1f1f;
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid #303030;
-        }
-
-        .chat-header {
-            padding: 14px 16px;
-            background: #272727;
-            font-weight: 700;
-            font-size: 14px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .chat-count {
-            background: #ff0000;
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 11px;
-        }
-
-        .chat-messages {
-            height: 300px;
-            overflow-y: auto;
-            padding: 12px 16px;
-        }
-
-        .chat-messages::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .chat-messages::-webkit-scrollbar-thumb {
-            background: #404040;
-            border-radius: 3px;
-        }
-
-        .chat-message {
-            margin-bottom: 10px;
-            display: flex;
-            gap: 8px;
-            align-items: flex-start;
-        }
-
-        .chat-avatar {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #ff0000, #cc0000);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 13px;
-            flex-shrink: 0;
-        }
-
-        .chat-content {
-            flex: 1;
-        }
-
-        .chat-name {
-            font-weight: 500;
-            color: #4285f4;
-            font-size: 13px;
-            margin-right: 6px;
-        }
-
-        .chat-text {
-            color: #fff;
-            font-size: 14px;
-            word-wrap: break-word;
-        }
-
-        .chat-time {
-            font-size: 11px;
-            color: #aaa;
-            margin-top: 2px;
-        }
-
-        .chat-input-wrap {
-            display: flex;
-            padding: 12px;
-            gap: 8px;
-            background: #272727;
-            border-top: 1px solid #404040;
-        }
-
-        .chat-input-wrap input {
-            flex: 1;
-            padding: 10px 14px;
-            background: #0f0f0f;
-            border: 1px solid #303030;
-            border-radius: 20px;
-            color: white;
-            font-size: 14px;
-            outline: none;
-        }
-
-        .chat-input-wrap input:focus {
-            border-color: #ff0000;
-        }
-
-        .chat-input-wrap button {
-            background: #ff0000;
-            color: white;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: 500;
-        }
-
-        .status-msg {
-            text-align: center;
-            padding: 12px;
-            margin: 10px 0;
-            border-radius: 8px;
-            display: none;
-            font-size: 14px;
-        }
-
-        .status-msg.error {
-            background: rgba(255,0,0,0.15);
-            color: #ff5252;
-            display: block;
-            border: 1px solid rgba(255,0,0,0.3);
-        }
-
-        @media (max-width: 600px) {
-            .container { padding: 12px; }
-            .setup-card { padding: 20px; }
-            .ctrl-btn { min-width: 100px; font-size: 12px; padding: 8px 12px; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Go Live - F12 ORBIT</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; }
+body { background: #0f0f0f; color: #fff; min-height: 100vh; }
+.header { background: #0f0f0f; padding: 0 24px; height: 60px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #272727; }
+.logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: white; }
+.logo-icon { width: 36px; height: 36px; background: linear-gradient(135deg, #ff0000, #cc0000); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 900; color: white; }
+.logo-text { font-size: 22px; font-weight: 900; letter-spacing: -1px; }
+.logo-text span { color: #ff0000; }
+.back-btn { background: transparent; color: #fff; border: 1px solid #303030; padding: 8px 16px; border-radius: 20px; cursor: pointer; text-decoration: none; font-size: 14px; }
+.back-btn:hover { background: #272727; }
+.container { max-width: 1000px; margin: 0 auto; padding: 24px; }
+.setup-card { background: #1f1f1f; border-radius: 16px; padding: 32px; margin-bottom: 20px; border: 1px solid #303030; }
+.setup-card h2 { font-size: 24px; margin-bottom: 8px; }
+.setup-card .subtitle { color: #aaa; margin-bottom: 24px; font-size: 14px; }
+.form-group { margin-bottom: 20px; }
+.form-group label { display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500; }
+.form-group input, .form-group select { width: 100%; padding: 14px 16px; background: #0f0f0f; border: 1px solid #303030; border-radius: 8px; color: #fff; font-size: 15px; outline: none; }
+.form-group input:focus, .form-group select:focus { border-color: #ff0000; }
+.start-btn { background: linear-gradient(135deg, #ff0000, #cc0000); color: white; border: none; padding: 16px 32px; border-radius: 25px; font-size: 16px; font-weight: 700; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; }
+.start-btn:disabled { background: #555; cursor: not-allowed; }
+.live-section { display: none; }
+.video-wrapper { position: relative; width: 100%; background: #000; border-radius: 16px; overflow: hidden; margin-bottom: 16px; border: 2px solid #ff0000; }
+.video-wrapper video { width: 100%; height: auto; max-height: 500px; display: block; }
+.live-overlay { position: absolute; top: 16px; left: 16px; display: flex; gap: 10px; z-index: 10; }
+.live-badge { background: #ff0000; padding: 6px 14px; border-radius: 6px; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+.live-badge .dot { width: 8px; height: 8px; background: white; border-radius: 50%; animation: pulse 1s infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+.viewer-badge { background: rgba(0,0,0,0.85); padding: 6px 14px; border-radius: 6px; font-size: 13px; }
+.audio-indicator { position: absolute; bottom: 16px; right: 16px; background: rgba(0,0,0,0.85); padding: 8px 14px; border-radius: 20px; display: flex; align-items: center; gap: 10px; z-index: 10; }
+.audio-bars { display: flex; gap: 3px; align-items: flex-end; height: 16px; }
+.audio-bar { width: 3px; background: #00ff00; border-radius: 2px; height: 3px; }
+.controls-card { background: #1f1f1f; border-radius: 12px; padding: 16px; margin-bottom: 16px; border: 1px solid #303030; }
+.control-buttons { display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+.ctrl-btn { background: #272727; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; flex: 1; min-width: 120px; }
+.ctrl-btn:hover { background: #404040; }
+.ctrl-btn.danger { background: #ff0000; }
+.ctrl-btn.muted { background: #555; opacity: 0.7; }
+.share-link-box { background: #0f0f0f; padding: 12px 16px; border-radius: 8px; display: none; align-items: center; gap: 10px; border: 1px solid #303030; }
+.share-link-box.show { display: flex; }
+.share-link-box .url { flex: 1; color: #4285f4; font-size: 14px; word-break: break-all; font-family: monospace; }
+.copy-btn { background: #ff0000; color: white; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; }
+.chat-card { background: #1f1f1f; border-radius: 12px; overflow: hidden; border: 1px solid #303030; }
+.chat-header { padding: 14px 16px; background: #272727; font-weight: 700; font-size: 14px; display: flex; justify-content: space-between; }
+.chat-messages { height: 300px; overflow-y: auto; padding: 12px 16px; }
+.chat-message { margin-bottom: 10px; display: flex; gap: 8px; }
+.chat-avatar { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, #ff0000, #cc0000); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; flex-shrink: 0; }
+.chat-content { flex: 1; }
+.chat-name { font-weight: 500; color: #4285f4; font-size: 13px; margin-right: 6px; }
+.chat-text { font-size: 14px; }
+.chat-time { font-size: 11px; color: #aaa; margin-top: 2px; }
+.chat-input-wrap { display: flex; padding: 12px; gap: 8px; background: #272727; }
+.chat-input-wrap input { flex: 1; padding: 10px 14px; background: #0f0f0f; border: 1px solid #303030; border-radius: 20px; color: white; font-size: 14px; outline: none; }
+.chat-input-wrap button { background: #ff0000; color: white; border: none; padding: 8px 20px; border-radius: 20px; cursor: pointer; font-weight: 500; }
+.status-msg { text-align: center; padding: 12px; margin: 10px 0; border-radius: 8px; display: none; font-size: 14px; }
+.status-msg.error { background: rgba(255,0,0,0.15); color: #ff5252; display: block; }
+</style>
 </head>
 <body>
-
-    <div class="header">
-        <a href="/" class="logo">
-            <div class="logo-icon">🎬</div>
-            <div class="logo-text">Holo Gia <span>Live</span></div>
-        </a>
-        <a href="/" class="back-btn">← Back</a>
-    </div>
-
-    <div class="container">
-
-        <!-- SETUP FORM -->
-        <div id="setup-section">
-            <div class="setup-card">
-                <h2>🔴 Go Live</h2>
-                <p class="subtitle">Set up your live stream and start broadcasting</p>
-                
-                <div class="form-group">
-                    <label>Your Name *</label>
-                    <input type="text" id="streamer-name" placeholder="Enter your name..." maxlength="30">
-                </div>
-                
-                <div class="form-group">
-                    <label>Stream Title *</label>
-                    <input type="text" id="stream-title" placeholder="What's your stream about?" maxlength="100">
-                </div>
-
-                <div class="form-group">
-                    <label>Category</label>
-                    <select id="stream-category">
-                        <option value="Chat">Just Chatting</option>
-                        <option value="Gaming">Gaming</option>
-                        <option value="Music">Music</option>
-                        <option value="Education">Education</option>
-                        <option value="News">News</option>
-                        <option value="Sports">Sports</option>
-                        <option value="Cooking">Cooking</option>
-                        <option value="Travel">Travel</option>
-                        <option value="Comedy">Comedy</option>
-                    </select>
-                </div>
-
-                <div id="status" class="status-msg"></div>
-
-                <button id="start-stream-btn" class="start-btn" onclick="startStream()">
-                    🔴 Start Live Stream
-                </button>
-            </div>
-        </div>
-
-        <!-- LIVE SECTION -->
-        <div id="live-section" class="live-section">
-            
-            <div class="video-wrapper">
-                <video id="local-video" autoplay muted playsinline></video>
-                <div class="live-overlay">
-                    <div class="live-badge">
-                        <div class="dot"></div>
-                        LIVE
-                    </div>
-                    <div class="viewer-badge" id="viewer-count">👁 0 watching</div>
-                </div>
-                <div class="audio-indicator">
-                    <span class="audio-icon" id="audio-icon">🎤</span>
-                    <div class="audio-bars">
-                        <div class="audio-bar" id="bar1"></div>
-                        <div class="audio-bar" id="bar2"></div>
-                        <div class="audio-bar" id="bar3"></div>
-                        <div class="audio-bar" id="bar4"></div>
-                        <div class="audio-bar" id="bar5"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="controls-card">
-                <div class="control-buttons">
-                    <button class="ctrl-btn" id="mic-btn" onclick="toggleMic()">
-                        🎤 Mic ON
-                    </button>
-                    <button class="ctrl-btn" id="cam-btn" onclick="toggleCam()">
-                        📹 Camera ON
-                    </button>
-                    <button class="ctrl-btn" onclick="shareStream()">
-                        🔗 Share
-                    </button>
-                    <button class="ctrl-btn danger" onclick="endStream()">
-                        ⬛ End Stream
-                    </button>
-                </div>
-                <div id="share-link-box" class="share-link-box">
-                    <span class="url" id="share-url"></span>
-                    <button class="copy-btn" onclick="copyLink()">Copy</button>
-                </div>
-            </div>
-
-            <div class="chat-card">
-                <div class="chat-header">
-                    <span>💬 Live Chat</span>
-                    <span class="chat-count" id="chat-count">0</span>
-                </div>
-                <div id="chat-messages" class="chat-messages"></div>
-                <div class="chat-input-wrap">
-                    <input type="text" id="chat-input" placeholder="Say something..." 
-                           onkeypress="if(event.key==='Enter') sendChat()">
-                    <button onclick="sendChat()">Send</button>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <script src="https://unpkg.com/peerjs@1.5.1/dist/peerjs.min.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
-    
-    <script>
-        const socket = io();
-        let localStream = null;
-        let peer = null;
-        let currentStreamId = null;
-        let streamerName = '';
-        let micEnabled = true;
-        let camEnabled = true;
-        let audioContext = null;
-        let analyser = null;
-        let messageCount = 0;
-
-        async function startStream() {
-            const nameInput = document.getElementById('streamer-name');
-            const titleInput = document.getElementById('stream-title');
-            const status = document.getElementById('status');
-            const startBtn = document.getElementById('start-stream-btn');
-
-            streamerName = nameInput.value.trim();
-            const title = titleInput.value.trim();
-
-            if (!streamerName) {
-                status.className = 'status-msg error';
-                status.textContent = '❌ Please enter your name!';
-                return;
-            }
-            if (!title) {
-                status.className = 'status-msg error';
-                status.textContent = '❌ Please enter stream title!';
-                return;
-            }
-
-            startBtn.disabled = true;
-            startBtn.textContent = '⏳ Starting camera...';
-
-            try {
-                // ⭐ MIC FIX: High-quality audio with proper constraints
-                localStream = await navigator.mediaDevices.getUserMedia({
-                    video: {
-                        width: { ideal: 1280 },
-                        height: { ideal: 720 },
-                        facingMode: 'user'
-                    },
-                    audio: {
-                        echoCancellation: true,
-                        noiseSuppression: true,
-                        autoGainControl: true,
-                        sampleRate: 48000,
-                        channelCount: 2
-                    }
-                });
-
-                console.log('✅ Got media stream');
-                console.log('Audio tracks:', localStream.getAudioTracks());
-                console.log('Video tracks:', localStream.getVideoTracks());
-
-                // Verify audio track exists
-                const audioTracks = localStream.getAudioTracks();
-                if (audioTracks.length === 0) {
-                    throw new Error('No microphone detected!');
-                }
-
-                audioTracks.forEach(track => {
-                    console.log('Audio track:', track.label, 'enabled:', track.enabled);
-                    track.enabled = true;
-                });
-
-                const video = document.getElementById('local-video');
-                video.srcObject = localStream;
-
-                // Setup audio visualization
-                setupAudioVisualization(localStream);
-
-                // PeerJS setup
-                peer = new Peer({
-                    config: {
-                        'iceServers': [
-                            { urls: 'stun:stun.l.google.com:19302' },
-                            { urls: 'stun:stun1.l.google.com:19302' },
-                            { urls: 'stun:stun2.l.google.com:19302' },
-                            { urls: 'stun:stun3.l.google.com:19302' },
-                            { urls: 'stun:stun4.l.google.com:19302' }
-                        ]
-                    }
-                });
-
-                peer.on('open', (peerId) => {
-                    console.log('✅ Peer ID:', peerId);
-
-                    socket.emit('start-stream', {
-                        title: title,
-                        streamerName: streamerName,
-                        peerId: peerId
-                    });
-                });
-
-                peer.on('call', (call) => {
-                    console.log('📞 Viewer joining...');
-                    // ⭐ CRITICAL FIX: Answer with the FULL stream (audio + video)
-                    call.answer(localStream);
-                    
-                    call.on('stream', () => {
-                        console.log('✅ Stream sent to viewer');
-                    });
-
-                    call.on('error', (err) => {
-                        console.error('Call error:', err);
-                    });
-                });
-
-                peer.on('error', (err) => {
-                    console.error('Peer error:', err);
-                });
-
-            } catch (err) {
-                console.error('❌ Error:', err);
-                status.className = 'status-msg error';
-                
-                if (err.name === 'NotAllowedError') {
-                    status.textContent = '❌ Please allow camera & microphone access!';
-                } else if (err.name === 'NotFoundError') {
-                    status.textContent = '❌ Camera or microphone not found!';
-                } else {
-                    status.textContent = '❌ Error: ' + err.message;
-                }
-                
-                startBtn.disabled = false;
-                startBtn.textContent = '🔴 Start Live Stream';
-            }
-        }
-
-        // ⭐ Audio Visualization (shows mic is working)
-        function setupAudioVisualization(stream) {
-            try {
-                audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                const source = audioContext.createMediaStreamSource(stream);
-                analyser = audioContext.createAnalyser();
-                analyser.fftSize = 256;
-                source.connect(analyser);
-
-                const bufferLength = analyser.frequencyBinCount;
-                const dataArray = new Uint8Array(bufferLength);
-
-                function updateBars() {
-                    if (!analyser) return;
-                    
-                    analyser.getByteFrequencyData(dataArray);
-                    const average = dataArray.reduce((a, b) => a + b) / bufferLength;
-                    
-                    const bars = ['bar1', 'bar2', 'bar3', 'bar4', 'bar5'];
-                    bars.forEach((id, i) => {
-                        const bar = document.getElementById(id);
-                        if (bar) {
-                            const height = Math.min(16, (average / 10) * (i + 1) * 0.3 + 3);
-                            bar.style.height = height + 'px';
-                            bar.style.background = average > 30 ? '#00ff00' : '#555';
-                        }
-                    });
-
-                    requestAnimationFrame(updateBars);
-                }
-                updateBars();
-            } catch (e) {
-                console.error('Audio viz error:', e);
-            }
-        }
-
-        function toggleMic() {
-            if (!localStream) return;
-            micEnabled = !micEnabled;
-            localStream.getAudioTracks().forEach(track => {
-                track.enabled = micEnabled;
-            });
-            const btn = document.getElementById('mic-btn');
-            if (micEnabled) {
-                btn.textContent = '🎤 Mic ON';
-                btn.classList.remove('muted');
-            } else {
-                btn.textContent = '🔇 Mic OFF';
-                btn.classList.add('muted');
-            }
-        }
-
-        function toggleCam() {
-            if (!localStream) return;
-            camEnabled = !camEnabled;
-            localStream.getVideoTracks().forEach(track => {
-                track.enabled = camEnabled;
-            });
-            const btn = document.getElementById('cam-btn');
-            if (camEnabled) {
-                btn.textContent = '📹 Camera ON';
-                btn.classList.remove('muted');
-            } else {
-                btn.textContent = '📷 Camera OFF';
-                btn.classList.add('muted');
-            }
-        }
-
-        socket.on('stream-started', (data) => {
-            currentStreamId = data.streamId;
-            document.getElementById('setup-section').style.display = 'none';
-            document.getElementById('live-section').style.display = 'block';
-            console.log('🔴 LIVE!', currentStreamId);
-        });
-
-        socket.on('viewer-count', (data) => {
-            document.getElementById('viewer-count').textContent = `👁 ${data.count} watching`;
-        });
-
-        socket.on('new-message', (data) => {
-            messageCount++;
-            document.getElementById('chat-count').textContent = messageCount;
-            
-            const chatMessages = document.getElementById('chat-messages');
-            const msgDiv = document.createElement('div');
-            msgDiv.className = 'chat-message';
-            msgDiv.innerHTML = `
-                <div class="chat-avatar">${data.name.charAt(0).toUpperCase()}</div>
-                <div class="chat-content">
-                    <span class="chat-name">${data.name}</span>
-                    <span class="chat-text">${data.message}</span>
-                    <div class="chat-time">${data.time}</div>
-                </div>
-            `;
-            chatMessages.appendChild(msgDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        });
-
-        function sendChat() {
-            const input = document.getElementById('chat-input');
-            const message = input.value.trim();
-            if (message && currentStreamId) {
-                socket.emit('chat-message', {
-                    streamId: currentStreamId,
-                    name: streamerName + ' 🎬',
-                    message: message
-                });
-                input.value = '';
-            }
-        }
-
-        function shareStream() {
-            const box = document.getElementById('share-link-box');
-            const url = window.location.origin + '/watch/' + currentStreamId;
-            document.getElementById('share-url').textContent = url;
-            box.classList.add('show');
-        }
-
-        function copyLink() {
-            const url = document.getElementById('share-url').textContent;
-            navigator.clipboard.writeText(url).then(() => {
-                alert('✅ Link copied!');
-            }).catch(() => {
-                prompt('Copy this link:', url);
-            });
-        }
-
-        function endStream() {
-            if (confirm('Are you sure you want to end the stream?')) {
-                socket.emit('end-stream');
-                if (localStream) localStream.getTracks().forEach(t => t.stop());
-                if (peer) peer.destroy();
-                if (audioContext) audioContext.close();
-                alert('⬛ Stream ended! Video was not saved.');
-                window.location.href = '/';
-            }
-        }
-
-        window.addEventListener('beforeunload', () => {
-            if (currentStreamId) {
-                socket.emit('end-stream');
-                if (localStream) localStream.getTracks().forEach(t => t.stop());
-            }
-        });
-    </script>
-
+<div class="header">
+<a href="/" class="logo">
+<div class="logo-icon">F12</div>
+<div class="logo-text">F12 <span>ORBIT</span></div>
+</a>
+<a href="/" class="back-btn">← Back</a>
+</div>
+<div class="container">
+<div id="setup-section">
+<div class="setup-card">
+<h2>🔴 Go Live</h2>
+<p class="subtitle">Set up your live stream on F12 ORBIT</p>
+<div class="form-group">
+<label>Your Name *</label>
+<input type="text" id="streamer-name" placeholder="Enter your name..." maxlength="30">
+</div>
+<div class="form-group">
+<label>Stream Title *</label>
+<input type="text" id="stream-title" placeholder="What is your stream about?" maxlength="100">
+</div>
+<div class="form-group">
+<label>Category</label>
+<select id="stream-category">
+<option value="Chat">Just Chatting</option>
+<option value="Gaming">Gaming</option>
+<option value="Music">Music</option>
+<option value="Education">Education</option>
+<option value="News">News</option>
+<option value="Sports">Sports</option>
+</select>
+</div>
+<div id="status" class="status-msg"></div>
+<button id="start-stream-btn" class="start-btn" onclick="startStream()">🔴 Start Live Stream</button>
+</div>
+</div>
+<div id="live-section" class="live-section">
+<div class="video-wrapper">
+<video id="local-video" autoplay muted playsinline></video>
+<div class="live-overlay">
+<div class="live-badge"><div class="dot"></div>LIVE</div>
+<div class="viewer-badge" id="viewer-count">👁 0 watching</div>
+</div>
+<div class="audio-indicator">
+<span>🎤</span>
+<div class="audio-bars">
+<div class="audio-bar" id="bar1"></div>
+<div class="audio-bar" id="bar2"></div>
+<div class="audio-bar" id="bar3"></div>
+<div class="audio-bar" id="bar4"></div>
+<div class="audio-bar" id="bar5"></div>
+</div>
+</div>
+</div>
+<div class="controls-card">
+<div class="control-buttons">
+<button class="ctrl-btn" id="mic-btn" onclick="toggleMic()">🎤 Mic ON</button>
+<button class="ctrl-btn" id="cam-btn" onclick="toggleCam()">📹 Camera ON</button>
+<button class="ctrl-btn" onclick="shareStream()">🔗 Share</button>
+<button class="ctrl-btn danger" onclick="endStream()">⬛ End Stream</button>
+</div>
+<div id="share-link-box" class="share-link-box">
+<span class="url" id="share-url"></span>
+<button class="copy-btn" onclick="copyLink()">Copy</button>
+</div>
+</div>
+<div class="chat-card">
+<div class="chat-header"><span>💬 Live Chat</span></div>
+<div id="chat-messages" class="chat-messages"></div>
+<div class="chat-input-wrap">
+<input type="text" id="chat-input" placeholder="Say something..." onkeypress="if(event.key==='Enter') sendChat()">
+<button onclick="sendChat()">Send</button>
+</div>
+</div>
+</div>
+</div>
+<script src="https://unpkg.com/peerjs@1.5.1/dist/peerjs.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+const username = localStorage.getItem('f12_username');
+if (username) { document.getElementById('streamer-name').value = username; }
+const socket = io();
+let localStream = null, peer = null, currentStreamId = null, streamerName = '';
+let micEnabled = true, camEnabled = true, audioContext = null, analyser = null;
+async function startStream() {
+streamerName = document.getElementById('streamer-name').value.trim();
+const title = document.getElementById('stream-title').value.trim();
+const status = document.getElementById('status');
+const startBtn = document.getElementById('start-stream-btn');
+if (!streamerName) { status.className = 'status-msg error'; status.textContent = 'Please enter your name!'; return; }
+if (!title) { status.className = 'status-msg error'; status.textContent = 'Please enter stream title!'; return; }
+startBtn.disabled = true;
+startBtn.textContent = '⏳ Starting camera...';
+try {
+localStream = await navigator.mediaDevices.getUserMedia({
+video: { width: { ideal: 1280 }, height: { ideal: 720 }, facingMode: 'user' },
+audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true, sampleRate: 48000 }
+});
+const audioTracks = localStream.getAudioTracks();
+if (audioTracks.length === 0) throw new Error('No microphone detected!');
+audioTracks.forEach(track => { track.enabled = true; });
+document.getElementById('local-video').srcObject = localStream;
+setupAudioVisualization(localStream);
+peer = new Peer({ config: { 'iceServers': [
+{ urls: 'stun:stun.l.google.com:19302' },
+{ urls: 'stun:stun1.l.google.com:19302' },
+{ urls: 'stun:stun2.l.google.com:19302' }
+]}});
+peer.on('open', (peerId) => {
+socket.emit('start-stream', { title: title, streamerName: streamerName, peerId: peerId });
+});
+peer.on('call', (call) => { call.answer(localStream); });
+peer.on('error', (err) => console.error('Peer error:', err));
+} catch (err) {
+status.className = 'status-msg error';
+if (err.name === 'NotAllowedError') status.textContent = 'Please allow camera and microphone access!';
+else if (err.name === 'NotFoundError') status.textContent = 'Camera or microphone not found!';
+else status.textContent = 'Error: ' + err.message;
+startBtn.disabled = false;
+startBtn.textContent = '🔴 Start Live Stream';
+}
+}
+function setupAudioVisualization(stream) {
+try {
+audioContext = new (window.AudioContext || window.webkitAudioContext)();
+const source = audioContext.createMediaStreamSource(stream);
+analyser = audioContext.createAnalyser();
+analyser.fftSize = 256;
+source.connect(analyser);
+const dataArray = new Uint8Array(analyser.frequencyBinCount);
+function updateBars() {
+if (!analyser) return;
+analyser.getByteFrequencyData(dataArray);
+const average = dataArray.reduce((a, b) => a + b) / dataArray.length;
+['bar1', 'bar2', 'bar3', 'bar4', 'bar5'].forEach((id, i) => {
+const bar = document.getElementById(id);
+if (bar) {
+bar.style.height = Math.min(16, (average / 10) * (i + 1) * 0.3 + 3) + 'px';
+bar.style.background = average > 30 ? '#00ff00' : '#555';
+}
+});
+requestAnimationFrame(updateBars);
+}
+updateBars();
+} catch (e) { console.error(e); }
+}
+function toggleMic() {
+if (!localStream) return;
+micEnabled = !micEnabled;
+localStream.getAudioTracks().forEach(track => { track.enabled = micEnabled; });
+const btn = document.getElementById('mic-btn');
+btn.textContent = micEnabled ? '🎤 Mic ON' : '🔇 Mic OFF';
+btn.classList.toggle('muted', !micEnabled);
+}
+function toggleCam() {
+if (!localStream) return;
+camEnabled = !camEnabled;
+localStream.getVideoTracks().forEach(track => { track.enabled = camEnabled; });
+const btn = document.getElementById('cam-btn');
+btn.textContent = camEnabled ? '📹 Camera ON' : '📷 Camera OFF';
+btn.classList.toggle('muted', !camEnabled);
+}
+socket.on('stream-started', (data) => {
+currentStreamId = data.streamId;
+document.getElementById('setup-section').style.display = 'none';
+document.getElementById('live-section').style.display = 'block';
+});
+socket.on('viewer-count', (data) => {
+document.getElementById('viewer-count').textContent = '👁 ' + data.count + ' watching';
+});
+socket.on('new-message', (data) => {
+const chatMessages = document.getElementById('chat-messages');
+const msgDiv = document.createElement('div');
+msgDiv.className = 'chat-message';
+msgDiv.innerHTML = '<div class="chat-avatar">' + data.name.charAt(0).toUpperCase() + '</div><div class="chat-content"><span class="chat-name">' + data.name + '</span><span class="chat-text">' + data.message + '</span><div class="chat-time">' + data.time + '</div></div>';
+chatMessages.appendChild(msgDiv);
+chatMessages.scrollTop = chatMessages.scrollHeight;
+});
+function sendChat() {
+const input = document.getElementById('chat-input');
+const message = input.value.trim();
+if (message && currentStreamId) {
+socket.emit('chat-message', { streamId: currentStreamId, name: streamerName + ' (Host)', message: message });
+input.value = '';
+}
+}
+function shareStream() {
+const box = document.getElementById('share-link-box');
+const url = window.location.origin + '/watch/' + currentStreamId;
+document.getElementById('share-url').textContent = url;
+box.classList.add('show');
+}
+function copyLink() {
+const url = document.getElementById('share-url').textContent;
+navigator.clipboard.writeText(url).then(() => alert('Link copied!')).catch(() => prompt('Copy this link:', url));
+}
+function endStream() {
+if (confirm('End the stream?')) {
+socket.emit('end-stream');
+if (localStream) localStream.getTracks().forEach(t => t.stop());
+if (peer) peer.destroy();
+if (audioContext) audioContext.close();
+alert('Stream ended! Video was not saved.');
+window.location.href = '/';
+}
+}
+window.addEventListener('beforeunload', () => {
+if (currentStreamId) {
+socket.emit('end-stream');
+if (localStream) localStream.getTracks().forEach(t => t.stop());
+}
+});
+</script>
 </body>
 </html>

@@ -1,7 +1,7 @@
 {
-  "name": "holo-gia-live",
-  "version": "1.0.0",
-  "description": "Holo Gia Live Stream App - Free live streaming for everyone",
+  "name": "f12-orbit",
+  "version": "2.0.0",
+  "description": "F12 ORBIT - Live Streaming and Messaging Platform",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
