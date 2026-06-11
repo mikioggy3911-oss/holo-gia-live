@@ -6,90 +6,173 @@
 <title>Profile - F12 ORBIT</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
 body { background: #0a0a0a; color: #fff; min-height: 100vh; }
-.header { background: rgba(10,10,10,0.85); backdrop-filter: blur(20px); padding: 0 28px; height: 68px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.06); position: sticky; top: 0; z-index: 100; }
-.logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: white; }
-.f12-logo-wrapper { display: inline-block; padding: 2px; border-radius: 22px; background: linear-gradient(90deg, #ffffff 0%, #d0d0d0 40%, #a8a8a8 49%, #ff3333 51%, #cc0000 70%, #880000 100%); box-shadow: 0 0 20px rgba(255,0,0,0.3); }
-.f12-logo-inner { display: inline-flex; align-items: center; padding: 7px 18px; background: #000; border-radius: 20px; position: relative; overflow: hidden; }
+
+.header { background: rgba(10,10,10,0.85); backdrop-filter: blur(20px); padding: 0 20px; height: 60px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.06); position: sticky; top: 0; z-index: 100; }
+.logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: white; cursor: pointer; }
+
+.f12-logo-wrapper { display: inline-block; padding: 2px; border-radius: 18px; background: linear-gradient(90deg, #ffffff 0%, #d0d0d0 40%, #a8a8a8 49%, #ff3333 51%, #cc0000 70%, #880000 100%); box-shadow: 0 0 20px rgba(255,0,0,0.3); }
+.f12-logo-inner { display: inline-flex; align-items: center; padding: 6px 14px; background: #000; border-radius: 16px; position: relative; overflow: hidden; }
 .f12-logo-inner::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 50%; background: linear-gradient(180deg, rgba(255,255,255,0.12), transparent); pointer-events: none; }
-.f12-text-logo { font-family: 'Orbitron', sans-serif; font-size: 22px; font-weight: 900; letter-spacing: -2px; font-style: italic; line-height: 1; display: flex; position: relative; z-index: 2; }
+.f12-text-logo { font-family: 'Orbitron', sans-serif; font-size: 18px; font-weight: 900; letter-spacing: -1.5px; font-style: italic; line-height: 1; display: flex; position: relative; z-index: 2; }
 .f12-text-logo .f { background: linear-gradient(180deg, #ffffff 0%, #e8e8e8 50%, #a8a8a8 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.8)); margin-right: 1px; }
 .f12-text-logo .num { background: linear-gradient(180deg, #ff4444 0%, #cc0000 50%, #880000 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.8)); }
-.logo-text { font-size: 16px; font-weight: 800; letter-spacing: -0.5px; }
+
+.logo-text { font-size: 15px; font-weight: 800; letter-spacing: -0.5px; }
 .logo-text span { color: #ff0000; }
-.back-btn { background: rgba(255,255,255,0.05); color: #fff; border: 1px solid rgba(255,255,255,0.1); padding: 10px 18px; border-radius: 24px; text-decoration: none; font-size: 14px; font-weight: 600; }
-.back-btn:hover { background: rgba(255,255,255,0.1); }
-.container { max-width: 800px; margin: 0 auto; padding: 32px 24px; }
-.cover-photo { width: 100%; height: 240px; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #ff0000 100%); border-radius: 20px 20px 0 0; position: relative; overflow: hidden; cursor: pointer; }
+
+/* BACK BUTTON - FIXED & VISIBLE */
+.back-btn {
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.15);
+    padding: 9px 18px;
+    border-radius: 22px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s;
+}
+.back-btn:hover {
+    background: rgba(255,255,255,0.15);
+    transform: translateX(-2px);
+}
+.back-btn:active {
+    transform: translateX(0);
+}
+
+.container { max-width: 800px; margin: 0 auto; padding: 28px 20px; }
+
+.cover-photo { width: 100%; height: 220px; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #ff0000 100%); border-radius: 18px 18px 0 0; position: relative; overflow: hidden; cursor: pointer; }
 .cover-photo img { width: 100%; height: 100%; object-fit: cover; }
-.cover-edit-btn { position: absolute; top: 16px; right: 16px; background: rgba(0,0,0,0.7); backdrop-filter: blur(10px); color: white; border: none; padding: 10px 16px; border-radius: 20px; cursor: pointer; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+.cover-edit-btn { position: absolute; top: 14px; right: 14px; background: rgba(0,0,0,0.7); backdrop-filter: blur(10px); color: white; border: none; padding: 9px 14px; border-radius: 18px; cursor: pointer; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
 .cover-edit-btn:hover { background: rgba(0,0,0,0.9); }
-@media (max-width: 600px) { .cover-photo { height: 160px; } }
-.profile-card { background: rgba(20,20,20,0.5); backdrop-filter: blur(20px); border-radius: 0 0 20px 20px; padding: 20px 32px 32px; border: 1px solid rgba(255,255,255,0.08); border-top: none; position: relative; }
-.profile-pic-wrapper { position: relative; margin-top: -80px; width: 160px; height: 160px; }
-.profile-pic { width: 160px; height: 160px; border-radius: 50%; background: linear-gradient(135deg, #ff0000, #cc0000); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 60px; overflow: hidden; border: 5px solid #0a0a0a; box-shadow: 0 8px 30px rgba(0,0,0,0.5); }
+
+.profile-card { background: rgba(20,20,20,0.5); backdrop-filter: blur(20px); border-radius: 0 0 18px 18px; padding: 18px 28px 28px; border: 1px solid rgba(255,255,255,0.08); border-top: none; }
+
+.profile-pic-wrapper { position: relative; margin-top: -70px; width: 140px; height: 140px; }
+.profile-pic { width: 140px; height: 140px; border-radius: 50%; background: linear-gradient(135deg, #ff0000, #cc0000); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 54px; overflow: hidden; border: 5px solid #0a0a0a; box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
 .profile-pic img { width: 100%; height: 100%; object-fit: cover; }
-.profile-pic-edit { position: absolute; bottom: 8px; right: 8px; background: #ff0000; color: white; width: 40px; height: 40px; border-radius: 50%; border: 3px solid #0a0a0a; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; transition: all 0.2s; }
+.profile-pic-edit { position: absolute; bottom: 6px; right: 6px; background: #ff0000; color: white; width: 36px; height: 36px; border-radius: 50%; border: 3px solid #0a0a0a; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; transition: all 0.2s; }
 .profile-pic-edit:hover { background: #cc0000; transform: scale(1.1); }
-@media (max-width: 600px) { .profile-pic-wrapper, .profile-pic { width: 120px; height: 120px; } .profile-pic { font-size: 48px; margin-top: -60px; } }
-.profile-info { margin-top: 20px; }
-.profile-name { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 4px; }
-.profile-email { color: rgba(255,255,255,0.5); font-size: 14px; font-weight: 500; }
-.profile-bio { color: rgba(255,255,255,0.7); font-size: 15px; margin-top: 12px; line-height: 1.5; }
-.profile-stats { display: flex; gap: 24px; margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.06); }
+
+.profile-info { margin-top: 18px; }
+.profile-name { font-size: 24px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 4px; }
+.profile-email { color: rgba(255,255,255,0.5); font-size: 13px; font-weight: 500; }
+.profile-bio { color: rgba(255,255,255,0.7); font-size: 14px; margin-top: 10px; line-height: 1.5; }
+.profile-stats { display: flex; gap: 22px; margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.06); }
 .stat-item { display: flex; flex-direction: column; }
-.stat-value { font-size: 20px; font-weight: 800; }
-.stat-label { font-size: 12px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
-.status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; margin-top: 8px; }
+.stat-value { font-size: 18px; font-weight: 800; }
+.stat-label { font-size: 11px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+
+.status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 11px; border-radius: 11px; font-size: 11px; font-weight: 600; margin-top: 8px; }
 .status-online { background: rgba(0,255,136,0.15); color: #00ff88; border: 1px solid rgba(0,255,136,0.3); }
 .status-busy { background: rgba(255,193,7,0.15); color: #ffc107; border: 1px solid rgba(255,193,7,0.3); }
 .status-away { background: rgba(108,117,125,0.15); color: #9ca3af; border: 1px solid rgba(108,117,125,0.3); }
-.status-dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
-.edit-section { background: rgba(20,20,20,0.5); backdrop-filter: blur(20px); border-radius: 20px; padding: 32px; margin-top: 20px; border: 1px solid rgba(255,255,255,0.08); }
-.section-title { font-size: 20px; font-weight: 800; margin-bottom: 24px; letter-spacing: -0.3px; display: flex; align-items: center; gap: 10px; }
-.section-icon { font-size: 24px; }
-.form-group { margin-bottom: 20px; }
-.form-group label { display: block; margin-bottom: 10px; font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 0.5px; }
-.form-group input, .form-group select, .form-group textarea { width: 100%; padding: 14px 18px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #fff; font-size: 15px; outline: none; transition: all 0.2s; font-family: 'Inter', sans-serif; }
-.form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: #ff0000; background: rgba(255,255,255,0.08); }
-.form-group textarea { resize: vertical; min-height: 100px; }
-.char-count { font-size: 12px; color: rgba(255,255,255,0.4); text-align: right; margin-top: 4px; }
-.status-options { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
-.status-option { padding: 14px; background: rgba(255,255,255,0.05); border: 2px solid rgba(255,255,255,0.1); border-radius: 12px; cursor: pointer; text-align: center; transition: all 0.2s; }
+.status-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+
+.edit-section { background: rgba(20,20,20,0.5); backdrop-filter: blur(20px); border-radius: 18px; padding: 28px; margin-top: 18px; border: 1px solid rgba(255,255,255,0.08); }
+.section-title { font-size: 18px; font-weight: 800; margin-bottom: 22px; letter-spacing: -0.3px; display: flex; align-items: center; gap: 10px; }
+.section-icon { font-size: 22px; }
+
+.form-group { margin-bottom: 18px; }
+.form-group label { display: block; margin-bottom: 8px; font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 0.5px; }
+.form-group input, .form-group textarea { width: 100%; padding: 13px 16px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 11px; color: #fff; font-size: 14px; outline: none; transition: all 0.2s; font-family: 'Inter', sans-serif; }
+.form-group input:focus, .form-group textarea:focus { border-color: #ff0000; background: rgba(255,255,255,0.08); }
+.form-group textarea { resize: vertical; min-height: 90px; }
+.char-count { font-size: 11px; color: rgba(255,255,255,0.4); text-align: right; margin-top: 4px; }
+
+.status-options { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+.status-option { padding: 13px; background: rgba(255,255,255,0.05); border: 2px solid rgba(255,255,255,0.1); border-radius: 11px; cursor: pointer; text-align: center; transition: all 0.2s; }
 .status-option:hover { background: rgba(255,255,255,0.08); }
 .status-option.active { border-color: #ff0000; background: rgba(255,0,0,0.1); }
-.status-option-icon { font-size: 24px; margin-bottom: 4px; }
-.status-option-label { font-size: 13px; font-weight: 600; }
-.btn-row { display: flex; gap: 12px; margin-top: 24px; }
-.btn { padding: 14px 28px; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; border: none; transition: all 0.2s; flex: 1; }
-.btn-primary { background: linear-gradient(135deg, #ff0000, #cc0000); color: white; box-shadow: 0 8px 24px rgba(255,0,0,0.3); }
+.status-option-icon { font-size: 22px; margin-bottom: 4px; }
+.status-option-label { font-size: 12px; font-weight: 600; }
+
+.btn-row { display: flex; gap: 10px; margin-top: 22px; }
+.btn { padding: 13px 24px; border-radius: 11px; font-size: 14px; font-weight: 700; cursor: pointer; border: none; transition: all 0.2s; flex: 1; font-family: 'Inter', sans-serif; }
+.btn-primary { background: linear-gradient(135deg, #ff0000, #cc0000); color: white; box-shadow: 0 6px 20px rgba(255,0,0,0.3); }
 .btn-primary:hover { transform: translateY(-2px); }
 .btn-secondary { background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.1); }
 .btn-secondary:hover { background: rgba(255,255,255,0.1); }
 .btn-danger { background: rgba(255,0,0,0.1); color: #ff5252; border: 1px solid rgba(255,0,0,0.3); }
 .btn-danger:hover { background: rgba(255,0,0,0.2); }
-.success-msg { background: rgba(0,255,136,0.15); color: #00ff88; padding: 14px 20px; border-radius: 12px; margin-bottom: 20px; display: none; font-weight: 600; border: 1px solid rgba(0,255,136,0.3); }
+
+.success-msg { background: rgba(0,255,136,0.15); color: #00ff88; padding: 13px 18px; border-radius: 11px; margin-bottom: 18px; display: none; font-weight: 600; border: 1px solid rgba(0,255,136,0.3); font-size: 14px; }
 .success-msg.show { display: block; animation: slideDown 0.3s; }
 @keyframes slideDown { from { transform: translateY(-10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
 .hidden-input { display: none; }
-.danger-zone { background: rgba(255,0,0,0.05); border: 1px solid rgba(255,0,0,0.2); border-radius: 16px; padding: 24px; margin-top: 20px; }
-.danger-title { color: #ff5252; font-weight: 800; font-size: 16px; margin-bottom: 8px; }
-.danger-text { color: rgba(255,255,255,0.6); font-size: 13px; margin-bottom: 16px; }
+
+.danger-zone { background: rgba(255,0,0,0.05); border: 1px solid rgba(255,0,0,0.2); border-radius: 14px; padding: 22px; margin-top: 18px; }
+.danger-title { color: #ff5252; font-weight: 800; font-size: 15px; margin-bottom: 6px; }
+.danger-text { color: rgba(255,255,255,0.6); font-size: 12px; margin-bottom: 14px; }
+
+/* FLOATING BACK BUTTON (Mobile) */
+.floating-back {
+    display: none;
+    position: fixed;
+    bottom: 24px;
+    left: 24px;
+    background: linear-gradient(135deg, #ff0000, #cc0000);
+    color: white;
+    border: none;
+    padding: 14px 24px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(255,0,0,0.4);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+}
+.floating-back:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(255,0,0,0.5);
+}
+
 @media (max-width: 768px) {
-.container { padding: 20px 16px; }
-.profile-card { padding: 16px 20px 24px; }
-.profile-name { font-size: 22px; }
-.edit-section { padding: 20px; }
-.status-options { grid-template-columns: 1fr; }
-.btn-row { flex-direction: column; }
+    .header { padding: 0 14px; height: 56px; }
+    .f12-logo-inner { padding: 5px 11px; }
+    .f12-text-logo { font-size: 16px; }
+    .logo-text { display: none; }
+    
+    .back-btn { padding: 8px 14px; font-size: 13px; }
+    
+    .container { padding: 18px 14px; }
+    .profile-card { padding: 14px 18px 22px; }
+    .profile-name { font-size: 20px; }
+    
+    .cover-photo { height: 160px; }
+    .profile-pic-wrapper, .profile-pic { width: 110px; height: 110px; }
+    .profile-pic { font-size: 44px; margin-top: -55px; }
+    .profile-pic-edit { width: 32px; height: 32px; font-size: 13px; }
+    
+    .edit-section { padding: 20px; }
+    .status-options { grid-template-columns: 1fr; }
+    .btn-row { flex-direction: column; }
+    
+    /* Show floating back button on mobile */
+    .floating-back { display: flex; }
+}
+
+@media (max-width: 480px) {
+    .floating-back { bottom: 16px; left: 16px; padding: 12px 20px; font-size: 13px; }
 }
 </style>
 </head>
 <body>
 
 <div class="header">
-<a href="/" class="logo">
+<a href="/" class="logo" onclick="goHome(event)">
 <div class="f12-logo-wrapper">
 <div class="f12-logo-inner">
 <div class="f12-text-logo"><span class="f">F</span><span class="num">12</span></div>
@@ -97,7 +180,9 @@ body { background: #0a0a0a; color: #fff; min-height: 100vh; }
 </div>
 <div class="logo-text">ORBIT</div>
 </a>
-<a href="/" class="back-btn">← Back</a>
+<button class="back-btn" onclick="goHome(event)">
+← Back to Home
+</button>
 </div>
 
 <div class="container">
@@ -138,7 +223,7 @@ body { background: #0a0a0a; color: #fff; min-height: 100vh; }
 </div>
 <div class="stat-item">
 <div class="stat-value" id="stat-views">0</div>
-<div class="stat-label">Total Views</div>
+<div class="stat-label">Views</div>
 </div>
 </div>
 </div>
@@ -185,7 +270,7 @@ body { background: #0a0a0a; color: #fff; min-height: 100vh; }
 </div>
 
 <div class="btn-row">
-<button class="btn btn-secondary" onclick="resetForm()">Cancel</button>
+<button class="btn btn-secondary" onclick="goHome(event)">Cancel</button>
 <button class="btn btn-primary" onclick="saveProfile()">💾 Save Changes</button>
 </div>
 </div>
@@ -220,6 +305,11 @@ body { background: #0a0a0a; color: #fff; min-height: 100vh; }
 
 </div>
 
+<!-- FLOATING BACK BUTTON for Mobile -->
+<button class="floating-back" onclick="goHome(event)">
+← Back
+</button>
+
 <script src="/socket.io/socket.io.js"></script>
 <script>
 const username = localStorage.getItem('f12_username');
@@ -242,6 +332,20 @@ const socket = io();
 let selectedStatus = userStatus;
 let newPhotoBase64 = null;
 let newCoverBase64 = null;
+let hasUnsavedChanges = false;
+
+// ⭐ FIXED: Go home function that works
+function goHome(event) {
+    if (event) event.preventDefault();
+    
+    if (hasUnsavedChanges) {
+        if (confirm('You have unsaved changes. Are you sure you want to leave?')) {
+            window.location.href = '/';
+        }
+    } else {
+        window.location.href = '/';
+    }
+}
 
 socket.on('connect', () => {
     socket.emit('user-online', {
@@ -324,10 +428,16 @@ function selectStatus(element) {
     document.querySelectorAll('.status-option').forEach(opt => opt.classList.remove('active'));
     element.classList.add('active');
     selectedStatus = element.dataset.status;
+    hasUnsavedChanges = true;
 }
 
 document.getElementById('edit-bio').addEventListener('input', (e) => {
     document.getElementById('bio-count').textContent = e.target.value.length;
+    hasUnsavedChanges = true;
+});
+
+document.getElementById('edit-name').addEventListener('input', () => {
+    hasUnsavedChanges = true;
 });
 
 function handlePhotoUpload(event) {
@@ -343,6 +453,7 @@ function handlePhotoUpload(event) {
     reader.onload = function(e) {
         newPhotoBase64 = e.target.result;
         document.getElementById('profile-pic').innerHTML = '<img src="' + newPhotoBase64 + '" alt="Preview">';
+        hasUnsavedChanges = true;
     };
     reader.readAsDataURL(file);
 }
@@ -362,6 +473,7 @@ function handleCoverUpload(event) {
         const coverEl = document.getElementById('cover-preview');
         coverEl.src = newCoverBase64;
         coverEl.style.display = 'block';
+        hasUnsavedChanges = true;
     };
     reader.readAsDataURL(file);
 }
@@ -404,19 +516,15 @@ function saveProfile() {
         status: selectedStatus
     });
     
+    hasUnsavedChanges = false;
+    
     const successMsg = document.getElementById('success-msg');
     successMsg.classList.add('show');
-    setTimeout(() => successMsg.classList.remove('show'), 3000);
     
+    // After successful save, go to home page
     setTimeout(() => {
-        window.location.reload();
+        window.location.href = '/';
     }, 1500);
-}
-
-function resetForm() {
-    if (confirm('Discard changes?')) {
-        window.location.reload();
-    }
 }
 
 function signOut() {
