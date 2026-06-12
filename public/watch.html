@@ -1,652 +1,632 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Watch Live - F12 ORBIT</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Watch Stream - F12 ORBIT</title>
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
 <style>
-:root { --accent: #ff0000; --accent2: #cc0000; --bg-main: #0a0a0a; --bg-card: rgba(20,20,20,0.5); --border: rgba(255,255,255,0.08); }
-[data-theme="blue"] { --accent: #4285f4; --accent2: #1a73e8; }
-[data-theme="green"] { --accent: #00ff88; --accent2: #00cc6a; }
-[data-theme="purple"] { --accent: #a855f7; --accent2: #7c3aed; }
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-body { background: var(--bg-main); color: #fff; min-height: 100vh; }
-.header { background: rgba(10,10,10,0.85); padding: 0 20px; height: 60px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
-.logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: white; }
-.f12-logo-wrapper { display: inline-block; padding: 2px; border-radius: 18px; background: linear-gradient(90deg, #fff 0%, #d0d0d0 40%, #a8a8a8 49%, var(--accent) 51%, var(--accent2) 70%, #880000 100%); }
-.f12-logo-inner { display: inline-flex; align-items: center; padding: 6px 14px; background: #000; border-radius: 16px; }
-.f12-text-logo { font-family: 'Orbitron', sans-serif; font-size: 18px; font-weight: 900; letter-spacing: -1.5px; font-style: italic; display: flex; }
-.f12-text-logo .f { color: #fff; }
-.f12-text-logo .num { color: var(--accent); }
-.logo-text { font-size: 15px; font-weight: 800; }
-.logo-text span { color: var(--accent); }
-.back-btn { background: rgba(255,255,255,0.05); color: #fff; border: 1px solid var(--border); padding: 10px 18px; border-radius: 22px; text-decoration: none; font-size: 14px; font-weight: 600; }
-.container { max-width: 1400px; margin: 0 auto; padding: 24px; display: grid; grid-template-columns: 1fr 380px; gap: 20px; }
-@media (max-width: 1024px) { .container { grid-template-columns: 1fr; } }
-.name-section { background: var(--bg-card); border-radius: 16px; padding: 40px; text-align: center; border: 1px solid var(--border); }
-.name-section h2 { font-size: 24px; margin-bottom: 8px; }
-.name-section p { color: rgba(255,255,255,0.5); margin-bottom: 24px; font-size: 14px; }
-.name-section input { padding: 14px 18px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 11px; color: #fff; font-size: 15px; outline: none; width: 100%; max-width: 350px; margin-bottom: 16px; }
-.join-btn { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: white; border: none; padding: 14px 32px; border-radius: 25px; font-size: 15px; cursor: pointer; font-weight: 700; }
-.watch-section { display: none; }
-.video-wrapper { position: relative; width: 100%; background: #000; border-radius: 12px; overflow: hidden; margin-bottom: 16px; }
-.video-wrapper video { width: 100%; height: auto; max-height: 600px; display: block; }
-.live-overlay { position: absolute; top: 16px; left: 16px; display: flex; gap: 10px; z-index: 10; flex-wrap: wrap; }
-.live-badge { background: var(--accent); padding: 6px 14px; border-radius: 6px; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
-.live-badge .dot { width: 8px; height: 8px; background: white; border-radius: 50%; animation: pulse 1s infinite; }
-@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-.viewer-badge { background: rgba(0,0,0,0.85); padding: 6px 14px; border-radius: 6px; font-size: 13px; display: flex; align-items: center; gap: 6px; }
-.volume-control { position: absolute; bottom: 16px; right: 16px; background: rgba(0,0,0,0.85); padding: 8px 14px; border-radius: 20px; display: flex; align-items: center; gap: 10px; z-index: 10; }
-.volume-btn { background: transparent; border: none; color: white; font-size: 18px; cursor: pointer; }
-.volume-slider { width: 80px; cursor: pointer; }
-.unmute-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.92); display: none; align-items: center; justify-content: center; flex-direction: column; cursor: pointer; z-index: 20; }
-.unmute-overlay.show { display: flex; }
-.unmute-overlay .icon { font-size: 80px; margin-bottom: 16px; }
-.unmute-overlay .text { font-size: 20px; font-weight: 700; }
-.hearts-container { position: absolute; bottom: 80px; right: 16px; pointer-events: none; z-index: 15; width: 60px; height: 400px; overflow: hidden; }
-.floating-heart { position: absolute; bottom: 0; font-size: 30px; animation: floatUp 3s linear forwards; }
-@keyframes floatUp {
-    0% { bottom: 0; opacity: 1; transform: translateX(0) scale(1); }
-    100% { bottom: 400px; opacity: 0; transform: translateX(var(--x-drift, 30px)) scale(0.5); }
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --primary:#7c3aed;
+  --primary2:#a855f7;
+  --bg:#0a0a0f;
+  --bg2:#13131a;
+  --bg3:#1a1a2e;
+  --card:#1e1e2e;
+  --card2:#252538;
+  --border:#2a2a3e;
+  --text:#ffffff;
+  --text2:#a0a0b8;
+  --red:#ef4444;
+  --green:#22c55e;
+  --gold:#f59e0b;
+  --pink:#ec4899;
 }
-.reactions-container { position: absolute; bottom: 120px; left: 16px; pointer-events: none; z-index: 15; }
-.floating-reaction { position: absolute; font-size: 50px; animation: reactionFloat 2.5s ease-out forwards; }
-@keyframes reactionFloat {
-    0% { opacity: 0; transform: scale(0); }
-    20% { opacity: 1; transform: scale(1.5); }
-    100% { opacity: 0; transform: scale(2) translateY(-200px); }
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',sans-serif;min-height:100vh}
+
+/* VIDEO */
+.video-wrap{position:relative;width:100%;background:#000;aspect-ratio:16/9;max-height:55vw}
+#remoteVideo{width:100%;height:100%;object-fit:cover;display:block}
+.video-overlay{position:absolute;inset:0;pointer-events:none}
+.video-top{position:absolute;top:0;left:0;right:0;padding:12px;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(to bottom,rgba(0,0,0,.7),transparent)}
+.video-bottom{position:absolute;bottom:0;left:0;right:0;padding:12px;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(to top,rgba(0,0,0,.7),transparent)}
+.streamer-info-bar{display:flex;align-items:center;gap:8px}
+.streamer-avatar-sm{width:36px;height:36px;border-radius:50%;border:2px solid var(--primary);overflow:hidden;background:var(--primary);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex-shrink:0}
+.streamer-avatar-sm img{width:100%;height:100%;object-fit:cover}
+.live-pill{background:var(--red);color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:10px;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+.viewer-pill{background:rgba(0,0,0,.6);color:#fff;font-size:12px;padding:4px 10px;border-radius:10px;display:flex;align-items:center;gap:4px}
+.stream-title-bar{font-size:13px;font-weight:700;text-shadow:0 1px 4px rgba(0,0,0,.8)}
+
+/* FLOATING */
+.hearts-container{position:absolute;bottom:60px;right:16px;width:50px;height:300px;pointer-events:none;overflow:hidden}
+.heart{position:absolute;bottom:0;right:0;font-size:24px;animation:floatUp 2s ease-out forwards}
+@keyframes floatUp{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-280px) scale(.5)}}
+.reactions-float{position:absolute;bottom:60px;left:16px;pointer-events:none}
+.reaction-float{position:absolute;font-size:28px;animation:floatReaction 1.5s ease-out forwards}
+@keyframes floatReaction{0%{opacity:1;transform:translateY(0) scale(1.2)}100%{opacity:0;transform:translateY(-120px) scale(.6)}}
+
+/* LAYOUT */
+.watch-layout{display:flex;height:calc(100vh - 55vw);min-height:300px}
+@media(min-width:768px){
+  .watch-layout{height:calc(100vh - 56px);flex-direction:row}
+  .video-wrap{width:60%;aspect-ratio:unset;max-height:unset;height:100%}
 }
-.gifts-container { position: absolute; bottom: 100px; left: 50%; transform: translateX(-50%); pointer-events: none; z-index: 16; }
-.gift-popup { background: rgba(0,0,0,0.85); padding: 16px 24px; border-radius: 16px; display: flex; align-items: center; gap: 12px; animation: giftPop 3s ease-out forwards; border: 2px solid var(--accent); }
-@keyframes giftPop {
-    0% { opacity: 0; transform: scale(0); }
-    20%, 80% { opacity: 1; transform: scale(1); }
-    100% { opacity: 0; transform: scale(0.8); }
-}
-.gift-emoji { font-size: 40px; }
-.gift-info { font-size: 14px; font-weight: 600; }
-.gift-sender { color: var(--accent); font-weight: 800; }
 
-/* WHEEL WINNER ANIMATION */
-.winner-popup { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; z-index: 9999; }
-.winner-popup.show { display: flex; animation: fadeIn 0.3s; }
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-.winner-content { background: linear-gradient(135deg, #ffc107, #ff9800); padding: 40px; border-radius: 24px; text-align: center; animation: bounceIn 0.5s; max-width: 400px; }
-@keyframes bounceIn {
-    0% { transform: scale(0); }
-    50% { transform: scale(1.1); }
-    100% { transform: scale(1); }
-}
-.winner-icon { font-size: 80px; margin-bottom: 16px; animation: spin 2s linear infinite; }
-@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-.winner-title { font-size: 28px; font-weight: 900; color: #000; margin-bottom: 8px; }
-.winner-name { font-size: 24px; font-weight: 800; color: #000; margin-bottom: 8px; }
-.winner-prize { font-size: 16px; color: #000; margin-bottom: 20px; }
-.winner-close { background: #000; color: white; border: none; padding: 12px 32px; border-radius: 20px; cursor: pointer; font-weight: 700; }
+/* SIDE PANEL */
+.side-panel{flex:1;display:flex;flex-direction:column;background:var(--bg2);border-left:1px solid var(--border);overflow:hidden}
+.panel-tabs{display:flex;border-bottom:1px solid var(--border)}
+.ptab{flex:1;padding:10px;text-align:center;font-size:12px;font-weight:600;cursor:pointer;color:var(--text2);transition:all .2s;border-bottom:2px solid transparent}
+.ptab.active{color:var(--primary);border-bottom-color:var(--primary);background:rgba(124,58,237,.05)}
 
-.interaction-bar { background: var(--bg-card); border-radius: 12px; padding: 14px; margin-bottom: 16px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: space-around; gap: 8px; flex-wrap: wrap; }
-.interact-btn { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: white; padding: 10px 16px; border-radius: 24px; cursor: pointer; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 6px; transition: all 0.2s; }
-.interact-btn:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); }
-.interact-btn.like-btn { background: linear-gradient(135deg, var(--accent), var(--accent2)); border-color: transparent; }
-.interact-btn.share-btn { background: rgba(66,133,244,0.15); border-color: rgba(66,133,244,0.3); color: #4285f4; }
-.reaction-row { display: flex; gap: 6px; flex-wrap: wrap; }
-.reaction-btn { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: white; padding: 6px 12px; border-radius: 20px; cursor: pointer; font-size: 14px; transition: all 0.2s; display: flex; align-items: center; gap: 4px; font-weight: 600; }
-.reaction-btn:hover { background: rgba(255,255,255,0.15); transform: scale(1.1); }
-.reaction-emoji { font-size: 18px; }
-.reaction-count { font-size: 11px; color: rgba(255,255,255,0.7); }
+/* CHAT */
+.chat-panel{display:flex;flex-direction:column;flex:1;overflow:hidden}
+.chat-messages{flex:1;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:8px}
+.chat-messages::-webkit-scrollbar{width:4px}
+.chat-messages::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.chat-msg{display:flex;gap:8px;align-items:flex-start}
+.chat-msg-avatar{width:28px;height:28px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;overflow:hidden}
+.chat-msg-avatar img{width:100%;height:100%;object-fit:cover}
+.chat-msg-body{flex:1}
+.chat-msg-name{font-size:11px;font-weight:700;color:var(--primary2);margin-bottom:2px}
+.chat-msg-text{font-size:13px;line-height:1.4;word-break:break-word}
+.chat-msg-time{font-size:10px;color:var(--text2);margin-top:2px}
+.system-msg{text-align:center;font-size:11px;color:var(--text2);padding:4px 8px;background:var(--bg3);border-radius:10px;margin:4px auto}
+.chat-input-area{border-top:1px solid var(--border);padding:10px}
+.chat-input-row{display:flex;gap:6px;margin-bottom:6px}
+.chat-input-row input{flex:1;padding:8px 14px;background:var(--card);border:1px solid var(--border);border-radius:20px;color:var(--text);font-size:13px;outline:none}
+.chat-input-row input:focus{border-color:var(--primary)}
+.chat-send-btn{background:var(--primary);color:#fff;border:none;padding:8px 16px;border-radius:20px;font-size:13px;cursor:pointer;font-weight:600}
 
-/* POLLS */
-.poll-card { background: linear-gradient(135deg, rgba(255,193,7,0.1), rgba(255,152,0,0.05)); border: 2px solid rgba(255,193,7,0.3); border-radius: 14px; padding: 18px; margin-bottom: 16px; display: none; }
-.poll-card.show { display: block; animation: slideDown 0.4s; }
-@keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
-.poll-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
-.poll-icon { font-size: 22px; }
-.poll-title { font-size: 13px; font-weight: 700; color: #ffc107; text-transform: uppercase; letter-spacing: 1px; }
-.poll-question { font-size: 16px; font-weight: 700; margin-bottom: 14px; }
-.poll-options { display: flex; flex-direction: column; gap: 8px; }
-.poll-option { padding: 12px 14px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 11px; cursor: pointer; position: relative; overflow: hidden; transition: all 0.2s; }
-.poll-option:hover { background: rgba(255,255,255,0.1); border-color: #ffc107; }
-.poll-option.voted { cursor: default; pointer-events: none; }
-.poll-option-bar { position: absolute; top: 0; left: 0; height: 100%; background: rgba(255,193,7,0.2); transition: width 0.5s; z-index: 0; }
-.poll-option-content { position: relative; z-index: 1; display: flex; justify-content: space-between; align-items: center; }
-.poll-option-text { font-weight: 600; font-size: 14px; }
-.poll-option-stats { font-size: 12px; color: #ffc107; font-weight: 700; }
-.poll-total { font-size: 11px; color: rgba(255,255,255,0.5); text-align: center; margin-top: 10px; }
+/* QUICK ACTIONS */
+.quick-actions{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.qa-btn{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:6px 10px;border-radius:20px;font-size:18px;cursor:pointer;transition:all .2s;line-height:1}
+.qa-btn:hover{transform:scale(1.2);background:var(--primary);border-color:var(--primary)}
 
-.gifts-btn-bar { background: var(--bg-card); border-radius: 12px; padding: 12px; margin-bottom: 16px; border: 1px solid var(--border); }
-.gifts-title { font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; text-align: center; }
-.gifts-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
-.gift-btn { background: rgba(255,255,255,0.05); border: 1px solid var(--border); padding: 10px 14px; border-radius: 14px; cursor: pointer; font-size: 24px; transition: all 0.2s; display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 60px; }
-.gift-btn:hover { background: rgba(255,255,255,0.15); transform: translateY(-3px); border-color: var(--accent); }
-.gift-name { font-size: 9px; font-weight: 600; color: rgba(255,255,255,0.7); }
+/* ANALYTICS PANEL */
+.analytics-panel{padding:14px;overflow-y:auto;flex:1}
+.analytics-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.analytics-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;text-align:center}
+.analytics-card .ac-icon{font-size:24px;margin-bottom:6px}
+.analytics-card .ac-value{font-size:22px;font-weight:800;color:var(--primary2)}
+.analytics-card .ac-label{font-size:11px;color:var(--text2);margin-top:2px}
+.analytics-section-title{font-size:13px;font-weight:700;margin-bottom:10px;color:var(--text2)}
+.duration-bar{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px}
+.duration-label{font-size:12px;color:var(--text2);margin-bottom:6px}
+.duration-value{font-size:20px;font-weight:800;color:var(--gold)}
 
-.stream-info-card { background: var(--bg-card); border-radius: 12px; padding: 20px; border: 1px solid var(--border); }
-.stream-title-text { font-size: 18px; font-weight: 700; margin-bottom: 12px; }
-.stream-hashtags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
-.stream-hashtag { background: rgba(255,0,0,0.15); color: var(--accent); padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; }
-.streamer-info { display: flex; align-items: center; gap: 12px; padding-top: 12px; border-top: 1px solid var(--border); cursor: pointer; }
-.streamer-info:hover { opacity: 0.8; }
-.streamer-avatar-lg { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent2)); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 20px; overflow: hidden; }
-.streamer-avatar-lg img { width: 100%; height: 100%; object-fit: cover; }
-.streamer-level { background: linear-gradient(135deg, #ffc107, #ff9800); padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 800; color: #000; display: inline-flex; align-items: center; gap: 2px; margin-left: 6px; }
-.share-stream-menu { display: none; flex-direction: column; gap: 8px; margin-top: 12px; }
-.share-stream-menu.show { display: flex; }
-.share-stream-btn { display: flex; align-items: center; gap: 10px; padding: 8px 12px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 10px; cursor: pointer; color: white; font-size: 13px; font-weight: 600; text-decoration: none; }
-.share-stream-btn:hover { background: rgba(255,255,255,0.1); }
+/* GIFTS PANEL */
+.gifts-panel{padding:14px;overflow-y:auto;flex:1}
+.gifts-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.gift-btn{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px 8px;text-align:center;cursor:pointer;transition:all .2s}
+.gift-btn:hover{border-color:var(--primary);transform:translateY(-2px);background:rgba(124,58,237,.1)}
+.gift-btn .g-emoji{font-size:28px;margin-bottom:4px}
+.gift-btn .g-name{font-size:11px;color:var(--text2)}
 
-.chat-card { background: var(--bg-card); border-radius: 12px; overflow: hidden; border: 1px solid var(--border); display: flex; flex-direction: column; height: 600px; }
-@media (max-width: 1024px) { .chat-card { height: 400px; } }
-.chat-header { padding: 14px 16px; background: rgba(255,255,255,0.03); font-weight: 700; font-size: 14px; }
-.chat-messages { flex: 1; overflow-y: auto; padding: 12px 16px; }
-.chat-message { margin-bottom: 10px; display: flex; gap: 8px; }
-.chat-avatar { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, #4285f4, #34a853); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; flex-shrink: 0; overflow: hidden; cursor: pointer; }
-.chat-avatar img { width: 100%; height: 100%; object-fit: cover; }
-.chat-name { font-weight: 500; color: #4285f4; font-size: 13px; margin-right: 6px; cursor: pointer; }
-.chat-name:hover { text-decoration: underline; }
-.chat-text { font-size: 14px; }
-.chat-time { font-size: 11px; color: #aaa; margin-top: 2px; }
-.chat-input-wrap { display: flex; padding: 12px; gap: 8px; background: rgba(255,255,255,0.03); align-items: center; position: relative; }
-.emoji-toggle { background: transparent; border: none; color: white; font-size: 22px; cursor: pointer; padding: 4px; }
-.chat-input-wrap input { flex: 1; padding: 10px 14px; background: rgba(255,255,255,0.06); border: 1px solid var(--border); border-radius: 20px; color: white; font-size: 14px; outline: none; }
-.chat-input-wrap button { background: var(--accent); color: white; border: none; padding: 8px 20px; border-radius: 20px; cursor: pointer; font-weight: 500; }
-.chat-emoji-picker { position: absolute; bottom: 60px; left: 10px; background: #1a1a1a; border: 1px solid var(--border); border-radius: 14px; padding: 12px; display: none; grid-template-columns: repeat(8, 1fr); gap: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 100; }
-.chat-emoji-picker.show { display: grid; }
-.emoji-item { padding: 6px; cursor: pointer; border-radius: 8px; font-size: 20px; text-align: center; }
-.emoji-item:hover { background: rgba(255,255,255,0.1); transform: scale(1.3); }
+/* GIFT ANIMATION */
+.gift-toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,.85);border:2px solid var(--gold);border-radius:20px;padding:20px 30px;text-align:center;z-index:999;animation:giftPop .4s ease}
+@keyframes giftPop{0%{transform:translate(-50%,-50%) scale(.5);opacity:0}100%{transform:translate(-50%,-50%) scale(1);opacity:1}}
+.gift-toast-emoji{font-size:48px}
+.gift-toast-text{font-size:14px;margin-top:8px}
 
-.loading { text-align: center; padding: 80px 20px; display: none; }
-.spinner { width: 60px; height: 60px; border: 4px solid #303030; border-top: 4px solid var(--accent); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px; }
-.stream-ended { text-align: center; padding: 80px 20px; display: none; }
-.stream-ended .emoji { font-size: 100px; margin-bottom: 20px; opacity: 0.5; }
-.stream-ended h2 { margin-bottom: 12px; font-size: 28px; }
+/* POLL */
+.poll-panel{padding:14px;overflow-y:auto;flex:1}
+.poll-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:12px}
+.poll-q{font-size:14px;font-weight:700;margin-bottom:10px}
+.poll-option{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--bg3);border-radius:10px;margin-bottom:6px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.poll-option:hover{background:rgba(124,58,237,.2);border-color:var(--primary)}
+.poll-bar{position:absolute;left:0;top:0;bottom:0;background:rgba(124,58,237,.2);transition:width .5s}
+.poll-opt-text{position:relative;z-index:1;font-size:13px}
+.poll-opt-pct{position:relative;z-index:1;font-size:12px;font-weight:700;color:var(--primary2)}
 
-.toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, var(--accent), var(--accent2)); color: white; padding: 14px 24px; border-radius: 12px; font-weight: 600; z-index: 9999; display: none; }
-.toast.show { display: block; animation: slideUp 0.3s; }
-@keyframes slideUp { from { transform: translate(-50%, 30px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
+/* BACK BTN */
+.back-btn{background:rgba(0,0,0,.6);border:1px solid rgba(255,255,255,.2);color:#fff;padding:6px 12px;border-radius:20px;font-size:12px;cursor:pointer;pointer-events:all}
 
-@media (max-width: 768px) {
-.logo-text { display: none; }
-.container { padding: 16px; }
-.interact-btn { font-size: 13px; padding: 8px 12px; }
-.gift-btn { min-width: 50px; padding: 8px 10px; font-size: 22px; }
-}
+/* NO STREAM */
+.no-stream{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:16px;color:var(--text2)}
+.no-stream-icon{font-size:64px}
+
+/* TOAST */
+.watch-toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.85);border:1px solid var(--border);color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;z-index:500;animation:fadeUp .3s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateX(-50%) translateY(20px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
 </style>
 </head>
 <body>
-<div class="header">
-<a href="/" class="logo">
-<div class="f12-logo-wrapper">
-<div class="f12-logo-inner">
-<div class="f12-text-logo"><span class="f">F</span><span class="num">12</span></div>
-</div>
-</div>
-<div class="logo-text">ORBIT</div>
-</a>
-<a href="/" class="back-btn">← Home</a>
+
+<!-- VIDEO -->
+<div class="video-wrap" id="videoWrap">
+  <video id="remoteVideo" autoplay playsinline></video>
+  <div class="video-overlay">
+    <div class="video-top">
+      <div class="streamer-info-bar">
+        <button class="back-btn" onclick="goBack()">← Back</button>
+        <div class="streamer-avatar-sm" id="streamerAvatarSm">?</div>
+        <div>
+          <div style="display:flex;align-items:center;gap:6px">
+            <span class="live-pill">LIVE</span>
+            <span id="streamCategoryBadge" style="background:rgba(124,58,237,.6);color:#fff;font-size:10px;padding:2px 8px;border-radius:10px">Chat</span>
+          </div>
+          <div class="stream-title-bar" id="streamTitleBar">Loading...</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <div class="viewer-pill">👁 <span id="viewerCount">0</span></div>
+        <div class="viewer-pill">❤️ <span id="likeCount">0</span></div>
+      </div>
+    </div>
+    <div class="video-bottom">
+      <div style="font-size:12px;color:rgba(255,255,255,.7)" id="streamerNameBar">...</div>
+      <div style="font-size:12px;color:rgba(255,255,255,.6)" id="streamDuration">00:00</div>
+    </div>
+  </div>
+  <div class="hearts-container" id="heartsContainer"></div>
+  <div class="reactions-float" id="reactionsFloat"></div>
 </div>
 
-<div class="container">
-<div>
+<!-- LAYOUT -->
+<div class="watch-layout">
 
-<div id="name-section" class="name-section">
-<h2>👋 Welcome!</h2>
-<p>Enter your name to join</p>
-<input type="text" id="viewer-name" placeholder="Your name..." maxlength="20">
-<br>
-<button class="join-btn" onclick="joinStream()">▶️ Watch Stream</button>
-</div>
+  <div class="side-panel">
+    <!-- TABS -->
+    <div class="panel-tabs">
+      <div class="ptab active" onclick="switchPTab('chat',this)">💬 Chat</div>
+      <div class="ptab" onclick="switchPTab('analytics',this)">📊 Stats</div>
+      <div class="ptab" onclick="switchPTab('gifts',this)">🎁 Gifts</div>
+      <div class="ptab" onclick="switchPTab('polls',this)">🗳️ Poll</div>
+    </div>
 
-<div id="loading" class="loading">
-<div class="spinner"></div>
-<p style="color: #aaa;">Connecting...</p>
-</div>
+    <!-- CHAT PANEL -->
+    <div id="ptab-chat" class="chat-panel">
+      <div class="chat-messages" id="chatMessages">
+        <div class="system-msg">Welcome to the stream! 🎉</div>
+      </div>
+      <div class="chat-input-area">
+        <div class="quick-actions" style="margin-bottom:8px">
+          <button class="qa-btn" onclick="sendLike()" title="Like">❤️</button>
+          <button class="qa-btn" onclick="sendReaction('😍')" title="Love">😍</button>
+          <button class="qa-btn" onclick="sendReaction('😂')" title="Haha">😂</button>
+          <button class="qa-btn" onclick="sendReaction('🔥')" title="Fire">🔥</button>
+          <button class="qa-btn" onclick="sendReaction('👏')" title="Clap">👏</button>
+          <button class="qa-btn" onclick="sendReaction('🎉')" title="Party">🎉</button>
+          <button class="qa-btn" onclick="sendReaction('💯')" title="100">💯</button>
+          <button class="qa-btn" onclick="sendReaction('😮')" title="Wow">😮</button>
+        </div>
+        <div class="chat-input-row">
+          <input type="text" id="chatInput" placeholder="Say something..." onkeydown="if(event.key==='Enter')sendChatMessage()"/>
+          <button class="chat-send-btn" onclick="sendChatMessage()">Send</button>
+        </div>
+      </div>
+    </div>
 
-<div id="watch-section" class="watch-section">
+    <!-- ANALYTICS PANEL -->
+    <div id="ptab-analytics" class="analytics-panel" style="display:none">
+      <div class="analytics-section-title">📊 Live Stream Analytics</div>
+      <div class="duration-bar">
+        <div class="duration-label">⏱️ Stream Duration</div>
+        <div class="duration-value" id="analyticsDuration">00:00</div>
+      </div>
+      <div class="analytics-grid">
+        <div class="analytics-card">
+          <div class="ac-icon">👁️</div>
+          <div class="ac-value" id="aViewers">0</div>
+          <div class="ac-label">Current Viewers</div>
+        </div>
+        <div class="analytics-card">
+          <div class="ac-icon">📈</div>
+          <div class="ac-value" id="aPeakViewers">0</div>
+          <div class="ac-label">Peak Viewers</div>
+        </div>
+        <div class="analytics-card">
+          <div class="ac-icon">❤️</div>
+          <div class="ac-value" id="aLikes">0</div>
+          <div class="ac-label">Total Likes</div>
+        </div>
+        <div class="analytics-card">
+          <div class="ac-icon">💬</div>
+          <div class="ac-value" id="aMessages">0</div>
+          <div class="ac-label">Chat Messages</div>
+        </div>
+        <div class="analytics-card">
+          <div class="ac-icon">😍</div>
+          <div class="ac-value" id="aReactions">0</div>
+          <div class="ac-label">Reactions</div>
+        </div>
+        <div class="analytics-card">
+          <div class="ac-icon">🎁</div>
+          <div class="ac-value" id="aGifts">0</div>
+          <div class="ac-label">Gifts</div>
+        </div>
+        <div class="analytics-card">
+          <div class="ac-icon">🚪</div>
+          <div class="ac-value" id="aJoins">0</div>
+          <div class="ac-label">Total Joins</div>
+        </div>
+        <div class="analytics-card">
+          <div class="ac-icon">🌟</div>
+          <div class="ac-value" id="aUnique">0</div>
+          <div class="ac-label">Unique Viewers</div>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:8px">
+        <button onclick="refreshAnalytics()" style="background:var(--primary);color:#fff;border:none;padding:8px 20px;border-radius:20px;font-size:13px;cursor:pointer;font-weight:600">🔄 Refresh Stats</button>
+      </div>
+    </div>
 
-<div class="video-wrapper">
-<video id="remote-video" autoplay playsinline></video>
-<div class="live-overlay">
-<div class="live-badge"><div class="dot"></div>LIVE</div>
-<div class="viewer-badge">👁 <span id="viewer-count">0</span></div>
-<div class="viewer-badge">❤️ <span id="likes-count">0</span></div>
-</div>
-<div class="volume-control">
-<button class="volume-btn" id="volume-btn" onclick="toggleMute()">🔊</button>
-<input type="range" class="volume-slider" id="volume-slider" min="0" max="100" value="100" onchange="changeVolume(this.value)">
-</div>
-<div class="unmute-overlay" id="unmute-overlay" onclick="enableAudio()">
-<div class="icon">🔊</div>
-<div class="text">Click to enable sound</div>
-</div>
-<div class="hearts-container" id="hearts-container"></div>
-<div class="reactions-container" id="reactions-container"></div>
-<div class="gifts-container" id="gifts-container"></div>
-</div>
+    <!-- GIFTS PANEL -->
+    <div id="ptab-gifts" class="gifts-panel" style="display:none">
+      <div class="analytics-section-title">🎁 Send a Gift</div>
+      <div class="gifts-grid" id="giftsGrid"></div>
+      <div style="font-size:11px;color:var(--text2);text-align:center;margin-top:8px">Gifts show up on stream for everyone! ✨</div>
+    </div>
 
-<!-- POLL CARD -->
-<div id="poll-card" class="poll-card">
-<div class="poll-header">
-<span class="poll-icon">🗳️</span>
-<span class="poll-title">Live Poll</span>
-</div>
-<div class="poll-question" id="poll-question"></div>
-<div class="poll-options" id="poll-options"></div>
-<div class="poll-total" id="poll-total"></div>
-</div>
+    <!-- POLLS PANEL -->
+    <div id="ptab-polls" class="poll-panel" style="display:none">
+      <div class="analytics-section-title">🗳️ Active Poll</div>
+      <div id="pollContainer">
+        <div style="text-align:center;color:var(--text2);padding:40px 20px">
+          <div style="font-size:40px;margin-bottom:12px">🗳️</div>
+          <div>No active poll</div>
+          <div style="font-size:12px;margin-top:8px">Streamer can create polls from go-live page</div>
+        </div>
+      </div>
+    </div>
 
-<div class="interaction-bar">
-<button class="interact-btn like-btn" onclick="sendLike()">
-<span>❤️</span>
-<span><span id="like-btn-count">0</span> Like</span>
-</button>
-<div class="reaction-row">
-<button class="reaction-btn" onclick="sendReaction('😍')">
-<span class="reaction-emoji">😍</span>
-<span class="reaction-count" id="r-1">0</span>
-</button>
-<button class="reaction-btn" onclick="sendReaction('😂')">
-<span class="reaction-emoji">😂</span>
-<span class="reaction-count" id="r-2">0</span>
-</button>
-<button class="reaction-btn" onclick="sendReaction('🔥')">
-<span class="reaction-emoji">🔥</span>
-<span class="reaction-count" id="r-3">0</span>
-</button>
-<button class="reaction-btn" onclick="sendReaction('👏')">
-<span class="reaction-emoji">👏</span>
-<span class="reaction-count" id="r-4">0</span>
-</button>
-<button class="reaction-btn" onclick="sendReaction('💯')">
-<span class="reaction-emoji">💯</span>
-<span class="reaction-count" id="r-5">0</span>
-</button>
-</div>
-<button class="interact-btn share-btn" onclick="toggleShareStream()">🔗 Share</button>
-</div>
-
-<div class="gifts-btn-bar">
-<div class="gifts-title">🎁 Send Free Gifts</div>
-<div class="gifts-row">
-<button class="gift-btn" onclick="sendGift('🌹', 'Rose')">🌹<span class="gift-name">Rose</span></button>
-<button class="gift-btn" onclick="sendGift('🎁', 'Gift')">🎁<span class="gift-name">Gift</span></button>
-<button class="gift-btn" onclick="sendGift('💎', 'Diamond')">💎<span class="gift-name">Diamond</span></button>
-<button class="gift-btn" onclick="sendGift('🏆', 'Trophy')">🏆<span class="gift-name">Trophy</span></button>
-<button class="gift-btn" onclick="sendGift('👑', 'Crown')">👑<span class="gift-name">Crown</span></button>
-<button class="gift-btn" onclick="sendGift('🚀', 'Rocket')">🚀<span class="gift-name">Rocket</span></button>
-</div>
-</div>
-
-<div class="stream-info-card">
-<div class="stream-title-text" id="stream-title">Live Stream</div>
-<div id="stream-hashtags-list" class="stream-hashtags"></div>
-<div class="streamer-info" onclick="goToStreamerProfile()">
-<div class="streamer-avatar-lg" id="streamer-avatar">S</div>
-<div>
-<div style="font-weight: 700;">
-<span id="streamer-name">Streamer</span>
-<span class="streamer-level" id="streamer-level" style="display:none;">⭐ Lv.1</span>
-</div>
-<div style="font-size: 13px; color: #aaa; margin-top: 2px;" id="stream-meta">Live on F12 ORBIT</div>
-</div>
-</div>
-<div id="share-stream-menu" class="share-stream-menu">
-<a href="#" class="share-stream-btn" onclick="shareStreamTo('whatsapp'); return false;">📱 WhatsApp</a>
-<a href="#" class="share-stream-btn" onclick="shareStreamTo('facebook'); return false;">📘 Facebook</a>
-<a href="#" class="share-stream-btn" onclick="shareStreamTo('twitter'); return false;">🐦 Twitter</a>
-<a href="#" class="share-stream-btn" onclick="copyStreamLink(); return false;">📋 Copy Link</a>
-</div>
-</div>
+  </div>
 </div>
 
-<div id="stream-ended" class="stream-ended">
-<div class="emoji">📺</div>
-<h2>Stream Ended</h2>
-<p>This stream is no longer available.</p>
-<a href="/" class="join-btn" style="text-decoration: none;">🏠 Back to Home</a>
-</div>
-</div>
-
-<div class="chat-card" id="chat-area" style="display:none;">
-<div class="chat-header">💬 Live Chat</div>
-<div id="chat-messages" class="chat-messages"></div>
-<div class="chat-input-wrap">
-<div class="chat-emoji-picker" id="chat-emoji-picker">
-<div class="emoji-item" onclick="insertChatEmoji('😀')">😀</div>
-<div class="emoji-item" onclick="insertChatEmoji('😂')">😂</div>
-<div class="emoji-item" onclick="insertChatEmoji('🥰')">🥰</div>
-<div class="emoji-item" onclick="insertChatEmoji('😎')">😎</div>
-<div class="emoji-item" onclick="insertChatEmoji('🤔')">🤔</div>
-<div class="emoji-item" onclick="insertChatEmoji('❤️')">❤️</div>
-<div class="emoji-item" onclick="insertChatEmoji('🔥')">🔥</div>
-<div class="emoji-item" onclick="insertChatEmoji('👍')">👍</div>
-<div class="emoji-item" onclick="insertChatEmoji('👏')">👏</div>
-<div class="emoji-item" onclick="insertChatEmoji('🙏')">🙏</div>
-<div class="emoji-item" onclick="insertChatEmoji('💯')">💯</div>
-<div class="emoji-item" onclick="insertChatEmoji('🎉')">🎉</div>
-<div class="emoji-item" onclick="insertChatEmoji('⭐')">⭐</div>
-<div class="emoji-item" onclick="insertChatEmoji('🚀')">🚀</div>
-</div>
-<button class="emoji-toggle" onclick="toggleChatEmoji()">😀</button>
-<input type="text" id="chat-input" placeholder="Say something..." onkeypress="if(event.key==='Enter') sendChat()">
-<button onclick="sendChat()">Send</button>
-</div>
-</div>
-
-</div>
-
-<!-- WINNER POPUP -->
-<div id="winner-popup" class="winner-popup">
-<div class="winner-content">
-<div class="winner-icon">🎡</div>
-<div class="winner-title">🏆 Winner!</div>
-<div class="winner-name" id="winner-name">User</div>
-<div class="winner-prize" id="winner-prize">Special Mention!</div>
-<button class="winner-close" onclick="closeWinner()">Close</button>
-</div>
-</div>
-
-<div id="toast" class="toast"></div>
-
-<script src="https://unpkg.com/peerjs@1.5.1/dist/peerjs.min.js"></script>
-<script src="/socket.io/socket.io.js"></script>
 <script>
-const savedName = localStorage.getItem('f12_username');
-const userPhoto = localStorage.getItem('f12_photo');
-const userEmail = localStorage.getItem('f12_email');
-const myUserId = userEmail || savedName;
-if (savedName) document.getElementById('viewer-name').value = savedName;
-
-const savedTheme = localStorage.getItem('f12_theme');
-if (savedTheme && savedTheme !== 'default') document.documentElement.setAttribute('data-theme', savedTheme);
-
 const socket = io();
-let peer = null, viewerName = '';
-let totalLikes = 0;
-let streamerUserId = null;
-let currentPoll = null;
-const pathParts = window.location.pathname.split('/');
-const streamId = pathParts[pathParts.length - 1];
+const streamId = location.pathname.split('/').pop();
+let myName = '', myPhoto = null, myUserKey = '';
+let peer = null;
+let streamStartedAt = null;
+let durationInterval = null;
+let analyticsDurationInterval = null;
+let currentAnalytics = {};
+let likeCount = 0;
+let heartCount = 0;
 
-function showToast(msg) {
-    const toast = document.getElementById('toast');
-    toast.textContent = msg;
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 3000);
+// GIFTS DATA
+const GIFTS = [
+  {emoji:'🌹',name:'Rose'},
+  {emoji:'🍕',name:'Pizza'},
+  {emoji:'👑',name:'Crown'},
+  {emoji:'💎',name:'Diamond'},
+  {emoji:'🚀',name:'Rocket'},
+  {emoji:'🎂',name:'Cake'},
+  {emoji:'🦁',name:'Lion'},
+  {emoji:'⭐',name:'Star'},
+  {emoji:'🎸',name:'Guitar'},
+  {emoji:'🏆',name:'Trophy'},
+  {emoji:'🌈',name:'Rainbow'},
+  {emoji:'🔮',name:'Magic'},
+];
+
+function init() {
+  const user = JSON.parse(localStorage.getItem('orbitUser') || '{}');
+  myName = user.name || 'Guest_' + Math.floor(Math.random()*9999);
+  myPhoto = user.photo || null;
+  myUserKey = user.userKey || ('uk_' + Date.now());
+
+  renderGifts();
+
+  socket.emit('join-stream', { streamId });
+  socket.emit('user-online', {
+    name: myName,
+    photo: myPhoto,
+    userKey: myUserKey
+  });
 }
 
-function joinStream() {
-    viewerName = document.getElementById('viewer-name').value.trim();
-    if (!viewerName) { alert('Please enter your name!'); return; }
-    document.getElementById('name-section').style.display = 'none';
-    document.getElementById('loading').style.display = 'block';
-    
-    socket.emit('user-online', {
-        name: viewerName,
-        avatar: viewerName.charAt(0).toUpperCase(),
-        photo: userPhoto,
-        userEmail: myUserId
-    });
-    
-    peer = new Peer({ config: { 'iceServers': [
-        { urls: 'stun:stun.l.google.com:19302' },
-        { urls: 'stun:stun1.l.google.com:19302' }
-    ]}});
-    peer.on('open', () => { socket.emit('join-stream', { streamId: streamId, viewerName: viewerName }); });
-    peer.on('error', (err) => console.error(err));
+function renderGifts() {
+  document.getElementById('giftsGrid').innerHTML = GIFTS.map(g =>
+    `<div class="gift-btn" onclick="sendGift('${g.emoji}','${g.name}')">
+      <div class="g-emoji">${g.emoji}</div>
+      <div class="g-name">${g.name}</div>
+    </div>`
+  ).join('');
 }
 
-socket.on('streamer-info', (data) => {
-    streamerUserId = data.streamerUserId;
-    document.getElementById('stream-title').textContent = data.title;
-    document.getElementById('streamer-name').textContent = data.streamerName;
-    document.getElementById('stream-meta').textContent = (data.category || 'Live') + ' on F12 ORBIT';
-    totalLikes = data.likes || 0;
-    document.getElementById('likes-count').textContent = totalLikes;
-    document.getElementById('like-btn-count').textContent = totalLikes;
-    
-    if (data.streamerLevel) {
-        const lvl = document.getElementById('streamer-level');
-        lvl.style.display = 'inline-flex';
-        lvl.innerHTML = '⭐ Lv.' + data.streamerLevel;
-    }
-    
-    if (data.hashtags && data.hashtags.length > 0) {
-        document.getElementById('stream-hashtags-list').innerHTML = data.hashtags.map(t => '<span class="stream-hashtag">' + t + '</span>').join('');
-    }
-    
-    if (data.reactions) {
-        document.getElementById('r-1').textContent = data.reactions['😍'] || 0;
-        document.getElementById('r-2').textContent = data.reactions['😂'] || 0;
-        document.getElementById('r-3').textContent = data.reactions['🔥'] || 0;
-        document.getElementById('r-4').textContent = data.reactions['👏'] || 0;
-        document.getElementById('r-5').textContent = data.reactions['💯'] || 0;
-    }
-    
-    const sAvatar = document.getElementById('streamer-avatar');
-    if (data.streamerPhoto) sAvatar.innerHTML = '<img src="' + data.streamerPhoto + '">';
-    else sAvatar.textContent = data.streamerName.charAt(0).toUpperCase();
-    
-    const call = peer.call(data.peerId, createEmptyStream());
-    call.on('stream', (remoteStream) => {
-        const video = document.getElementById('remote-video');
-        video.srcObject = remoteStream;
-        video.volume = 1.0;
-        video.muted = false;
-        video.play().then(() => {}).catch(() => {
-            video.muted = true;
-            document.getElementById('unmute-overlay').classList.add('show');
-            video.play();
-        });
-        document.getElementById('loading').style.display = 'none';
-        document.getElementById('watch-section').style.display = 'block';
-        document.getElementById('chat-area').style.display = 'flex';
-    });
-});
+// PANEL TABS
+function switchPTab(name, el) {
+  ['chat','analytics','gifts','polls'].forEach(t => {
+    const panel = document.getElementById('ptab-'+t);
+    if(panel) panel.style.display = t === name ? (t==='chat'?'flex':'block') : 'none';
+  });
+  document.querySelectorAll('.ptab').forEach(t => t.classList.remove('active'));
+  if(el) el.classList.add('active');
 
-function goToStreamerProfile() {
-    if (streamerUserId) window.location.href = '/user/' + encodeURIComponent(streamerUserId);
+  if(name === 'analytics') refreshAnalytics();
 }
 
-function enableAudio() {
-    const video = document.getElementById('remote-video');
-    video.muted = false;
-    document.getElementById('unmute-overlay').classList.remove('show');
-}
-
-function createEmptyStream() {
-    const canvas = document.createElement('canvas');
-    canvas.width = 1; canvas.height = 1;
-    canvas.getContext('2d').fillRect(0, 0, 1, 1);
-    return canvas.captureStream();
-}
-
-function toggleMute() {
-    const video = document.getElementById('remote-video');
-    video.muted = !video.muted;
-    document.getElementById('volume-btn').textContent = video.muted ? '🔇' : '🔊';
-}
-
-function changeVolume(value) {
-    const video = document.getElementById('remote-video');
-    video.muted = false;
-    video.volume = value / 100;
-    document.getElementById('volume-btn').textContent = value == 0 ? '🔇' : value < 50 ? '🔉' : '🔊';
-}
-
-socket.on('viewer-count', (data) => { document.getElementById('viewer-count').textContent = data.count; });
-socket.on('stream-error', (data) => {
-    document.getElementById('loading').style.display = 'none';
-    document.getElementById('name-section').style.display = 'none';
-    document.getElementById('stream-ended').style.display = 'block';
-});
-socket.on('stream-ended', () => {
-    document.getElementById('watch-section').style.display = 'none';
-    document.getElementById('loading').style.display = 'none';
-    document.getElementById('chat-area').style.display = 'none';
-    document.getElementById('stream-ended').style.display = 'block';
-    const video = document.getElementById('remote-video');
-    if (video.srcObject) video.srcObject.getTracks().forEach(t => t.stop());
-    if (peer) peer.destroy();
-});
-
+// ACTIONS
 function sendLike() {
-    socket.emit('like-stream', { streamId: streamId, fromName: viewerName });
+  socket.emit('like-stream', { streamId, fromName: myName });
+  spawnHeart();
 }
-
-socket.on('stream-liked', (data) => {
-    totalLikes = data.likes;
-    document.getElementById('likes-count').textContent = totalLikes;
-    document.getElementById('like-btn-count').textContent = totalLikes;
-    const container = document.getElementById('hearts-container');
-    const heart = document.createElement('div');
-    heart.className = 'floating-heart';
-    heart.textContent = ['❤️', '💖', '💕', '💗'][Math.floor(Math.random() * 4)];
-    heart.style.left = (Math.random() * 40) + 'px';
-    heart.style.setProperty('--x-drift', ((Math.random() - 0.5) * 60) + 'px');
-    container.appendChild(heart);
-    setTimeout(() => heart.remove(), 3000);
-});
 
 function sendReaction(emoji) {
-    socket.emit('send-reaction', { streamId: streamId, emoji: emoji, fromName: viewerName });
+  socket.emit('send-reaction', { streamId, emoji, fromName: myName });
+  spawnReaction(emoji);
 }
-
-socket.on('new-reaction', (data) => {
-    const container = document.getElementById('reactions-container');
-    const reaction = document.createElement('div');
-    reaction.className = 'floating-reaction';
-    reaction.textContent = data.emoji;
-    reaction.style.left = (Math.random() * 200) + 'px';
-    container.appendChild(reaction);
-    setTimeout(() => reaction.remove(), 2500);
-    
-    if (data.totals) {
-        document.getElementById('r-1').textContent = data.totals['😍'] || 0;
-        document.getElementById('r-2').textContent = data.totals['😂'] || 0;
-        document.getElementById('r-3').textContent = data.totals['🔥'] || 0;
-        document.getElementById('r-4').textContent = data.totals['👏'] || 0;
-        document.getElementById('r-5').textContent = data.totals['💯'] || 0;
-    }
-});
 
 function sendGift(emoji, name) {
-    socket.emit('send-gift', { streamId: streamId, gift: { emoji: emoji, name: name }, fromName: viewerName });
+  socket.emit('send-gift', { streamId, gift: emoji + ' ' + name, fromName: myName });
+  showWatchToast(`🎁 You sent ${emoji} ${name}!`);
 }
 
-socket.on('new-gift', (data) => {
-    const container = document.getElementById('gifts-container');
-    const giftEl = document.createElement('div');
-    giftEl.className = 'gift-popup';
-    giftEl.innerHTML = '<div class="gift-emoji">' + data.gift.emoji + '</div><div class="gift-info"><span class="gift-sender">' + data.fromName + '</span> sent a ' + data.gift.name + '!</div>';
-    container.appendChild(giftEl);
-    setTimeout(() => giftEl.remove(), 3000);
-});
+function sendChatMessage() {
+  const input = document.getElementById('chatInput');
+  const msg = input.value.trim();
+  if(!msg) return;
+  socket.emit('chat-message', {
+    streamId,
+    name: myName,
+    photo: myPhoto,
+    message: msg
+  });
+  input.value = '';
+}
 
-// POLLS
-socket.on('new-poll', (poll) => {
-    currentPoll = poll;
-    renderPoll(poll);
-});
+function refreshAnalytics() {
+  socket.emit('get-stream-analytics', { streamId });
+}
 
-socket.on('poll-updated', (poll) => {
-    currentPoll = poll;
-    renderPoll(poll);
-});
+// FLOATING HEARTS
+function spawnHeart() {
+  heartCount++;
+  const c = document.getElementById('heartsContainer');
+  const h = document.createElement('div');
+  h.className = 'heart';
+  const hearts = ['❤️','🧡','💛','💚','💙','💜','🩷'];
+  h.textContent = hearts[heartCount % hearts.length];
+  h.style.right = (Math.random() * 30) + 'px';
+  h.style.animationDuration = (1.5 + Math.random()) + 's';
+  c.appendChild(h);
+  setTimeout(() => h.remove(), 2500);
+}
 
-socket.on('poll-closed', (poll) => {
-    showToast('Poll closed!');
-    setTimeout(() => {
-        document.getElementById('poll-card').classList.remove('show');
-        currentPoll = null;
-    }, 3000);
-});
+// FLOATING REACTIONS
+function spawnReaction(emoji) {
+  const c = document.getElementById('reactionsFloat');
+  const r = document.createElement('div');
+  r.className = 'reaction-float';
+  r.textContent = emoji;
+  r.style.left = (Math.random() * 60) + 'px';
+  r.style.bottom = '0px';
+  r.style.animationDuration = (1 + Math.random()) + 's';
+  c.appendChild(r);
+  setTimeout(() => r.remove(), 2000);
+}
 
+// GIFT ANIMATION
+function showGiftAnimation(gift, fromName) {
+  const existing = document.querySelector('.gift-toast');
+  if(existing) existing.remove();
+
+  const div = document.createElement('div');
+  div.className = 'gift-toast';
+  div.innerHTML = `<div class="gift-toast-emoji">${gift.split(' ')[0]}</div>
+    <div class="gift-toast-text"><strong>${fromName}</strong> sent ${gift}! 🎉</div>`;
+  document.body.appendChild(div);
+  setTimeout(() => div.remove(), 2500);
+}
+
+// DURATION
+function startDuration(startedAt) {
+  streamStartedAt = new Date(startedAt);
+  if(durationInterval) clearInterval(durationInterval);
+  if(analyticsDurationInterval) clearInterval(analyticsDurationInterval);
+
+  function update() {
+    const diff = Math.floor((Date.now() - streamStartedAt.getTime()) / 1000);
+    const h = Math.floor(diff / 3600);
+    const m = Math.floor((diff % 3600) / 60);
+    const s = diff % 60;
+    const str = h > 0
+      ? `${pad(h)}:${pad(m)}:${pad(s)}`
+      : `${pad(m)}:${pad(s)}`;
+    const dur = document.getElementById('streamDuration');
+    const aDur = document.getElementById('analyticsDuration');
+    if(dur) dur.textContent = str;
+    if(aDur) aDur.textContent = str;
+  }
+
+  update();
+  durationInterval = setInterval(update, 1000);
+}
+
+function pad(n) { return String(n).padStart(2,'0'); }
+
+function showWatchToast(msg) {
+  const existing = document.querySelector('.watch-toast');
+  if(existing) existing.remove();
+  const t = document.createElement('div');
+  t.className = 'watch-toast';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2500);
+}
+
+function goBack() {
+  if(durationInterval) clearInterval(durationInterval);
+  location.href = '/';
+}
+
+function updateAnalyticsUI(analytics) {
+  if(!analytics) return;
+  currentAnalytics = analytics;
+  const set = (id, val) => {
+    const el = document.getElementById(id);
+    if(el) el.textContent = val ?? 0;
+  };
+  set('aViewers', analytics.uniqueViewers ?? 0);
+  set('aPeakViewers', analytics.peakViewers ?? 0);
+  set('aLikes', analytics.totalLikes ?? 0);
+  set('aMessages', analytics.totalMessages ?? 0);
+  set('aReactions', analytics.totalReactions ?? 0);
+  set('aGifts', analytics.totalGifts ?? 0);
+  set('aJoins', analytics.joinCount ?? 0);
+  set('aUnique', analytics.uniqueViewers ?? 0);
+}
+
+// POLL RENDER
 function renderPoll(poll) {
-    document.getElementById('poll-card').classList.add('show');
-    document.getElementById('poll-question').textContent = poll.question;
-    const totalVotes = poll.options.reduce((sum, opt) => sum + opt.votes, 0);
-    const hasVoted = poll.options.some(opt => opt.voters.includes(myUserId));
-    
-    document.getElementById('poll-options').innerHTML = poll.options.map((opt, i) => {
-        const percent = totalVotes > 0 ? (opt.votes / totalVotes * 100).toFixed(0) : 0;
-        return '<div class="poll-option ' + (hasVoted ? 'voted' : '') + '" onclick="' + (hasVoted ? '' : 'votePoll(' + i + ')') + '">' +
-            '<div class="poll-option-bar" style="width:' + percent + '%"></div>' +
-            '<div class="poll-option-content">' +
-            '<span class="poll-option-text">' + opt.text + '</span>' +
-            (hasVoted ? '<span class="poll-option-stats">' + opt.votes + ' (' + percent + '%)</span>' : '') +
-            '</div></div>';
-    }).join('');
-    
-    document.getElementById('poll-total').textContent = totalVotes + ' total votes';
+  if(!poll) return;
+  const total = poll.options.reduce((s, o) => s + (o.votes || 0), 0);
+  document.getElementById('pollContainer').innerHTML = `
+    <div class="poll-card">
+      <div class="poll-q">${escHtml(poll.question)}</div>
+      ${poll.options.map((opt, i) => {
+        const pct = total > 0 ? Math.round((opt.votes||0) / total * 100) : 0;
+        return `<div class="poll-option" onclick="votePoll('${poll.id}',${i})">
+          <div class="poll-bar" style="width:${pct}%"></div>
+          <span class="poll-opt-text">${escHtml(opt.text)}</span>
+          <span class="poll-opt-pct">${pct}%</span>
+        </div>`;
+      }).join('')}
+      <div style="font-size:11px;color:var(--text2);margin-top:8px">Total votes: ${total}</div>
+    </div>`;
 }
 
-function votePoll(index) {
-    socket.emit('vote-poll', { streamId: streamId, optionIndex: index });
+function votePoll(pollId, optionIndex) {
+  socket.emit('vote-poll', { streamId, pollId, optionIndex, voterName: myName });
+  showWatchToast('✅ Vote submitted!');
 }
 
-// WHEEL WINNER
-socket.on('wheel-winner', (data) => {
-    document.getElementById('winner-name').textContent = data.winnerName;
-    document.getElementById('winner-prize').textContent = data.prize;
-    document.getElementById('winner-popup').classList.add('show');
+function escHtml(str) {
+  if(!str) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// SOCKET EVENTS
+socket.on('connect', init);
+
+socket.on('streamer-info', data => {
+  const titleBar = document.getElementById('streamTitleBar');
+  const nameBar = document.getElementById('streamerNameBar');
+  const catBadge = document.getElementById('streamCategoryBadge');
+  const avSm = document.getElementById('streamerAvatarSm');
+
+  if(titleBar) titleBar.textContent = data.title || 'Live Stream';
+  if(nameBar) nameBar.textContent = '👤 ' + (data.streamerName || 'Streamer');
+  if(catBadge) catBadge.textContent = data.category || 'Chat';
+
+  if(data.streamerPhoto && avSm) {
+    avSm.innerHTML = `<img src="${data.streamerPhoto}" alt="${data.streamerName}">`;
+  } else if(avSm) {
+    avSm.textContent = (data.streamerName || '?').charAt(0).toUpperCase();
+  }
+
+  if(data.likes !== undefined) {
+    likeCount = data.likes;
+    const lc = document.getElementById('likeCount');
+    if(lc) lc.textContent = likeCount;
+  }
+
+  // PEERJS
+  if(data.peerId) {
+    peer = new Peer(undefined, {
+      host: location.hostname,
+      port: location.port || (location.protocol === 'https:' ? 443 : 80),
+      path: '/peerjs',
+      secure: location.protocol === 'https:'
+    });
+
+    peer.on('open', () => {
+      const call = peer.call(data.peerId, null);
+      if(call) {
+        call.on('stream', remoteStream => {
+          const video = document.getElementById('remoteVideo');
+          if(video) {
+            video.srcObject = remoteStream;
+            video.play().catch(()=>{});
+          }
+          startDuration(new Date().toISOString());
+        });
+      }
+    });
+
+    peer.on('error', err => {
+      console.warn('PeerJS error:', err.type);
+      startDuration(new Date().toISOString());
+    });
+  } else {
+    startDuration(new Date().toISOString());
+  }
 });
 
-function closeWinner() {
-    document.getElementById('winner-popup').classList.remove('show');
-}
-
-socket.on('new-message', (data) => {
-    const chatMessages = document.getElementById('chat-messages');
-    const msgDiv = document.createElement('div');
-    msgDiv.className = 'chat-message';
-    const avatar = data.photo ? '<img src="' + data.photo + '">' : data.name.charAt(0).toUpperCase();
-    const userIdAttr = data.userId ? 'onclick="window.location.href=\'/user/' + encodeURIComponent(data.userId) + '\'"' : '';
-    msgDiv.innerHTML = '<div class="chat-avatar" ' + userIdAttr + '>' + avatar + '</div><div><span class="chat-name" ' + userIdAttr + '>' + data.name + '</span><span class="chat-text">' + data.message + '</span><div class="chat-time">' + data.time + '</div></div>';
-    chatMessages.appendChild(msgDiv);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
+socket.on('viewer-count', data => {
+  const vc = document.getElementById('viewerCount');
+  if(vc) vc.textContent = data.count;
 });
 
-socket.on('chat-muted', (data) => {
-    showToast('⚠️ ' + data.message);
+socket.on('stream-liked', data => {
+  likeCount = data.likes;
+  const lc = document.getElementById('likeCount');
+  if(lc) lc.textContent = likeCount;
+  spawnHeart();
+  showWatchToast(`❤️ ${data.fromName} liked the stream!`);
 });
 
-function sendChat() {
-    const input = document.getElementById('chat-input');
-    const message = input.value.trim();
-    if (message && streamId) {
-        socket.emit('chat-message', { streamId: streamId, name: viewerName, photo: userPhoto, message: message });
-        input.value = '';
-    }
-}
-
-function toggleChatEmoji() { document.getElementById('chat-emoji-picker').classList.toggle('show'); }
-function insertChatEmoji(emoji) {
-    document.getElementById('chat-input').value += emoji;
-    document.getElementById('chat-input').focus();
-}
-
-function toggleShareStream() { document.getElementById('share-stream-menu').classList.toggle('show'); }
-
-function shareStreamTo(platform) {
-    const url = window.location.href;
-    const text = 'Watch this live stream on F12 ORBIT!';
-    let shareUrl = '';
-    if (platform === 'whatsapp') shareUrl = 'https://wa.me/?text=' + encodeURIComponent(text + ' ' + url);
-    else if (platform === 'facebook') shareUrl = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url);
-    else if (platform === 'twitter') shareUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(text) + '&url=' + encodeURIComponent(url);
-    window.open(shareUrl, '_blank', 'width=600,height=400');
-}
-
-function copyStreamLink() {
-    navigator.clipboard.writeText(window.location.href).then(() => showToast('🔗 Link copied!'));
-}
-
-document.addEventListener('click', (e) => {
-    if (!e.target.closest('.chat-emoji-picker') && !e.target.closest('.emoji-toggle')) {
-        document.getElementById('chat-emoji-picker').classList.remove('show');
-    }
+socket.on('new-reaction', data => {
+  spawnReaction(data.emoji);
+  showWatchToast(`${data.emoji} ${data.fromName}`);
 });
+
+socket.on('new-gift', data => {
+  showGiftAnimation(data.gift, data.fromName);
+});
+
+socket.on('new-message', data => {
+  const box = document.getElementById('chatMessages');
+  if(!box) return;
+  const div = document.createElement('div');
+  div.className = 'chat-msg';
+  const avHTML = data.photo
+    ? `<img src="${data.photo}" alt="${data.name}">`
+    : (data.name||'?').charAt(0).toUpperCase();
+  div.innerHTML = `<div class="chat-msg-avatar">${avHTML}</div>
+    <div class="chat-msg-body">
+      <div class="chat-msg-name">${escHtml(data.name)}</div>
+      <div class="chat-msg-text">${escHtml(data.message)}</div>
+      <div class="chat-msg-time">${data.time||''}</div>
+    </div>`;
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+});
+
+socket.on('analytics-updated', data => {
+  updateAnalyticsUI(data);
+});
+
+socket.on('stream-analytics', data => {
+  if(data && data.analytics) {
+    updateAnalyticsUI(data.analytics);
+    if(data.startedAt) startDuration(data.startedAt);
+  }
+});
+
+socket.on('poll-update', data => {
+  renderPoll(data);
+  const pollDot = document.querySelector('.ptab:nth-child(4)');
+  if(pollDot) pollDot.textContent = '🗳️ Poll 🔴';
+});
+
+socket.on('stream-ended', data => {
+  if(durationInterval) clearInterval(durationInterval);
+  showWatchToast('Stream ended. Redirecting...');
+  setTimeout(() => location.href = '/', 2500);
+});
+
+socket.on('stream-error', data => {
+  showWatchToast(data.message || 'Stream not found');
+  setTimeout(() => location.href = '/', 2000);
+});
+
+setInterval(refreshAnalytics, 15000);
 </script>
 </body>
 </html>

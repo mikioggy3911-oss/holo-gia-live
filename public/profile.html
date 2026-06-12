@@ -1,332 +1,526 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Profile - F12 ORBIT</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+<script src="/socket.io/socket.io.js"></script>
 <style>
-:root { --accent: #ff0000; --accent2: #cc0000; --bg-main: #0a0a0a; --bg-card: rgba(20,20,20,0.5); --border: rgba(255,255,255,0.08); }
-[data-theme="blue"] { --accent: #4285f4; --accent2: #1a73e8; }
-[data-theme="green"] { --accent: #00ff88; --accent2: #00cc6a; }
-[data-theme="purple"] { --accent: #a855f7; --accent2: #7c3aed; }
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-body { background: var(--bg-main); color: #fff; min-height: 100vh; padding-bottom: 80px; }
-.header { background: rgba(10,10,10,0.95); padding: 0 20px; height: 60px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
-.logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: white; }
-.f12-logo-wrapper { display: inline-block; padding: 2px; border-radius: 18px; background: linear-gradient(90deg, #fff 0%, #d0d0d0 40%, #a8a8a8 49%, var(--accent) 51%, var(--accent2) 70%, #880000 100%); }
-.f12-logo-inner { display: inline-flex; align-items: center; padding: 6px 14px; background: #000; border-radius: 16px; }
-.f12-text-logo { font-family: 'Orbitron', sans-serif; font-size: 18px; font-weight: 900; letter-spacing: -1.5px; font-style: italic; display: flex; }
-.f12-text-logo .f { color: #fff; }
-.f12-text-logo .num { color: var(--accent); }
-.logo-text { font-size: 15px; font-weight: 800; }
-.logo-text span { color: var(--accent); }
-.back-btn { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; padding: 10px 22px; border-radius: 22px; text-decoration: none; font-size: 14px; font-weight: 700; }
-.container { max-width: 800px; margin: 0 auto; padding: 28px 20px 100px; }
-.cover-photo { width: 100%; height: 220px; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, var(--accent) 100%); border-radius: 18px 18px 0 0; position: relative; overflow: hidden; }
-.cover-photo img { width: 100%; height: 100%; object-fit: cover; }
-.cover-edit-btn { position: absolute; top: 14px; right: 14px; background: rgba(0,0,0,0.7); color: white; border: none; padding: 9px 14px; border-radius: 18px; cursor: pointer; font-size: 12px; font-weight: 600; }
-.profile-card { background: var(--bg-card); border-radius: 0 0 18px 18px; padding: 18px 28px 28px; border: 1px solid var(--border); border-top: none; }
-.profile-pic-wrapper { position: relative; margin-top: -70px; width: 140px; height: 140px; }
-.profile-pic { width: 140px; height: 140px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent2)); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 54px; overflow: hidden; border: 5px solid var(--bg-main); }
-.profile-pic img { width: 100%; height: 100%; object-fit: cover; }
-.profile-pic-edit { position: absolute; bottom: 6px; right: 6px; background: var(--accent); color: white; width: 36px; height: 36px; border-radius: 50%; border: 3px solid var(--bg-main); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; }
-.profile-info { margin-top: 18px; }
-.profile-name { font-size: 24px; font-weight: 800; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
-.verified-badge { color: #4285f4; font-size: 18px; }
-.profile-email { color: rgba(255,255,255,0.5); font-size: 13px; }
-.profile-bio { color: rgba(255,255,255,0.7); font-size: 14px; margin-top: 10px; line-height: 1.5; }
-.profile-stats { display: flex; gap: 22px; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); }
-.stat-item { display: flex; flex-direction: column; }
-.stat-value { font-size: 18px; font-weight: 800; }
-.stat-label { font-size: 11px; color: rgba(255,255,255,0.5); text-transform: uppercase; margin-top: 2px; }
-.status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 11px; border-radius: 11px; font-size: 11px; font-weight: 600; margin-top: 8px; background: rgba(0,255,136,0.15); color: #00ff88; border: 1px solid rgba(0,255,136,0.3); }
-.edit-section { background: var(--bg-card); border-radius: 18px; padding: 28px; margin-top: 18px; border: 1px solid var(--border); }
-.section-title { font-size: 18px; font-weight: 800; margin-bottom: 22px; display: flex; align-items: center; gap: 10px; }
-.form-group { margin-bottom: 18px; }
-.form-group label { display: block; margin-bottom: 8px; font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.7); text-transform: uppercase; }
-.form-group input, .form-group textarea { width: 100%; padding: 13px 16px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 11px; color: #fff; font-size: 14px; outline: none; }
-.form-group input:focus, .form-group textarea:focus { border-color: var(--accent); }
-.form-group textarea { resize: vertical; min-height: 90px; }
-.char-count { font-size: 11px; color: rgba(255,255,255,0.4); text-align: right; margin-top: 4px; }
-.status-options { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
-.status-option { padding: 13px; background: rgba(255,255,255,0.05); border: 2px solid var(--border); border-radius: 11px; cursor: pointer; text-align: center; }
-.status-option.active { border-color: var(--accent); background: rgba(255,0,0,0.1); }
-.status-option-icon { font-size: 22px; margin-bottom: 4px; }
-.status-option-label { font-size: 12px; font-weight: 600; }
-.theme-section { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-.theme-card { padding: 16px; background: rgba(255,255,255,0.05); border: 2px solid var(--border); border-radius: 11px; cursor: pointer; text-align: center; transition: all 0.2s; }
-.theme-card:hover { transform: translateY(-3px); }
-.theme-card.active { border-color: var(--accent); }
-.theme-preview { width: 100%; height: 40px; border-radius: 8px; margin-bottom: 6px; }
-.theme-preview.red { background: linear-gradient(135deg, #ff0000, #cc0000); }
-.theme-preview.blue { background: linear-gradient(135deg, #4285f4, #1a73e8); }
-.theme-preview.green { background: linear-gradient(135deg, #00ff88, #00cc6a); }
-.theme-preview.purple { background: linear-gradient(135deg, #a855f7, #7c3aed); }
-.theme-name { font-size: 11px; font-weight: 700; }
-.badges-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 10px; }
-.badge-item { padding: 12px; background: rgba(255,255,255,0.03); border-radius: 11px; text-align: center; cursor: pointer; border: 1px solid rgba(255,255,255,0.05); }
-.badge-item.earned { background: rgba(255,193,7,0.1); border-color: rgba(255,193,7,0.3); }
-.badge-icon { font-size: 32px; margin-bottom: 4px; }
-.badge-item.locked .badge-icon { filter: grayscale(1); opacity: 0.3; }
-.badge-name { font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.7); }
-.badge-item.earned .badge-name { color: #ffc107; }
-.btn-row { display: flex; gap: 10px; margin-top: 22px; }
-.btn { padding: 13px 24px; border-radius: 11px; font-size: 14px; font-weight: 700; cursor: pointer; border: none; flex: 1; text-decoration: none; text-align: center; display: flex; align-items: center; justify-content: center; }
-.btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: white; }
-.btn-secondary { background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--border); }
-.btn-danger { background: rgba(255,0,0,0.1); color: #ff5252; border: 1px solid rgba(255,0,0,0.3); }
-.success-msg { background: rgba(0,255,136,0.15); color: #00ff88; padding: 13px 18px; border-radius: 11px; margin-bottom: 18px; display: none; font-weight: 600; border: 1px solid rgba(0,255,136,0.3); }
-.success-msg.show { display: block; }
-.hidden-input { display: none; }
-.danger-zone { background: rgba(255,0,0,0.05); border: 1px solid rgba(255,0,0,0.2); border-radius: 14px; padding: 22px; margin-top: 18px; }
-.danger-title { color: #ff5252; font-weight: 800; font-size: 15px; margin-bottom: 6px; }
-.danger-text { color: rgba(255,255,255,0.6); font-size: 12px; margin-bottom: 14px; }
-.floating-back { position: fixed; bottom: 24px; left: 24px; background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; padding: 14px 24px; border-radius: 30px; font-size: 14px; font-weight: 700; box-shadow: 0 8px 30px rgba(255,0,0,0.5); z-index: 9999; display: flex; align-items: center; gap: 8px; text-decoration: none; }
-@media (max-width: 768px) {
-.logo-text { display: none; }
-.container { padding: 18px 14px 100px; }
-.profile-card { padding: 14px 18px 22px; }
-.profile-name { font-size: 20px; }
-.cover-photo { height: 160px; }
-.profile-pic-wrapper, .profile-pic { width: 110px; height: 110px; }
-.profile-pic { font-size: 44px; margin-top: -55px; }
-.edit-section { padding: 20px; }
-.status-options, .theme-section { grid-template-columns: 1fr 1fr; }
-.btn-row { flex-direction: column; }
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --primary:#7c3aed;
+  --primary2:#a855f7;
+  --bg:#0a0a0f;
+  --bg2:#13131a;
+  --bg3:#1a1a2e;
+  --card:#1e1e2e;
+  --card2:#252538;
+  --border:#2a2a3e;
+  --text:#ffffff;
+  --text2:#a0a0b8;
+  --red:#ef4444;
+  --green:#22c55e;
+  --gold:#f59e0b;
+  --pink:#ec4899;
 }
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',sans-serif;min-height:100vh;padding-bottom:40px}
+.top-nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,10,15,.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:12px 16px;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{font-size:18px;font-weight:800;background:linear-gradient(135deg,var(--primary),var(--primary2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.back-btn{background:var(--card);border:1px solid var(--border);color:var(--text);padding:7px 14px;border-radius:20px;font-size:13px;cursor:pointer}
+.back-btn:hover{background:var(--primary);border-color:var(--primary)}
+.main{padding-top:70px;max-width:500px;margin:0 auto;padding-left:16px;padding-right:16px}
+
+/* PROFILE CARD */
+.profile-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:24px;text-align:center;margin-bottom:16px;margin-top:16px}
+.profile-avatar-wrap{position:relative;display:inline-block;margin-bottom:14px}
+.profile-avatar{width:90px;height:90px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:700;margin:0 auto;overflow:hidden;border:3px solid var(--primary);cursor:pointer;transition:opacity .2s}
+.profile-avatar:hover{opacity:.85}
+.profile-avatar img{width:100%;height:100%;object-fit:cover}
+.avatar-edit{position:absolute;bottom:0;right:0;background:var(--primary2);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer}
+.profile-name{font-size:22px;font-weight:800;margin-bottom:4px}
+.profile-bio{font-size:13px;color:var(--text2);margin-bottom:12px}
+.profile-stats{display:flex;justify-content:center;gap:24px;margin-bottom:12px}
+.pstat{text-align:center}
+.pstat-val{font-size:20px;font-weight:800;color:var(--primary2)}
+.pstat-label{font-size:11px;color:var(--text2)}
+.status-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;background:rgba(34,197,94,.15);color:var(--green);border:1px solid rgba(34,197,94,.3)}
+
+/* SECTION */
+.section{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:14px}
+.section-title{font-size:14px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:6px}
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:12px;font-weight:600;color:var(--text2);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
+.form-input{width:100%;padding:10px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:12px;color:var(--text);font-size:14px;outline:none;transition:border .2s}
+.form-input:focus{border-color:var(--primary)}
+.form-textarea{resize:vertical;min-height:80px;font-family:inherit}
+.save-btn{width:100%;padding:12px;background:linear-gradient(135deg,var(--primary),var(--primary2));color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;transition:opacity .2s}
+.save-btn:hover{opacity:.9}
+.save-btn:active{opacity:.8}
+
+/* THEME */
+.theme-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.theme-item{border-radius:12px;padding:10px 6px;text-align:center;cursor:pointer;border:2px solid var(--border);transition:all .2s;font-size:11px;font-weight:600}
+.theme-item:hover{transform:translateY(-2px)}
+.theme-item.selected{border-width:2px}
+.theme-swatch{width:36px;height:36px;border-radius:50%;margin:0 auto 6px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.mode-toggle{display:flex;gap:10px;margin-bottom:14px}
+.mode-btn{flex:1;padding:10px;border-radius:12px;border:1px solid var(--border);background:var(--bg3);color:var(--text2);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;text-align:center}
+.mode-btn.active{background:var(--primary);border-color:var(--primary);color:#fff}
+
+/* LEADERBOARD MINI */
+.lb-mini{display:flex;align-items:center;gap:12px;padding:12px;background:var(--bg3);border-radius:12px;margin-bottom:8px}
+.lb-mini-rank{font-size:20px;width:28px;text-align:center}
+.lb-mini-info{flex:1}
+.lb-mini-name{font-size:13px;font-weight:700}
+.lb-mini-stats{font-size:11px;color:var(--text2);margin-top:2px}
+.lb-mini-score{font-size:16px;font-weight:800;color:var(--gold)}
+
+/* STORY */
+.my-story-card{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:8px;display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.del-story-btn{background:var(--red);color:#fff;border:none;padding:4px 10px;border-radius:8px;font-size:11px;cursor:pointer;flex-shrink:0}
+
+/* NOTIF TOGGLE */
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border)}
+.toggle-row:last-child{border-bottom:none}
+.toggle-label{font-size:14px;font-weight:600}
+.toggle-sub{font-size:12px;color:var(--text2);margin-top:2px}
+.toggle-switch{position:relative;width:48px;height:26px;flex-shrink:0}
+.toggle-switch input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;inset:0;background:var(--border);border-radius:13px;cursor:pointer;transition:.3s}
+.toggle-slider:before{content:'';position:absolute;width:20px;height:20px;border-radius:50%;background:#fff;bottom:3px;left:3px;transition:.3s}
+.toggle-switch input:checked + .toggle-slider{background:var(--green)}
+.toggle-switch input:checked + .toggle-slider:before{transform:translateX(22px)}
+
+/* TOAST */
+.toast-container{position:fixed;top:80px;right:16px;z-index:1000;display:flex;flex-direction:column;gap:8px}
+.toast{background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:12px 16px;font-size:13px;min-width:200px;animation:slideIn .3s ease}
+.toast.success{border-color:var(--green)}
+.toast.error{border-color:var(--red)}
+@keyframes slideIn{from{opacity:0;transform:translateX(100%)}to{opacity:1;transform:translateX(0)}}
+
+/* LOGOUT */
+.logout-btn{width:100%;padding:12px;background:rgba(239,68,68,.1);color:var(--red);border:1px solid rgba(239,68,68,.3);border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;margin-top:4px;transition:all .2s}
+.logout-btn:hover{background:rgba(239,68,68,.2)}
 </style>
 </head>
 <body>
 
-<div class="header">
-<a href="/" class="logo">
-<div class="f12-logo-wrapper">
-<div class="f12-logo-inner">
-<div class="f12-text-logo"><span class="f">F</span><span class="num">12</span></div>
-</div>
-</div>
-<div class="logo-text">ORBIT</div>
-</a>
-<a href="/" class="back-btn">← Back to Home</a>
-</div>
+<nav class="top-nav">
+  <button class="back-btn" onclick="location.href='/'">← Home</button>
+  <div class="nav-logo">👤 Profile</div>
+  <button class="save-btn" style="width:auto;padding:7px 16px;font-size:13px" onclick="saveProfile()">Save</button>
+</nav>
 
-<div class="container">
+<div class="main">
 
-<div class="cover-photo">
-<img id="cover-preview" style="display:none;" alt="Cover">
-<button class="cover-edit-btn" onclick="document.getElementById('cover-input').click()">📷 Edit Cover</button>
-<input type="file" id="cover-input" class="hidden-input" accept="image/*" onchange="handleCoverUpload(event)">
-</div>
+  <!-- PROFILE CARD -->
+  <div class="profile-card">
+    <div class="profile-avatar-wrap">
+      <div class="profile-avatar" id="profileAvatar" onclick="triggerPhotoUpload()">?</div>
+      <div class="avatar-edit" onclick="triggerPhotoUpload()">📷</div>
+    </div>
+    <input type="file" id="photoInput" accept="image/*" style="display:none" onchange="handlePhotoChange(this)"/>
+    <div class="profile-name" id="profileDisplayName">Loading...</div>
+    <div class="profile-bio" id="profileDisplayBio">No bio yet</div>
+    <div class="profile-stats">
+      <div class="pstat"><div class="pstat-val" id="statStreams">0</div><div class="pstat-label">Streams</div></div>
+      <div class="pstat"><div class="pstat-val" id="statLikes">0</div><div class="pstat-label">Likes</div></div>
+      <div class="pstat"><div class="pstat-val" id="statGifts">0</div><div class="pstat-label">Gifts</div></div>
+    </div>
+    <div class="status-badge" id="statusBadge">🟢 Online</div>
+  </div>
 
-<div class="profile-card">
-<div class="profile-pic-wrapper">
-<div class="profile-pic" id="profile-pic">U</div>
-<button class="profile-pic-edit" onclick="document.getElementById('photo-input').click()">📷</button>
-<input type="file" id="photo-input" class="hidden-input" accept="image/*" onchange="handlePhotoUpload(event)">
-</div>
+  <!-- EDIT PROFILE -->
+  <div class="section">
+    <div class="section-title">✏️ Edit Profile</div>
+    <div class="form-group">
+      <label>Display Name</label>
+      <input class="form-input" id="nameInput" type="text" placeholder="Your name"/>
+    </div>
+    <div class="form-group">
+      <label>Bio</label>
+      <textarea class="form-input form-textarea" id="bioInput" placeholder="Tell people about yourself..."></textarea>
+    </div>
+    <div class="form-group">
+      <label>Status</label>
+      <select class="form-input" id="statusSelect">
+        <option value="online">🟢 Online</option>
+        <option value="away">🟡 Away</option>
+        <option value="busy">🔴 Busy</option>
+      </select>
+    </div>
+    <button class="save-btn" onclick="saveProfile()">💾 Save Profile</button>
+  </div>
 
-<div class="profile-info">
-<div class="profile-name">
-<span id="display-name">User Name</span>
-<span class="verified-badge" id="verified-badge" style="display:none;">✓</span>
-</div>
-<div class="profile-email" id="display-email"></div>
-<div class="status-badge"><span style="width:7px;height:7px;border-radius:50%;background:#00ff88;display:inline-block;"></span><span id="status-text">Online</span></div>
-<div class="profile-bio" id="display-bio"></div>
-<div class="profile-stats">
-<div class="stat-item"><div class="stat-value" id="stat-friends">0</div><div class="stat-label">Friends</div></div>
-<div class="stat-item"><div class="stat-value" id="stat-streams">0</div><div class="stat-label">Streams</div></div>
-<div class="stat-item"><div class="stat-value" id="stat-views">0</div><div class="stat-label">Views</div></div>
-</div>
-</div>
-</div>
+  <!-- THEME -->
+  <div class="section">
+    <div class="section-title">🎨 Theme</div>
+    <div class="mode-toggle">
+      <div class="mode-btn active" id="modeDark" onclick="setMode('dark')">🌙 Dark</div>
+      <div class="mode-btn" id="modeLight" onclick="setMode('light')">☀️ Light</div>
+    </div>
+    <div class="theme-grid" id="themeGrid"></div>
+    <button class="save-btn" onclick="saveTheme()">🎨 Apply Theme</button>
+  </div>
 
-<div class="success-msg" id="success-msg">✅ Profile updated! Returning to home...</div>
+  <!-- MY STORIES -->
+  <div class="section">
+    <div class="section-title">💌 My Stories</div>
+    <div id="myStoriesContainer">
+      <div style="text-align:center;color:var(--text2);padding:20px;font-size:13px">No stories yet</div>
+    </div>
+    <button class="save-btn" style="margin-top:10px" onclick="openAddStory()">+ Add New Story</button>
+  </div>
 
-<div class="edit-section">
-<div class="section-title"><span>🎨</span><span>Theme Color</span></div>
-<div class="theme-section">
-<div class="theme-card" data-theme="default" onclick="setTheme('default')">
-<div class="theme-preview red"></div>
-<div class="theme-name">Red</div>
-</div>
-<div class="theme-card" data-theme="blue" onclick="setTheme('blue')">
-<div class="theme-preview blue"></div>
-<div class="theme-name">Blue</div>
-</div>
-<div class="theme-card" data-theme="green" onclick="setTheme('green')">
-<div class="theme-preview green"></div>
-<div class="theme-name">Green</div>
-</div>
-<div class="theme-card" data-theme="purple" onclick="setTheme('purple')">
-<div class="theme-preview purple"></div>
-<div class="theme-name">Purple</div>
-</div>
-</div>
-</div>
+  <!-- MY RANK -->
+  <div class="section">
+    <div class="section-title">🏆 My Rank</div>
+    <div id="myRankContainer">
+      <div style="text-align:center;color:var(--text2);padding:20px;font-size:13px">No rank data yet. Start streaming!</div>
+    </div>
+  </div>
 
-<div class="edit-section">
-<div class="section-title"><span>🏆</span><span>Achievements</span></div>
-<div class="badges-grid">
-<div class="badge-item earned"><div class="badge-icon">🌟</div><div class="badge-name">Welcome</div></div>
-<div class="badge-item" id="badge-firststream"><div class="badge-icon">🎬</div><div class="badge-name">First Stream</div></div>
-<div class="badge-item" id="badge-popular"><div class="badge-icon">🔥</div><div class="badge-name">Popular</div></div>
-<div class="badge-item" id="badge-veteran"><div class="badge-icon">👑</div><div class="badge-name">Veteran</div></div>
-<div class="badge-item" id="badge-social"><div class="badge-icon">💬</div><div class="badge-name">Social</div></div>
-<div class="badge-item" id="badge-streamer"><div class="badge-icon">🎥</div><div class="badge-name">Streamer</div></div>
-</div>
-</div>
+  <!-- NOTIFICATIONS -->
+  <div class="section">
+    <div class="section-title">🔔 Notifications</div>
+    <div class="toggle-row">
+      <div>
+        <div class="toggle-label">All Notifications</div>
+        <div class="toggle-sub">Likes, gifts, messages, viewers</div>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" id="notifToggle" checked onchange="toggleNotifs(this.checked)"/>
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+  </div>
 
-<div class="edit-section">
-<div class="section-title"><span>✏️</span><span>Edit Profile</span></div>
-<div class="form-group"><label>Display Name</label><input type="text" id="edit-name" placeholder="Your name" maxlength="30"></div>
-<div class="form-group">
-<label>Bio (About You)</label>
-<textarea id="edit-bio" placeholder="Tell us about yourself..." maxlength="150"></textarea>
-<div class="char-count"><span id="bio-count">0</span>/150</div>
-</div>
-<div class="form-group">
-<label>Status</label>
-<div class="status-options">
-<div class="status-option active" data-status="online" onclick="selectStatus(this)"><div class="status-option-icon">🟢</div><div class="status-option-label">Online</div></div>
-<div class="status-option" data-status="busy" onclick="selectStatus(this)"><div class="status-option-icon">🟡</div><div class="status-option-label">Busy</div></div>
-<div class="status-option" data-status="away" onclick="selectStatus(this)"><div class="status-option-icon">⚪</div><div class="status-option-label">Away</div></div>
-</div>
-</div>
-<div class="btn-row">
-<a href="/" class="btn btn-secondary">Cancel</a>
-<button class="btn btn-primary" onclick="saveProfile()">💾 Save Changes</button>
-</div>
-</div>
-
-<div class="edit-section">
-<div class="section-title"><span>⚙️</span><span>Account Info</span></div>
-<div class="form-group"><label>Account Type</label><input type="text" id="account-type" readonly></div>
-<div class="form-group"><label>User ID</label><input type="text" id="user-id" readonly></div>
-<div class="form-group"><label>Member Since</label><input type="text" id="member-since" readonly></div>
-</div>
-
-<div class="danger-zone">
-<div class="danger-title">⚠️ Danger Zone</div>
-<div class="danger-text">Sign out from F12 ORBIT.</div>
-<button class="btn btn-danger" onclick="signOut()">🚪 Sign Out</button>
-</div>
+  <!-- LOGOUT -->
+  <div class="section">
+    <div class="section-title">⚙️ Account</div>
+    <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+  </div>
 
 </div>
 
-<a href="/" class="floating-back">← Back to Home</a>
+<!-- STORY ADD MODAL -->
+<div id="storyModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:300;align-items:center;justify-content:center">
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:24px;width:90%;max-width:400px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <div style="font-size:17px;font-weight:700">📝 Add Story</div>
+      <button onclick="closeAddStory()" style="background:none;border:none;color:var(--text2);font-size:22px;cursor:pointer">✕</button>
+    </div>
+    <textarea id="storyText" style="width:100%;padding:12px 16px;background:var(--card);border:1px solid var(--border);border-radius:12px;color:var(--text);font-size:14px;outline:none;resize:none;margin-bottom:12px;font-family:inherit" rows="4" placeholder="What's on your mind?"></textarea>
+    <div style="font-size:12px;color:var(--text2);margin-bottom:12px">Stories expire in 24 hours</div>
+    <button onclick="submitStory()" style="width:100%;padding:12px;background:linear-gradient(135deg,var(--primary),var(--pink));color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer">📤 Share</button>
+  </div>
+</div>
 
-<script src="/socket.io/socket.io.js"></script>
+<div class="toast-container" id="toastContainer"></div>
+
 <script>
-const username = localStorage.getItem('f12_username');
-const userPhoto = localStorage.getItem('f12_photo');
-const userEmail = localStorage.getItem('f12_email');
-const userBio = localStorage.getItem('f12_bio') || '';
-const userStatus = localStorage.getItem('f12_status') || 'online';
-const userCover = localStorage.getItem('f12_cover');
-if (!username) { window.location.href = '/login'; }
-if (!localStorage.getItem('f12_member_since')) { localStorage.setItem('f12_member_since', new Date().toISOString()); }
-const memberSince = localStorage.getItem('f12_member_since');
-
-const savedTheme = localStorage.getItem('f12_theme') || 'default';
-if (savedTheme !== 'default') document.documentElement.setAttribute('data-theme', savedTheme);
-
 const socket = io();
-let selectedStatus = userStatus;
-let newPhotoBase64 = null, newCoverBase64 = null;
+let myUserKey = '';
+let myPhoto = null;
+let selectedTheme = '#7c3aed';
+let selectedMode = 'dark';
+let myStories = [];
 
-socket.on('connect', () => {
-    socket.emit('user-online', { name: username, avatar: username.charAt(0).toUpperCase(), photo: userPhoto, bio: userBio, status: userStatus, userEmail: userEmail || username });
-});
+const THEMES = [
+  {color:'#7c3aed',name:'Purple',emoji:'💜'},
+  {color:'#ef4444',name:'Red',emoji:'❤️'},
+  {color:'#3b82f6',name:'Blue',emoji:'💙'},
+  {color:'#22c55e',name:'Green',emoji:'💚'},
+  {color:'#f59e0b',name:'Gold',emoji:'💛'},
+  {color:'#ec4899',name:'Pink',emoji:'🩷'},
+  {color:'#06b6d4',name:'Cyan',emoji:'🩵'},
+  {color:'#f97316',name:'Orange',emoji:'🧡'},
+];
 
-function setTheme(theme) {
-    if (theme === 'default') document.documentElement.removeAttribute('data-theme');
-    else document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('f12_theme', theme);
-    document.querySelectorAll('.theme-card').forEach(c => c.classList.toggle('active', c.dataset.theme === theme));
+function init() {
+  const user = JSON.parse(localStorage.getItem('orbitUser') || '{}');
+  myUserKey = user.userKey || ('uk_' + Date.now());
+  user.userKey = myUserKey;
+  localStorage.setItem('orbitUser', JSON.stringify(user));
+
+  document.getElementById('nameInput').value = user.name || '';
+  document.getElementById('bioInput').value = user.bio || '';
+  document.getElementById('statusSelect').value = user.status || 'online';
+
+  selectedTheme = user.themeColor || '#7c3aed';
+  selectedMode = user.themeMode || 'dark';
+
+  updateModeUI();
+  renderThemeGrid();
+  updateProfileCard(user);
+  loadDashboard();
+  loadStories();
+  renderThemeGrid();
+
+  socket.emit('user-online', {
+    name: user.name || 'Guest',
+    photo: user.photo || null,
+    userKey: myUserKey,
+    status: user.status || 'online',
+    bio: user.bio || '',
+    themeColor: selectedTheme,
+    themeMode: selectedMode,
+    notificationsEnabled: user.notificationsEnabled !== false
+  });
+
+  const notifToggle = document.getElementById('notifToggle');
+  if(notifToggle) notifToggle.checked = user.notificationsEnabled !== false;
 }
 
-function loadProfile() {
-    const picEl = document.getElementById('profile-pic');
-    if (userPhoto) picEl.innerHTML = '<img src="' + userPhoto + '">';
-    else picEl.textContent = username.charAt(0).toUpperCase();
-    if (userCover) { const coverEl = document.getElementById('cover-preview'); coverEl.src = userCover; coverEl.style.display = 'block'; }
-    document.getElementById('display-name').textContent = username;
-    document.getElementById('display-email').textContent = userEmail || 'Guest User';
-    document.getElementById('display-bio').textContent = userBio || 'No bio yet.';
-    document.getElementById('edit-name').value = username;
-    document.getElementById('edit-bio').value = userBio;
-    document.getElementById('bio-count').textContent = userBio.length;
-    document.querySelectorAll('.status-option').forEach(opt => { opt.classList.toggle('active', opt.dataset.status === userStatus); });
-    document.querySelectorAll('.theme-card').forEach(c => { c.classList.toggle('active', c.dataset.theme === savedTheme); });
-    document.getElementById('account-type').value = userEmail ? '🔵 Google' : '👤 Guest';
-    document.getElementById('user-id').value = 'F12-' + (userEmail || username).substring(0, 8).toUpperCase();
-    document.getElementById('member-since').value = new Date(memberSince).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-    if (userEmail) document.getElementById('verified-badge').style.display = 'inline';
-    
-    const friends = JSON.parse(localStorage.getItem('f12_friends') || '[]');
-    const streams = parseInt(localStorage.getItem('f12_stream_count') || '0');
-    const views = parseInt(localStorage.getItem('f12_total_views') || '0');
-    document.getElementById('stat-friends').textContent = friends.length;
-    document.getElementById('stat-streams').textContent = streams;
-    document.getElementById('stat-views').textContent = views;
-    
-    if (streams >= 1) document.getElementById('badge-firststream').classList.add('earned');
-    if (streams >= 5) document.getElementById('badge-streamer').classList.add('earned');
-    if (views >= 100) document.getElementById('badge-popular').classList.add('earned');
-    const daysSince = (new Date() - new Date(memberSince)) / (1000 * 60 * 60 * 24);
-    if (daysSince >= 30) document.getElementById('badge-veteran').classList.add('earned');
-    if (friends.length >= 5) document.getElementById('badge-social').classList.add('earned');
+function updateProfileCard(user) {
+  const av = document.getElementById('profileAvatar');
+  const dn = document.getElementById('profileDisplayName');
+  const db = document.getElementById('profileDisplayBio');
+  const sb = document.getElementById('statusBadge');
+
+  if(user.photo) {
+    av.innerHTML = `<img src="${user.photo}" alt="${user.name}">`;
+  } else {
+    av.textContent = (user.name || 'U').charAt(0).toUpperCase();
+  }
+  if(dn) dn.textContent = user.name || 'Anonymous';
+  if(db) db.textContent = user.bio || 'No bio yet';
+
+  const statusMap = {online:'🟢 Online', away:'🟡 Away', busy:'🔴 Busy'};
+  if(sb) sb.textContent = statusMap[user.status] || '🟢 Online';
 }
 
-function selectStatus(element) {
-    document.querySelectorAll('.status-option').forEach(opt => opt.classList.remove('active'));
-    element.classList.add('active');
-    selectedStatus = element.dataset.status;
+function renderThemeGrid() {
+  const grid = document.getElementById('themeGrid');
+  if(!grid) return;
+  grid.innerHTML = THEMES.map(t => `
+    <div class="theme-item ${selectedTheme === t.color ? 'selected' : ''}"
+      style="border-color:${selectedTheme === t.color ? t.color : 'var(--border)'};background:${selectedTheme === t.color ? t.color+'22' : 'var(--bg3)'}"
+      onclick="selectTheme('${t.color}')">
+      <div class="theme-swatch" style="background:${t.color}">${t.emoji}</div>
+      ${t.name}
+    </div>`).join('');
 }
 
-document.getElementById('edit-bio').addEventListener('input', (e) => { document.getElementById('bio-count').textContent = e.target.value.length; });
-
-function handlePhotoUpload(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    if (file.size > 5 * 1024 * 1024) { alert('Max 5MB!'); return; }
-    const reader = new FileReader();
-    reader.onload = function(e) { newPhotoBase64 = e.target.result; document.getElementById('profile-pic').innerHTML = '<img src="' + newPhotoBase64 + '">'; };
-    reader.readAsDataURL(file);
+function selectTheme(color) {
+  selectedTheme = color;
+  renderThemeGrid();
+  document.documentElement.style.setProperty('--primary', color);
 }
 
-function handleCoverUpload(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    if (file.size > 5 * 1024 * 1024) { alert('Max 5MB!'); return; }
-    const reader = new FileReader();
-    reader.onload = function(e) { newCoverBase64 = e.target.result; const coverEl = document.getElementById('cover-preview'); coverEl.src = newCoverBase64; coverEl.style.display = 'block'; };
-    reader.readAsDataURL(file);
+function setMode(mode) {
+  selectedMode = mode;
+  updateModeUI();
+}
+
+function updateModeUI() {
+  const dark = document.getElementById('modeDark');
+  const light = document.getElementById('modeLight');
+  if(dark) dark.classList.toggle('active', selectedMode === 'dark');
+  if(light) light.classList.toggle('active', selectedMode === 'light');
+}
+
+function saveTheme() {
+  const user = JSON.parse(localStorage.getItem('orbitUser') || '{}');
+  user.themeColor = selectedTheme;
+  user.themeMode = selectedMode;
+  localStorage.setItem('orbitUser', JSON.stringify(user));
+
+  socket.emit('update-theme', {
+    themeColor: selectedTheme,
+    themeMode: selectedMode
+  });
+
+  document.documentElement.style.setProperty('--primary', selectedTheme);
+  showToast('🎨 Theme saved!', 'success');
 }
 
 function saveProfile() {
-    const newName = document.getElementById('edit-name').value.trim();
-    const newBio = document.getElementById('edit-bio').value.trim();
-    if (!newName) { alert('Name cannot be empty!'); return; }
-    if (newName.length < 2) { alert('Name must be at least 2 characters!'); return; }
-    localStorage.setItem('f12_username', newName);
-    localStorage.setItem('f12_bio', newBio);
-    localStorage.setItem('f12_status', selectedStatus);
-    localStorage.setItem('f12_avatar', newName.charAt(0).toUpperCase());
-    if (newPhotoBase64) localStorage.setItem('f12_photo', newPhotoBase64);
-    if (newCoverBase64) localStorage.setItem('f12_cover', newCoverBase64);
-    socket.emit('update-profile', { name: newName, photo: newPhotoBase64 || userPhoto, bio: newBio, status: selectedStatus });
-    document.getElementById('success-msg').classList.add('show');
-    setTimeout(() => { window.location.href = '/'; }, 1500);
+  const name = document.getElementById('nameInput').value.trim();
+  const bio = document.getElementById('bioInput').value.trim();
+  const status = document.getElementById('statusSelect').value;
+
+  if(!name) { showToast('Name cannot be empty', 'error'); return; }
+
+  const user = JSON.parse(localStorage.getItem('orbitUser') || '{}');
+  user.name = name;
+  user.bio = bio;
+  user.status = status;
+  user.photo = myPhoto || user.photo;
+  user.themeColor = selectedTheme;
+  user.themeMode = selectedMode;
+  localStorage.setItem('orbitUser', JSON.stringify(user));
+
+  socket.emit('update-profile', {
+    name,
+    bio,
+    status,
+    photo: myPhoto || user.photo,
+    themeColor: selectedTheme,
+    themeMode: selectedMode
+  });
+
+  updateProfileCard(user);
+  showToast('✅ Profile saved!', 'success');
 }
 
-function signOut() {
-    if (confirm('Sign out?')) { localStorage.clear(); window.location.href = '/login'; }
+function triggerPhotoUpload() {
+  document.getElementById('photoInput').click();
 }
 
-loadProfile();
+function handlePhotoChange(input) {
+  const file = input.files[0];
+  if(!file) return;
+  if(file.size > 3 * 1024 * 1024) { showToast('Image too large (max 3MB)', 'error'); return; }
+  const reader = new FileReader();
+  reader.onload = e => {
+    myPhoto = e.target.result;
+    const av = document.getElementById('profileAvatar');
+    if(av) av.innerHTML = `<img src="${myPhoto}" alt="Profile">`;
+    showToast('📷 Photo selected! Press Save.', 'success');
+  };
+  reader.readAsDataURL(file);
+}
+
+function toggleNotifs(enabled) {
+  socket.emit('set-notification-preference', { enabled });
+  const user = JSON.parse(localStorage.getItem('orbitUser') || '{}');
+  user.notificationsEnabled = enabled;
+  localStorage.setItem('orbitUser', JSON.stringify(user));
+  showToast(enabled ? '🔔 Notifications ON' : '🔕 Notifications OFF', 'success');
+}
+
+function loadDashboard() {
+  fetch('/api/dashboard/' + myUserKey)
+    .then(r => r.json())
+    .then(data => {
+      if(data.leaderboard) {
+        const lb = data.leaderboard;
+        const el = document.getElementById('statStreams');
+        const el2 = document.getElementById('statLikes');
+        const el3 = document.getElementById('statGifts');
+        if(el) el.textContent = lb.totalStreams || 0;
+        if(el2) el2.textContent = lb.totalLikes || 0;
+        if(el3) el3.textContent = lb.totalGifts || 0;
+
+        const rankContainer = document.getElementById('myRankContainer');
+        if(rankContainer) {
+          const score = lb.score || 0;
+          rankContainer.innerHTML = `
+            <div class="lb-mini">
+              <div class="lb-mini-rank">🏅</div>
+              <div class="lb-mini-info">
+                <div class="lb-mini-name">${escHtml(lb.streamerName || 'You')}</div>
+                <div class="lb-mini-stats">❤️${lb.totalLikes} 🎁${lb.totalGifts} 📺${lb.totalStreams} 💬${lb.totalChatMessages}</div>
+              </div>
+              <div class="lb-mini-score">${score} pts</div>
+            </div>`;
+        }
+      }
+    }).catch(() => {});
+}
+
+function loadStories() {
+  fetch('/api/stories')
+    .then(r => r.json())
+    .then(data => {
+      myStories = data.filter(s => s.userKey === myUserKey);
+      renderMyStories();
+    }).catch(() => {});
+}
+
+function renderMyStories() {
+  const container = document.getElementById('myStoriesContainer');
+  if(!container) return;
+  if(myStories.length === 0) {
+    container.innerHTML = `<div style="text-align:center;color:var(--text2);padding:20px;font-size:13px">No stories yet. Add one!</div>`;
+    return;
+  }
+  container.innerHTML = myStories.map(story => `
+    <div class="my-story-card">
+      <div style="flex:1">
+        <div style="font-size:13px;margin-bottom:4px">${escHtml(story.text || '(empty)')}</div>
+        <div style="font-size:11px;color:var(--text2)">Expires: ${getTimeAgo(story.expiresAt, true)}</div>
+      </div>
+      <button class="del-story-btn" onclick="deleteStory('${story.id}')">Delete</button>
+    </div>`).join('');
+}
+
+function deleteStory(storyId) {
+  socket.emit('delete-story', { storyId });
+  myStories = myStories.filter(s => s.id !== storyId);
+  renderMyStories();
+  showToast('Story deleted', 'success');
+}
+
+function openAddStory() {
+  document.getElementById('storyText').value = '';
+  document.getElementById('storyModal').style.display = 'flex';
+}
+function closeAddStory() {
+  document.getElementById('storyModal').style.display = 'none';
+}
+function submitStory() {
+  const text = document.getElementById('storyText').value.trim();
+  if(!text) { showToast('Please write something', 'error'); return; }
+  socket.emit('add-story', { text });
+  closeAddStory();
+  showToast('Story shared! 💌', 'success');
+  setTimeout(loadStories, 1000);
+}
+
+function logout() {
+  if(!confirm('Are you sure you want to logout?')) return;
+  localStorage.removeItem('orbitUser');
+  location.href = '/login';
+}
+
+function showToast(msg, type='info') {
+  const c = document.getElementById('toastContainer');
+  const t = document.createElement('div');
+  t.className = 'toast ' + type;
+  t.textContent = msg;
+  c.appendChild(t);
+  setTimeout(() => { t.style.opacity='0'; t.style.transition='opacity .3s'; setTimeout(()=>t.remove(),300); }, 3000);
+}
+
+function escHtml(str) {
+  if(!str) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function getTimeAgo(dateStr, future=false) {
+  if(!dateStr) return '';
+  const diff = future
+    ? new Date(dateStr).getTime() - Date.now()
+    : Date.now() - new Date(dateStr).getTime();
+  const abs = Math.abs(diff);
+  const m = Math.floor(abs/60000);
+  const h = Math.floor(abs/3600000);
+  if(future) {
+    if(h > 0) return `in ${h}h`;
+    if(m > 0) return `in ${m}m`;
+    return 'soon';
+  }
+  if(m < 1) return 'just now';
+  if(m < 60) return `${m}m ago`;
+  return `${h}h ago`;
+}
+
+socket.on('connect', init);
+socket.on('stories-updated', loadStories);
+socket.on('leaderboard-updated', loadDashboard);
+socket.on('dashboard-data', data => {
+  if(data && data.leaderboard) {
+    const lb = data.leaderboard;
+    const el = document.getElementById('statStreams');
+    const el2 = document.getElementById('statLikes');
+    const el3 = document.getElementById('statGifts');
+    if(el) el.textContent = lb.totalStreams || 0;
+    if(el2) el2.textContent = lb.totalLikes || 0;
+    if(el3) el3.textContent = lb.totalGifts || 0;
+  }
+});
 </script>
 </body>
 </html>
