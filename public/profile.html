@@ -6,66 +6,75 @@
 <title>Profile - F12 ORBIT</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
 <style>
+:root { --accent: #ff0000; --accent2: #cc0000; --bg-main: #0a0a0a; --bg-card: rgba(20,20,20,0.5); --border: rgba(255,255,255,0.08); }
+[data-theme="blue"] { --accent: #4285f4; --accent2: #1a73e8; }
+[data-theme="green"] { --accent: #00ff88; --accent2: #00cc6a; }
+[data-theme="purple"] { --accent: #a855f7; --accent2: #7c3aed; }
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-body { background: #0a0a0a; color: #fff; min-height: 100vh; padding-bottom: 80px; }
-.header { background: rgba(10,10,10,0.95); padding: 0 20px; height: 60px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.06); position: sticky; top: 0; z-index: 100; }
+body { background: var(--bg-main); color: #fff; min-height: 100vh; padding-bottom: 80px; }
+.header { background: rgba(10,10,10,0.95); padding: 0 20px; height: 60px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
 .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: white; }
-.f12-logo-wrapper { display: inline-block; padding: 2px; border-radius: 18px; background: linear-gradient(90deg, #fff 0%, #d0d0d0 40%, #a8a8a8 49%, #ff3333 51%, #cc0000 70%, #880000 100%); }
+.f12-logo-wrapper { display: inline-block; padding: 2px; border-radius: 18px; background: linear-gradient(90deg, #fff 0%, #d0d0d0 40%, #a8a8a8 49%, var(--accent) 51%, var(--accent2) 70%, #880000 100%); }
 .f12-logo-inner { display: inline-flex; align-items: center; padding: 6px 14px; background: #000; border-radius: 16px; }
 .f12-text-logo { font-family: 'Orbitron', sans-serif; font-size: 18px; font-weight: 900; letter-spacing: -1.5px; font-style: italic; display: flex; }
 .f12-text-logo .f { color: #fff; }
-.f12-text-logo .num { color: #ff0000; }
+.f12-text-logo .num { color: var(--accent); }
 .logo-text { font-size: 15px; font-weight: 800; }
-.logo-text span { color: #ff0000; }
-.back-btn { background: linear-gradient(135deg, #ff0000, #cc0000); color: #fff; padding: 10px 22px; border-radius: 22px; text-decoration: none; font-size: 14px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 4px 16px rgba(255,0,0,0.3); }
-.back-btn:hover { transform: translateX(-3px); }
+.logo-text span { color: var(--accent); }
+.back-btn { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; padding: 10px 22px; border-radius: 22px; text-decoration: none; font-size: 14px; font-weight: 700; }
 .container { max-width: 800px; margin: 0 auto; padding: 28px 20px 100px; }
-.cover-photo { width: 100%; height: 220px; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #ff0000 100%); border-radius: 18px 18px 0 0; position: relative; overflow: hidden; }
+.cover-photo { width: 100%; height: 220px; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, var(--accent) 100%); border-radius: 18px 18px 0 0; position: relative; overflow: hidden; }
 .cover-photo img { width: 100%; height: 100%; object-fit: cover; }
 .cover-edit-btn { position: absolute; top: 14px; right: 14px; background: rgba(0,0,0,0.7); color: white; border: none; padding: 9px 14px; border-radius: 18px; cursor: pointer; font-size: 12px; font-weight: 600; }
-.profile-card { background: rgba(20,20,20,0.5); border-radius: 0 0 18px 18px; padding: 18px 28px 28px; border: 1px solid rgba(255,255,255,0.08); border-top: none; }
+.profile-card { background: var(--bg-card); border-radius: 0 0 18px 18px; padding: 18px 28px 28px; border: 1px solid var(--border); border-top: none; }
 .profile-pic-wrapper { position: relative; margin-top: -70px; width: 140px; height: 140px; }
-.profile-pic { width: 140px; height: 140px; border-radius: 50%; background: linear-gradient(135deg, #ff0000, #cc0000); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 54px; overflow: hidden; border: 5px solid #0a0a0a; }
+.profile-pic { width: 140px; height: 140px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent2)); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 54px; overflow: hidden; border: 5px solid var(--bg-main); }
 .profile-pic img { width: 100%; height: 100%; object-fit: cover; }
-.profile-pic-edit { position: absolute; bottom: 6px; right: 6px; background: #ff0000; color: white; width: 36px; height: 36px; border-radius: 50%; border: 3px solid #0a0a0a; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+.profile-pic-edit { position: absolute; bottom: 6px; right: 6px; background: var(--accent); color: white; width: 36px; height: 36px; border-radius: 50%; border: 3px solid var(--bg-main); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; }
 .profile-info { margin-top: 18px; }
 .profile-name { font-size: 24px; font-weight: 800; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
 .verified-badge { color: #4285f4; font-size: 18px; }
 .profile-email { color: rgba(255,255,255,0.5); font-size: 13px; }
 .profile-bio { color: rgba(255,255,255,0.7); font-size: 14px; margin-top: 10px; line-height: 1.5; }
-.profile-stats { display: flex; gap: 22px; margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.06); }
+.profile-stats { display: flex; gap: 22px; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); }
 .stat-item { display: flex; flex-direction: column; }
 .stat-value { font-size: 18px; font-weight: 800; }
 .stat-label { font-size: 11px; color: rgba(255,255,255,0.5); text-transform: uppercase; margin-top: 2px; }
 .status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 11px; border-radius: 11px; font-size: 11px; font-weight: 600; margin-top: 8px; background: rgba(0,255,136,0.15); color: #00ff88; border: 1px solid rgba(0,255,136,0.3); }
-.edit-section { background: rgba(20,20,20,0.5); border-radius: 18px; padding: 28px; margin-top: 18px; border: 1px solid rgba(255,255,255,0.08); }
+.edit-section { background: var(--bg-card); border-radius: 18px; padding: 28px; margin-top: 18px; border: 1px solid var(--border); }
 .section-title { font-size: 18px; font-weight: 800; margin-bottom: 22px; display: flex; align-items: center; gap: 10px; }
 .form-group { margin-bottom: 18px; }
 .form-group label { display: block; margin-bottom: 8px; font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.7); text-transform: uppercase; }
-.form-group input, .form-group textarea { width: 100%; padding: 13px 16px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 11px; color: #fff; font-size: 14px; outline: none; }
-.form-group input:focus, .form-group textarea:focus { border-color: #ff0000; }
+.form-group input, .form-group textarea { width: 100%; padding: 13px 16px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 11px; color: #fff; font-size: 14px; outline: none; }
+.form-group input:focus, .form-group textarea:focus { border-color: var(--accent); }
 .form-group textarea { resize: vertical; min-height: 90px; }
 .char-count { font-size: 11px; color: rgba(255,255,255,0.4); text-align: right; margin-top: 4px; }
 .status-options { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
-.status-option { padding: 13px; background: rgba(255,255,255,0.05); border: 2px solid rgba(255,255,255,0.1); border-radius: 11px; cursor: pointer; text-align: center; }
-.status-option.active { border-color: #ff0000; background: rgba(255,0,0,0.1); }
+.status-option { padding: 13px; background: rgba(255,255,255,0.05); border: 2px solid var(--border); border-radius: 11px; cursor: pointer; text-align: center; }
+.status-option.active { border-color: var(--accent); background: rgba(255,0,0,0.1); }
 .status-option-icon { font-size: 22px; margin-bottom: 4px; }
 .status-option-label { font-size: 12px; font-weight: 600; }
-
-/* BADGES SECTION */
+.theme-section { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.theme-card { padding: 16px; background: rgba(255,255,255,0.05); border: 2px solid var(--border); border-radius: 11px; cursor: pointer; text-align: center; transition: all 0.2s; }
+.theme-card:hover { transform: translateY(-3px); }
+.theme-card.active { border-color: var(--accent); }
+.theme-preview { width: 100%; height: 40px; border-radius: 8px; margin-bottom: 6px; }
+.theme-preview.red { background: linear-gradient(135deg, #ff0000, #cc0000); }
+.theme-preview.blue { background: linear-gradient(135deg, #4285f4, #1a73e8); }
+.theme-preview.green { background: linear-gradient(135deg, #00ff88, #00cc6a); }
+.theme-preview.purple { background: linear-gradient(135deg, #a855f7, #7c3aed); }
+.theme-name { font-size: 11px; font-weight: 700; }
 .badges-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 10px; }
-.badge-item { padding: 12px; background: rgba(255,255,255,0.03); border-radius: 11px; text-align: center; cursor: pointer; transition: all 0.2s; border: 1px solid rgba(255,255,255,0.05); }
+.badge-item { padding: 12px; background: rgba(255,255,255,0.03); border-radius: 11px; text-align: center; cursor: pointer; border: 1px solid rgba(255,255,255,0.05); }
 .badge-item.earned { background: rgba(255,193,7,0.1); border-color: rgba(255,193,7,0.3); }
-.badge-item:hover { transform: translateY(-3px); }
 .badge-icon { font-size: 32px; margin-bottom: 4px; }
 .badge-item.locked .badge-icon { filter: grayscale(1); opacity: 0.3; }
 .badge-name { font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.7); }
 .badge-item.earned .badge-name { color: #ffc107; }
-
 .btn-row { display: flex; gap: 10px; margin-top: 22px; }
 .btn { padding: 13px 24px; border-radius: 11px; font-size: 14px; font-weight: 700; cursor: pointer; border: none; flex: 1; text-decoration: none; text-align: center; display: flex; align-items: center; justify-content: center; }
-.btn-primary { background: linear-gradient(135deg, #ff0000, #cc0000); color: white; }
-.btn-secondary { background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.1); }
+.btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: white; }
+.btn-secondary { background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--border); }
 .btn-danger { background: rgba(255,0,0,0.1); color: #ff5252; border: 1px solid rgba(255,0,0,0.3); }
 .success-msg { background: rgba(0,255,136,0.15); color: #00ff88; padding: 13px 18px; border-radius: 11px; margin-bottom: 18px; display: none; font-weight: 600; border: 1px solid rgba(0,255,136,0.3); }
 .success-msg.show { display: block; }
@@ -73,11 +82,9 @@ body { background: #0a0a0a; color: #fff; min-height: 100vh; padding-bottom: 80px
 .danger-zone { background: rgba(255,0,0,0.05); border: 1px solid rgba(255,0,0,0.2); border-radius: 14px; padding: 22px; margin-top: 18px; }
 .danger-title { color: #ff5252; font-weight: 800; font-size: 15px; margin-bottom: 6px; }
 .danger-text { color: rgba(255,255,255,0.6); font-size: 12px; margin-bottom: 14px; }
-.floating-back { position: fixed; bottom: 24px; left: 24px; background: linear-gradient(135deg, #ff0000, #cc0000); color: #fff; padding: 14px 24px; border-radius: 30px; font-size: 14px; font-weight: 700; box-shadow: 0 8px 30px rgba(255,0,0,0.5); z-index: 9999; display: flex; align-items: center; gap: 8px; text-decoration: none; }
+.floating-back { position: fixed; bottom: 24px; left: 24px; background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; padding: 14px 24px; border-radius: 30px; font-size: 14px; font-weight: 700; box-shadow: 0 8px 30px rgba(255,0,0,0.5); z-index: 9999; display: flex; align-items: center; gap: 8px; text-decoration: none; }
 @media (max-width: 768px) {
-.header { padding: 0 14px; height: 56px; }
 .logo-text { display: none; }
-.back-btn { padding: 8px 16px; font-size: 13px; }
 .container { padding: 18px 14px 100px; }
 .profile-card { padding: 14px 18px 22px; }
 .profile-name { font-size: 20px; }
@@ -85,9 +92,8 @@ body { background: #0a0a0a; color: #fff; min-height: 100vh; padding-bottom: 80px
 .profile-pic-wrapper, .profile-pic { width: 110px; height: 110px; }
 .profile-pic { font-size: 44px; margin-top: -55px; }
 .edit-section { padding: 20px; }
-.status-options { grid-template-columns: 1fr; }
+.status-options, .theme-section { grid-template-columns: 1fr 1fr; }
 .btn-row { flex-direction: column; }
-.floating-back { bottom: 16px; left: 16px; padding: 12px 20px; font-size: 13px; }
 }
 </style>
 </head>
@@ -114,7 +120,6 @@ body { background: #0a0a0a; color: #fff; min-height: 100vh; padding-bottom: 80px
 </div>
 
 <div class="profile-card">
-
 <div class="profile-pic-wrapper">
 <div class="profile-pic" id="profile-pic">U</div>
 <button class="profile-pic-edit" onclick="document.getElementById('photo-input').click()">📷</button>
@@ -135,12 +140,32 @@ body { background: #0a0a0a; color: #fff; min-height: 100vh; padding-bottom: 80px
 <div class="stat-item"><div class="stat-value" id="stat-views">0</div><div class="stat-label">Views</div></div>
 </div>
 </div>
-
 </div>
 
 <div class="success-msg" id="success-msg">✅ Profile updated! Returning to home...</div>
 
-<!-- ACHIEVEMENTS / BADGES -->
+<div class="edit-section">
+<div class="section-title"><span>🎨</span><span>Theme Color</span></div>
+<div class="theme-section">
+<div class="theme-card" data-theme="default" onclick="setTheme('default')">
+<div class="theme-preview red"></div>
+<div class="theme-name">Red</div>
+</div>
+<div class="theme-card" data-theme="blue" onclick="setTheme('blue')">
+<div class="theme-preview blue"></div>
+<div class="theme-name">Blue</div>
+</div>
+<div class="theme-card" data-theme="green" onclick="setTheme('green')">
+<div class="theme-preview green"></div>
+<div class="theme-name">Green</div>
+</div>
+<div class="theme-card" data-theme="purple" onclick="setTheme('purple')">
+<div class="theme-preview purple"></div>
+<div class="theme-name">Purple</div>
+</div>
+</div>
+</div>
+
 <div class="edit-section">
 <div class="section-title"><span>🏆</span><span>Achievements</span></div>
 <div class="badges-grid">
@@ -155,10 +180,7 @@ body { background: #0a0a0a; color: #fff; min-height: 100vh; padding-bottom: 80px
 
 <div class="edit-section">
 <div class="section-title"><span>✏️</span><span>Edit Profile</span></div>
-<div class="form-group">
-<label>Display Name</label>
-<input type="text" id="edit-name" placeholder="Your name" maxlength="30">
-</div>
+<div class="form-group"><label>Display Name</label><input type="text" id="edit-name" placeholder="Your name" maxlength="30"></div>
 <div class="form-group">
 <label>Bio (About You)</label>
 <textarea id="edit-bio" placeholder="Tell us about yourself..." maxlength="150"></textarea>
@@ -203,23 +225,32 @@ const userEmail = localStorage.getItem('f12_email');
 const userBio = localStorage.getItem('f12_bio') || '';
 const userStatus = localStorage.getItem('f12_status') || 'online';
 const userCover = localStorage.getItem('f12_cover');
-
 if (!username) { window.location.href = '/login'; }
 if (!localStorage.getItem('f12_member_since')) { localStorage.setItem('f12_member_since', new Date().toISOString()); }
 const memberSince = localStorage.getItem('f12_member_since');
 
+const savedTheme = localStorage.getItem('f12_theme') || 'default';
+if (savedTheme !== 'default') document.documentElement.setAttribute('data-theme', savedTheme);
+
 const socket = io();
 let selectedStatus = userStatus;
-let newPhotoBase64 = null;
-let newCoverBase64 = null;
+let newPhotoBase64 = null, newCoverBase64 = null;
 
 socket.on('connect', () => {
-    socket.emit('user-online', { name: username, avatar: username.charAt(0).toUpperCase(), photo: userPhoto, bio: userBio, status: userStatus });
+    socket.emit('user-online', { name: username, avatar: username.charAt(0).toUpperCase(), photo: userPhoto, bio: userBio, status: userStatus, userEmail: userEmail || username });
 });
+
+function setTheme(theme) {
+    if (theme === 'default') document.documentElement.removeAttribute('data-theme');
+    else document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('f12_theme', theme);
+    document.querySelectorAll('.theme-card').forEach(c => c.classList.toggle('active', c.dataset.theme === theme));
+}
 
 function loadProfile() {
     const picEl = document.getElementById('profile-pic');
-    if (userPhoto) { picEl.innerHTML = '<img src="' + userPhoto + '" alt="">'; } else { picEl.textContent = username.charAt(0).toUpperCase(); }
+    if (userPhoto) picEl.innerHTML = '<img src="' + userPhoto + '">';
+    else picEl.textContent = username.charAt(0).toUpperCase();
     if (userCover) { const coverEl = document.getElementById('cover-preview'); coverEl.src = userCover; coverEl.style.display = 'block'; }
     document.getElementById('display-name').textContent = username;
     document.getElementById('display-email').textContent = userEmail || 'Guest User';
@@ -228,31 +259,24 @@ function loadProfile() {
     document.getElementById('edit-bio').value = userBio;
     document.getElementById('bio-count').textContent = userBio.length;
     document.querySelectorAll('.status-option').forEach(opt => { opt.classList.toggle('active', opt.dataset.status === userStatus); });
+    document.querySelectorAll('.theme-card').forEach(c => { c.classList.toggle('active', c.dataset.theme === savedTheme); });
     document.getElementById('account-type').value = userEmail ? '🔵 Google' : '👤 Guest';
     document.getElementById('user-id').value = 'F12-' + (userEmail || username).substring(0, 8).toUpperCase();
     document.getElementById('member-since').value = new Date(memberSince).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-    
-    // Show verified badge for Google accounts
-    if (userEmail) {
-        document.getElementById('verified-badge').style.display = 'inline';
-    }
+    if (userEmail) document.getElementById('verified-badge').style.display = 'inline';
     
     const friends = JSON.parse(localStorage.getItem('f12_friends') || '[]');
     const streams = parseInt(localStorage.getItem('f12_stream_count') || '0');
     const views = parseInt(localStorage.getItem('f12_total_views') || '0');
-    
     document.getElementById('stat-friends').textContent = friends.length;
     document.getElementById('stat-streams').textContent = streams;
     document.getElementById('stat-views').textContent = views;
     
-    // Check badge achievements
     if (streams >= 1) document.getElementById('badge-firststream').classList.add('earned');
     if (streams >= 5) document.getElementById('badge-streamer').classList.add('earned');
     if (views >= 100) document.getElementById('badge-popular').classList.add('earned');
-    
     const daysSince = (new Date() - new Date(memberSince)) / (1000 * 60 * 60 * 24);
     if (daysSince >= 30) document.getElementById('badge-veteran').classList.add('earned');
-    
     if (friends.length >= 5) document.getElementById('badge-social').classList.add('earned');
 }
 
@@ -267,16 +291,16 @@ document.getElementById('edit-bio').addEventListener('input', (e) => { document.
 function handlePhotoUpload(event) {
     const file = event.target.files[0];
     if (!file) return;
-    if (file.size > 5 * 1024 * 1024) { alert('Image too large! Max 5MB.'); return; }
+    if (file.size > 5 * 1024 * 1024) { alert('Max 5MB!'); return; }
     const reader = new FileReader();
-    reader.onload = function(e) { newPhotoBase64 = e.target.result; document.getElementById('profile-pic').innerHTML = '<img src="' + newPhotoBase64 + '" alt="">'; };
+    reader.onload = function(e) { newPhotoBase64 = e.target.result; document.getElementById('profile-pic').innerHTML = '<img src="' + newPhotoBase64 + '">'; };
     reader.readAsDataURL(file);
 }
 
 function handleCoverUpload(event) {
     const file = event.target.files[0];
     if (!file) return;
-    if (file.size > 5 * 1024 * 1024) { alert('Image too large! Max 5MB.'); return; }
+    if (file.size > 5 * 1024 * 1024) { alert('Max 5MB!'); return; }
     const reader = new FileReader();
     reader.onload = function(e) { newCoverBase64 = e.target.result; const coverEl = document.getElementById('cover-preview'); coverEl.src = newCoverBase64; coverEl.style.display = 'block'; };
     reader.readAsDataURL(file);

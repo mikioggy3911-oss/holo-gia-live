@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Friends - F12 ORBIT</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+body { background: #0a0a0a; color: #fff; min-height: 100vh; padding-bottom: 80px; }
+
+.header { background: rgba(10,10,10,0.85); padding: 0 20px; height: 60px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.06); position: sticky; top: 0; z-index: 100; }
+.logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: white; }
+.f12-logo-wrapper { display: inline-block; padding: 2px; border-radius: 18px; background: linear-gradient(90deg, #fff 0%, #d0d0d0 40%, #a8a8a8 49%, #ff3333 51%, #cc0000 70%, #880000 100%); }
+.f12-logo-inner { display: inline-flex; align-items: center; padding: 6px 14px; background: #000; border-radius: 16px; }
+.f12-text-logo { font-family: 'Orbitron', sans-serif; font-size: 18px; font-weight: 900; letter-spacing: -1.5px; font-style: italic; display: flex; }
+.f12-text-logo .f { color: #fff; }
+.f12-text-logo .num { color: #ff0000; }
+.logo-text { font-size: 15px; font-weight: 800; }
+.logo-text span { color: #ff0000; }
+.back-btn { background: rgba(255,255,255,0.05); color: #fff; border: 1px solid rgba(255,255,255,0.1); padding: 10px 18px; border-radius: 22px; text-decoration: none; font-size: 14px; font-weight: 600; }
+
+.container { max-width: 900px; margin: 0 auto; padding: 24px 20px; }
+.page-title { font-size: 28px; font-weight: 800; margin-bottom: 24px; display: flex; align-items: center; gap: 12px; }
+
+/* TABS */
+.tabs { display: flex; background: rgba(20,20,20,0.5); border-radius: 14px; padding: 6px; margin-bottom: 24px; gap: 4px; border: 1px solid rgba(255,255,255,0.06); }
+.tab { flex: 1; padding: 12px 16px; background: transparent; border: none; color: rgba(255,255,255,0.6); cursor: pointer; font-size: 14px; font-weight: 600; border-radius: 10px; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s; position: relative; }
+.tab:hover { color: white; }
+.tab.active { background: linear-gradient(135deg, #ff0000, #cc0000); color: white; box-shadow: 0 4px 12px rgba(255,0,0,0.3); }
+.tab-badge { background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 800; }
+.tab.active .tab-badge { background: rgba(255,255,255,0.3); }
+
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* FRIEND CARDS */
+.friends-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+.friend-card { background: rgba(20,20,20,0.5); border-radius: 14px; padding: 18px; border: 1px solid rgba(255,255,255,0.06); transition: all 0.2s; }
+.friend-card:hover { transform: translateY(-3px); border-color: rgba(255,255,255,0.1); }
+.friend-card-header { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+.friend-avatar { width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, #4285f4, #34a853); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 22px; overflow: hidden; position: relative; flex-shrink: 0; }
+.friend-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.friend-avatar.online::after { content: ''; position: absolute; bottom: 2px; right: 2px; width: 14px; height: 14px; background: #00ff88; border-radius: 50%; border: 2px solid #1a1a1a; }
+.friend-info { flex: 1; min-width: 0; }
+.friend-name { font-size: 15px; font-weight: 700; margin-bottom: 2px; }
+.friend-status { font-size: 12px; color: rgba(255,255,255,0.5); }
+.friend-status.online { color: #00ff88; }
+.friend-bio { color: rgba(255,255,255,0.6); font-size: 13px; line-height: 1.4; min-height: 36px; }
+.friend-actions { display: flex; gap: 8px; margin-top: 14px; }
+.action-btn { flex: 1; padding: 9px 14px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s; }
+.action-btn-primary { background: linear-gradient(135deg, #ff0000, #cc0000); color: white; }
+.action-btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(255,0,0,0.3); }
+.action-btn-secondary { background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.1); }
+.action-btn-secondary:hover { background: rgba(255,255,255,0.1); }
+.action-btn-danger { background: rgba(255,0,0,0.1); color: #ff5252; border: 1px solid rgba(255,0,0,0.3); }
+.action-btn-danger:hover { background: rgba(255,0,0,0.2); }
+
+/* REQUESTS */
+.request-card { background: rgba(20,20,20,0.5); border-radius: 14px; padding: 16px; border: 1px solid rgba(255,255,255,0.06); margin-bottom: 12px; display: flex; align-items: center; gap: 14px; }
+.request-time { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 4px; }
+
+/* EMPTY STATES */
+.empty-state { text-align: center; padding: 60px 20px; }
+.empty-state .icon { font-size: 80px; margin-bottom: 20px; opacity: 0.4; }
+.empty-state h3 { font-size: 22px; margin-bottom: 10px; font-weight: 700; }
+.empty-state p { color: rgba(255,255,255,0.5); font-size: 14px; }
+
+/* SEARCH BAR */
+.search-section { background: rgba(20,20,20,0.5); border-radius: 14px; padding: 14px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.06); }
+.search-input { width: 100%; padding: 12px 16px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 11px; color: #fff; font-size: 14px; outline: none; }
+.search-input:focus { border-color: #ff0000; }
+
+/* SUGGESTED USERS */
+.suggestions-section { margin-top: 24px; }
+.section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.section-header h2 { font-size: 18px; font-weight: 700; }
+
+/* TOAST NOTIFICATION */
+.toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #ff0000, #cc0000); color: white; padding: 14px 24px; border-radius: 12px; font-weight: 600; box-shadow: 0 8px 30px rgba(255,0,0,0.5); z-index: 9999; display: none; animation: slideUp 0.3s; }
+.toast.show { display: block; }
+@keyframes slideUp { from { transform: translate(-50%, 30px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
+
+/* BOTTOM NAV */
+.bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: rgba(10,10,10,0.95); backdrop-filter: blur(20px); border-top: 1px solid rgba(255,255,255,0.08); padding: 10px 0 12px; z-index: 100; }
+.bottom-nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; text-decoration: none; color: rgba(255,255,255,0.6); padding: 5px; }
+.bottom-nav-item.active { color: #ff0000; }
+.bottom-nav-icon { font-size: 22px; }
+.bottom-nav-label { font-size: 10px; font-weight: 600; }
+
+@media (max-width: 768px) {
+.bottom-nav { display: flex; }
+.logo-text { display: none; }
+.page-title { font-size: 22px; }
+.friends-grid { grid-template-columns: 1fr; }
+.tab { font-size: 12px; padding: 10px 8px; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+<a href="/" class="logo">
+<div class="f12-logo-wrapper">
+<div class="f12-logo-inner">
+<div class="f12-text-logo"><span class="f">F</span><span class="num">12</span></div>
+</div>
+</div>
+<div class="logo-text">ORBIT</div>
+</a>
+<a href="/" class="back-btn">← Home</a>
+</div>
+
+<div class="container">
+
+<h1 class="page-title">
+<span>👥</span>
+<span>Friends</span>
+</h1>
+
+<!-- TABS -->
+<div class="tabs">
+<button class="tab active" onclick="switchTab(event, 'friends')">
+👥 Friends <span class="tab-badge" id="friends-count">0</span>
+</button>
+<button class="tab" onclick="switchTab(event, 'requests')">
+📩 Requests <span class="tab-badge" id="requests-count">0</span>
+</button>
+<button class="tab" onclick="switchTab(event, 'suggestions')">
+🌟 Find People
+</button>
+</div>
+
+<!-- FRIENDS TAB -->
+<div id="tab-friends" class="tab-content active">
+<div class="search-section">
+<input type="text" class="search-input" id="friends-search" placeholder="🔍 Search your friends...">
+</div>
+<div id="friends-list" class="friends-grid"></div>
+<div id="no-friends" class="empty-state" style="display:none;">
+<div class="icon">👥</div>
+<h3>No friends yet</h3>
+<p>Find people in "Find People" tab and send friend requests!</p>
+</div>
+</div>
+
+<!-- REQUESTS TAB -->
+<div id="tab-requests" class="tab-content">
+<div id="requests-list"></div>
+<div id="no-requests" class="empty-state" style="display:none;">
+<div class="icon">📬</div>
+<h3>No pending requests</h3>
+<p>When someone sends you a friend request, it'll appear here.</p>
+</div>
+</div>
+
+<!-- SUGGESTIONS TAB -->
+<div id="tab-suggestions" class="tab-content">
+<div class="search-section">
+<input type="text" class="search-input" id="suggestions-search" placeholder="🔍 Search users...">
+</div>
+<div id="suggestions-list" class="friends-grid"></div>
+<div id="no-suggestions" class="empty-state" style="display:none;">
+<div class="icon">😔</div>
+<h3>No one to suggest</h3>
+<p>Wait for more users to come online!</p>
+</div>
+</div>
+
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="toast"></div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+<a href="/" class="bottom-nav-item">
+<div class="bottom-nav-icon">🏠</div>
+<div class="bottom-nav-label">Home</div>
+</a>
+<a href="/friends" class="bottom-nav-item active">
+<div class="bottom-nav-icon">👥</div>
+<div class="bottom-nav-label">Friends</div>
+</a>
+<a href="/go-live" class="bottom-nav-item">
+<div class="bottom-nav-icon">🔴</div>
+<div class="bottom-nav-label">Live</div>
+</a>
+<a href="/profile" class="bottom-nav-item">
+<div class="bottom-nav-icon">👤</div>
+<div class="bottom-nav-label">Profile</div>
+</a>
+</nav>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+const username = localStorage.getItem('f12_username');
+const userPhoto = localStorage.getItem('f12_photo');
+const userEmail = localStorage.getItem('f12_email');
+const userBio = localStorage.getItem('f12_bio') || '';
+const userStatus = localStorage.getItem('f12_status') || 'online';
+
+if (!username) { window.location.href = '/login'; }
+
+const myUserId = userEmail || username;
+let friends = JSON.parse(localStorage.getItem('f12_friends') || '[]');
+let pendingRequests = [];
+let allUsers = [];
+
+const socket = io();
+
+socket.on('connect', () => {
+    socket.emit('user-online', { 
+        name: username, 
+        avatar: username.charAt(0).toUpperCase(),
+        photo: userPhoto || null,
+        bio: userBio,
+        status: userStatus,
+        userEmail: myUserId
+    });
+    socket.emit('get-friend-requests');
+});
+
+function switchTab(event, tabName) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    event.target.closest('.tab').classList.add('active');
+    document.getElementById('tab-' + tabName).classList.add('active');
+}
+
+function showToast(message) {
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+function loadUsers() {
+    fetch('/api/online-users').then(res => res.json()).then(users => {
+        allUsers = users.filter(u => u.name !== username);
+        renderFriends();
+        renderSuggestions();
+    });
+}
+
+function renderFriends() {
+    const list = document.getElementById('friends-list');
+    const empty = document.getElementById('no-friends');
+    const count = document.getElementById('friends-count');
+    
+    count.textContent = friends.length;
+    
+    if (friends.length === 0) {
+        list.style.display = 'none';
+        empty.style.display = 'block';
+        return;
+    }
+    
+    list.style.display = 'grid';
+    empty.style.display = 'none';
+    
+    const searchTerm = document.getElementById('friends-search').value.toLowerCase();
+    const filteredFriends = friends.filter(f => f.name.toLowerCase().includes(searchTerm));
+    
+    list.innerHTML = filteredFriends.map(friend => {
+        const onlineUser = allUsers.find(u => (u.userEmail || u.name) === friend.id);
+        const isOnline = !!onlineUser;
+        const photo = friend.photo || (onlineUser ? onlineUser.photo : null);
+        const avatar = photo ? '<img src="' + photo + '">' : friend.name.charAt(0).toUpperCase();
+        
+        return '<div class="friend-card">' +
+            '<div class="friend-card-header">' +
+            '<div class="friend-avatar ' + (isOnline ? 'online' : '') + '">' + avatar + '</div>' +
+            '<div class="friend-info">' +
+            '<div class="friend-name">' + friend.name + '</div>' +
+            '<div class="friend-status ' + (isOnline ? 'online' : '') + '">' + (isOnline ? '🟢 Online' : '⚪ Offline') + '</div>' +
+            '</div></div>' +
+            '<div class="friend-bio">' + (friend.bio || 'No bio') + '</div>' +
+            '<div class="friend-actions">' +
+            (isOnline ? '<button class="action-btn action-btn-primary" onclick="messageFriend(\'' + onlineUser.socketId + '\', \'' + friend.name + '\')">💬 Message</button>' : '<button class="action-btn action-btn-secondary" disabled>💬 Offline</button>') +
+            '<button class="action-btn action-btn-danger" onclick="removeFriend(\'' + friend.id + '\')">Remove</button>' +
+            '</div></div>';
+    }).join('');
+}
+
+function renderRequests() {
+    const list = document.getElementById('requests-list');
+    const empty = document.getElementById('no-requests');
+    const count = document.getElementById('requests-count');
+    
+    count.textContent = pendingRequests.length;
+    
+    if (pendingRequests.length === 0) {
+        list.innerHTML = '';
+        empty.style.display = 'block';
+        return;
+    }
+    
+    empty.style.display = 'none';
+    
+    list.innerHTML = pendingRequests.map(req => {
+        const avatar = req.fromPhoto ? '<img src="' + req.fromPhoto + '">' : (req.fromAvatar || req.fromName.charAt(0).toUpperCase());
+        const time = new Date(req.time).toLocaleString();
+        
+        return '<div class="request-card">' +
+            '<div class="friend-avatar">' + avatar + '</div>' +
+            '<div class="friend-info">' +
+            '<div class="friend-name">' + req.fromName + '</div>' +
+            '<div class="friend-status">Wants to be your friend</div>' +
+            '<div class="request-time">' + time + '</div>' +
+            '</div>' +
+            '<div style="display:flex; gap:8px;">' +
+            '<button class="action-btn action-btn-primary" onclick="acceptRequest(\'' + req.fromUserId + '\', \'' + req.fromName + '\', \'' + (req.fromPhoto || '') + '\')">✓ Accept</button>' +
+            '<button class="action-btn action-btn-secondary" onclick="declineRequest(\'' + req.fromUserId + '\')">✕ Decline</button>' +
+            '</div></div>';
+    }).join('');
+}
+
+function renderSuggestions() {
+    const list = document.getElementById('suggestions-list');
+    const empty = document.getElementById('no-suggestions');
+    
+    const friendIds = friends.map(f => f.id);
+    const suggestions = allUsers.filter(u => !friendIds.includes(u.userEmail || u.name));
+    
+    if (suggestions.length === 0) {
+        list.style.display = 'none';
+        empty.style.display = 'block';
+        return;
+    }
+    
+    list.style.display = 'grid';
+    empty.style.display = 'none';
+    
+    const searchTerm = document.getElementById('suggestions-search').value.toLowerCase();
+    const filtered = suggestions.filter(u => u.name.toLowerCase().includes(searchTerm));
+    
+    list.innerHTML = filtered.map(user => {
+        const avatar = user.photo ? '<img src="' + user.photo + '">' : user.avatar;
+        return '<div class="friend-card">' +
+            '<div class="friend-card-header">' +
+            '<div class="friend-avatar online">' + avatar + '</div>' +
+            '<div class="friend-info">' +
+            '<div class="friend-name">' + user.name + '</div>' +
+            '<div class="friend-status online">🟢 Online</div>' +
+            '</div></div>' +
+            '<div class="friend-bio">' + (user.bio || 'No bio yet') + '</div>' +
+            '<div class="friend-actions">' +
+            '<button class="action-btn action-btn-primary" onclick="sendFriendRequest(\'' + user.socketId + '\', \'' + user.name + '\')">➕ Add Friend</button>' +
+            '<button class="action-btn action-btn-secondary" onclick="messageFriend(\'' + user.socketId + '\', \'' + user.name + '\')">💬</button>' +
+            '</div></div>';
+    }).join('');
+}
+
+function sendFriendRequest(socketId, name) {
+    socket.emit('send-friend-request', { toSocketId: socketId });
+    showToast('Friend request sent to ' + name + '!');
+}
+
+function acceptRequest(fromUserId, fromName, fromPhoto) {
+    socket.emit('accept-friend-request', { fromUserId, fromName, fromPhoto });
+    pendingRequests = pendingRequests.filter(r => r.fromUserId !== fromUserId);
+    renderRequests();
+    showToast('You are now friends with ' + fromName + '! 🎉');
+}
+
+function declineRequest(fromUserId) {
+    socket.emit('decline-friend-request', { fromUserId });
+    pendingRequests = pendingRequests.filter(r => r.fromUserId !== fromUserId);
+    renderRequests();
+}
+
+function removeFriend(friendId) {
+    if (!confirm('Remove this friend?')) return;
+    socket.emit('remove-friend', { friendId });
+    friends = friends.filter(f => f.id !== friendId);
+    localStorage.setItem('f12_friends', JSON.stringify(friends));
+    renderFriends();
+    showToast('Friend removed');
+}
+
+function messageFriend(socketId, name) {
+    localStorage.setItem('f12_message_target', JSON.stringify({ socketId, name }));
+    window.location.href = '/';
+}
+
+socket.on('friend-request-status', (data) => {
+    showToast(data.message);
+});
+
+socket.on('new-friend-request', (request) => {
+    pendingRequests.push(request);
+    renderRequests();
+    showToast('💌 New friend request from ' + request.fromName);
+});
+
+socket.on('pending-friend-requests', (requests) => {
+    pendingRequests = requests;
+    renderRequests();
+});
+
+socket.on('friend-added', (data) => {
+    friends.push({ id: data.friendId, name: data.friendName, photo: data.friendPhoto, bio: '' });
+    localStorage.setItem('f12_friends', JSON.stringify(friends));
+    renderFriends();
+});
+
+socket.on('friend-request-accepted', (data) => {
+    friends.push({ id: data.friendId, name: data.friendName, photo: data.friendPhoto, bio: '' });
+    localStorage.setItem('f12_friends', JSON.stringify(friends));
+    renderFriends();
+    showToast(data.friendName + ' accepted your friend request! 🎉');
+});
+
+socket.on('friend-removed', (data) => {
+    friends = friends.filter(f => f.id !== data.friendId);
+    localStorage.setItem('f12_friends', JSON.stringify(friends));
+    renderFriends();
+});
+
+socket.on('users-updated', loadUsers);
+
+document.getElementById('friends-search').addEventListener('input', renderFriends);
+document.getElementById('suggestions-search').addEventListener('input', renderSuggestions);
+
+loadUsers();
+renderFriends();
+renderRequests();
+setInterval(loadUsers, 5000);
+</script>
+
+</body>
+</html>
