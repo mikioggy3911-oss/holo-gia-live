@@ -34,6 +34,15 @@ body { background: var(--bg-main); color: #fff; min-height: 100vh; }
 .start-btn { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: white; border: none; padding: 16px 32px; border-radius: 25px; font-size: 16px; font-weight: 700; cursor: pointer; width: 100%; }
 .start-btn:disabled { background: #555; cursor: not-allowed; }
 .live-section { display: none; }
+
+.stats-card { background: var(--bg-card); border-radius: 12px; padding: 16px; margin-bottom: 16px; border: 1px solid var(--border); }
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.stat-box { background: rgba(255,255,255,0.03); padding: 14px; border-radius: 10px; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
+.stat-box-icon { font-size: 22px; margin-bottom: 4px; }
+.stat-box-value { font-size: 18px; font-weight: 800; color: var(--accent); }
+.stat-box-label { font-size: 11px; color: rgba(255,255,255,0.5); text-transform: uppercase; margin-top: 4px; }
+@media (max-width: 600px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+
 .video-wrapper { position: relative; width: 100%; background: #000; border-radius: 16px; overflow: hidden; margin-bottom: 16px; border: 2px solid var(--accent); }
 .video-wrapper video { width: 100%; height: auto; max-height: 500px; display: block; }
 .live-overlay { position: absolute; top: 16px; left: 16px; display: flex; gap: 10px; z-index: 10; flex-wrap: wrap; }
@@ -60,14 +69,50 @@ body { background: var(--bg-main); color: #fff; min-height: 100vh; }
 .gifts-stream { position: absolute; bottom: 100px; left: 50%; transform: translateX(-50%); pointer-events: none; z-index: 16; }
 .gift-popup { background: rgba(0,0,0,0.85); padding: 16px 24px; border-radius: 16px; display: flex; align-items: center; gap: 12px; animation: giftPop 3s ease-out forwards; border: 2px solid var(--accent); }
 @keyframes giftPop {
-    0% { opacity: 0; transform: scale(0) translateY(50px); }
-    20% { opacity: 1; transform: scale(1) translateY(0); }
-    80% { opacity: 1; transform: scale(1) translateY(0); }
-    100% { opacity: 0; transform: scale(0.8) translateY(-30px); }
+    0% { opacity: 0; transform: scale(0); }
+    20%, 80% { opacity: 1; transform: scale(1); }
+    100% { opacity: 0; transform: scale(0.8); }
 }
 .gift-emoji { font-size: 40px; }
 .gift-info { font-size: 14px; font-weight: 600; }
 .gift-sender { color: var(--accent); font-weight: 800; }
+
+/* WHEEL WINNER */
+.winner-popup { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; z-index: 9999; }
+.winner-popup.show { display: flex; }
+.winner-content { background: linear-gradient(135deg, #ffc107, #ff9800); padding: 40px; border-radius: 24px; text-align: center; animation: bounceIn 0.5s; max-width: 400px; }
+@keyframes bounceIn { 0% { transform: scale(0); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+.winner-icon { font-size: 80px; margin-bottom: 16px; animation: spin 2s linear infinite; }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+.winner-title { font-size: 28px; font-weight: 900; color: #000; margin-bottom: 8px; }
+.winner-name { font-size: 24px; font-weight: 800; color: #000; margin-bottom: 8px; }
+.winner-prize { font-size: 16px; color: #000; margin-bottom: 20px; }
+.winner-close { background: #000; color: white; border: none; padding: 12px 32px; border-radius: 20px; cursor: pointer; font-weight: 700; }
+
+/* STREAMER TOOLS */
+.streamer-tools { background: var(--bg-card); border-radius: 12px; padding: 16px; margin-bottom: 16px; border: 1px solid var(--border); }
+.tools-title { font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+.tools-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.tool-btn { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: white; padding: 14px; border-radius: 11px; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s; }
+.tool-btn:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); }
+.tool-btn.poll { background: linear-gradient(135deg, rgba(255,193,7,0.15), rgba(255,152,0,0.1)); border-color: rgba(255,193,7,0.3); }
+.tool-btn.wheel { background: linear-gradient(135deg, rgba(168,85,247,0.15), rgba(124,58,237,0.1)); border-color: rgba(168,85,247,0.3); }
+
+/* ACTIVE POLL DISPLAY */
+.active-poll { background: linear-gradient(135deg, rgba(255,193,7,0.1), rgba(255,152,0,0.05)); border: 2px solid rgba(255,193,7,0.3); border-radius: 14px; padding: 16px; margin-bottom: 16px; display: none; }
+.active-poll.show { display: block; animation: slideDown 0.4s; }
+@keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+.poll-header-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.poll-label { font-size: 12px; font-weight: 700; color: #ffc107; text-transform: uppercase; }
+.close-poll-btn { background: rgba(255,0,0,0.15); color: var(--accent); border: 1px solid rgba(255,0,0,0.3); padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 11px; font-weight: 700; }
+.poll-q { font-size: 15px; font-weight: 700; margin-bottom: 12px; }
+.poll-results { display: flex; flex-direction: column; gap: 8px; }
+.poll-result-item { padding: 10px 12px; background: rgba(255,255,255,0.05); border-radius: 10px; position: relative; overflow: hidden; }
+.poll-result-bar { position: absolute; top: 0; left: 0; height: 100%; background: rgba(255,193,7,0.2); transition: width 0.5s; }
+.poll-result-content { position: relative; z-index: 1; display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
+.poll-result-text { font-weight: 600; }
+.poll-result-votes { color: #ffc107; font-weight: 700; }
+
 .controls-card { background: var(--bg-card); border-radius: 12px; padding: 16px; margin-bottom: 16px; border: 1px solid var(--border); }
 .control-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
 .ctrl-btn { background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--border); padding: 10px 20px; border-radius: 11px; font-size: 14px; font-weight: 600; cursor: pointer; flex: 1; min-width: 120px; }
@@ -77,31 +122,58 @@ body { background: var(--bg-main); color: #fff; min-height: 100vh; }
 .share-link-box.show { display: flex; }
 .share-link-box .url { flex: 1; color: #4285f4; font-size: 13px; word-break: break-all; font-family: monospace; }
 .copy-btn { background: var(--accent); color: white; border: none; padding: 6px 14px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 700; }
-.stats-card { background: var(--bg-card); border-radius: 12px; padding: 16px; margin-bottom: 16px; border: 1px solid var(--border); }
-.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
-.stat-box { background: rgba(255,255,255,0.03); padding: 14px; border-radius: 10px; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
-.stat-box-icon { font-size: 22px; margin-bottom: 4px; }
-.stat-box-value { font-size: 18px; font-weight: 800; color: var(--accent); }
-.stat-box-label { font-size: 11px; color: rgba(255,255,255,0.5); text-transform: uppercase; margin-top: 4px; }
-@media (max-width: 600px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+
 .chat-card { background: var(--bg-card); border-radius: 12px; overflow: hidden; border: 1px solid var(--border); }
-.chat-header { padding: 14px 16px; background: rgba(255,255,255,0.03); font-weight: 700; font-size: 14px; }
+.chat-header { padding: 14px 16px; background: rgba(255,255,255,0.03); font-weight: 700; font-size: 14px; display: flex; justify-content: space-between; align-items: center; }
+.chat-actions { display: flex; gap: 6px; }
+.chat-action-btn { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: white; padding: 4px 10px; border-radius: 8px; cursor: pointer; font-size: 11px; font-weight: 600; }
 .chat-messages { height: 300px; overflow-y: auto; padding: 12px 16px; }
-.chat-message { margin-bottom: 10px; display: flex; gap: 8px; }
-.chat-avatar { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent2)); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; flex-shrink: 0; }
+.chat-message { margin-bottom: 10px; display: flex; gap: 8px; align-items: flex-start; position: relative; }
+.chat-avatar { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent2)); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; flex-shrink: 0; overflow: hidden; }
+.chat-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.chat-content { flex: 1; }
 .chat-name { font-weight: 500; color: #4285f4; font-size: 13px; margin-right: 6px; }
 .chat-text { font-size: 14px; }
 .chat-time { font-size: 11px; color: #aaa; margin-top: 2px; }
+.chat-mute-btn { background: rgba(255,0,0,0.15); color: var(--accent); border: 1px solid rgba(255,0,0,0.3); padding: 2px 8px; border-radius: 6px; cursor: pointer; font-size: 10px; font-weight: 600; opacity: 0; transition: opacity 0.2s; }
+.chat-message:hover .chat-mute-btn { opacity: 1; }
 .chat-input-wrap { display: flex; padding: 12px; gap: 8px; background: rgba(255,255,255,0.03); }
 .chat-input-wrap input { flex: 1; padding: 10px 14px; background: rgba(255,255,255,0.06); border: 1px solid var(--border); border-radius: 20px; color: white; font-size: 14px; outline: none; }
 .chat-input-wrap button { background: var(--accent); color: white; border: none; padding: 8px 20px; border-radius: 20px; cursor: pointer; font-weight: 500; }
+
+/* MODAL */
+.modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 9999; padding: 20px; }
+.modal.show { display: flex; }
+.modal-content { background: #1a1a1a; border-radius: 16px; padding: 28px; max-width: 450px; width: 100%; border: 1px solid var(--border); max-height: 90vh; overflow-y: auto; }
+.modal-title { font-size: 20px; font-weight: 800; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+.modal-form { display: flex; flex-direction: column; gap: 14px; }
+.modal-form label { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.7); text-transform: uppercase; }
+.modal-form input { padding: 12px 14px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 10px; color: #fff; font-size: 14px; outline: none; }
+.modal-form input:focus { border-color: var(--accent); }
+.poll-options-container { display: flex; flex-direction: column; gap: 8px; }
+.poll-option-input { display: flex; gap: 8px; align-items: center; }
+.poll-option-input input { flex: 1; }
+.poll-option-input button { background: rgba(255,0,0,0.15); color: var(--accent); border: 1px solid rgba(255,0,0,0.3); padding: 8px 12px; border-radius: 8px; cursor: pointer; font-size: 12px; }
+.add-option-btn { background: rgba(255,255,255,0.05); color: white; border: 1px dashed var(--border); padding: 10px; border-radius: 10px; cursor: pointer; font-size: 13px; font-weight: 600; }
+.add-option-btn:hover { background: rgba(255,255,255,0.1); }
+.modal-buttons { display: flex; gap: 10px; margin-top: 20px; }
+.modal-btn { flex: 1; padding: 12px; border-radius: 10px; font-weight: 700; cursor: pointer; border: none; font-size: 14px; }
+.modal-btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: white; }
+.modal-btn-cancel { background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--border); }
+
 .status-msg { text-align: center; padding: 12px; margin: 10px 0; border-radius: 11px; display: none; font-size: 14px; }
 .status-msg.error { background: rgba(255,0,0,0.15); color: #ff5252; display: block; }
+
+.toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, var(--accent), var(--accent2)); color: white; padding: 14px 24px; border-radius: 12px; font-weight: 600; z-index: 9999; display: none; }
+.toast.show { display: block; animation: slideUp 0.3s; }
+@keyframes slideUp { from { transform: translate(-50%, 30px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
+
 @media (max-width: 768px) {
 .logo-text { display: none; }
 .container { padding: 16px; }
 .setup-card { padding: 22px; }
 .ctrl-btn { min-width: 100px; font-size: 13px; padding: 9px 14px; }
+.tools-grid { grid-template-columns: 1fr; }
 }
 </style>
 </head>
@@ -127,7 +199,7 @@ body { background: var(--bg-main); color: #fff; min-height: 100vh; }
 <div class="form-group">
 <label>Stream Title (use #hashtags!)</label>
 <input type="text" id="stream-title" placeholder="My awesome stream #gaming #fun" maxlength="100">
-<div class="hashtag-hint">💡 Tip: Add hashtags like #gaming #music to help people find your stream!</div>
+<div class="hashtag-hint">💡 Add hashtags like #gaming #music!</div>
 </div>
 <div class="form-group"><label>Category</label>
 <select id="stream-category">
@@ -146,6 +218,7 @@ body { background: var(--bg-main); color: #fff; min-height: 100vh; }
 </div>
 
 <div id="live-section" class="live-section">
+
 <div class="stats-card">
 <div class="stats-grid">
 <div class="stat-box"><div class="stat-box-icon">👁</div><div class="stat-box-value" id="stat-viewers">0</div><div class="stat-box-label">Viewers</div></div>
@@ -173,6 +246,25 @@ body { background: var(--bg-main); color: #fff; min-height: 100vh; }
 <div class="gifts-stream" id="gifts-stream"></div>
 </div>
 
+<!-- STREAMER TOOLS -->
+<div class="streamer-tools">
+<div class="tools-title">🎮 Streamer Tools</div>
+<div class="tools-grid">
+<button class="tool-btn poll" onclick="openModal('poll-modal')">🗳️ Create Poll</button>
+<button class="tool-btn wheel" onclick="openModal('wheel-modal')">🎡 Spin Wheel</button>
+</div>
+</div>
+
+<!-- ACTIVE POLL -->
+<div id="active-poll" class="active-poll">
+<div class="poll-header-row">
+<span class="poll-label">🗳️ Active Poll</span>
+<button class="close-poll-btn" onclick="closePoll()">✕ Close Poll</button>
+</div>
+<div class="poll-q" id="active-poll-q"></div>
+<div class="poll-results" id="active-poll-results"></div>
+</div>
+
 <div class="controls-card">
 <div class="control-buttons">
 <button class="ctrl-btn" id="mic-btn" onclick="toggleMic()">🎤 Mic ON</button>
@@ -187,7 +279,10 @@ body { background: var(--bg-main); color: #fff; min-height: 100vh; }
 </div>
 
 <div class="chat-card">
-<div class="chat-header">💬 Live Chat</div>
+<div class="chat-header">
+<span>💬 Live Chat</span>
+<span style="font-size: 12px; color: rgba(255,255,255,0.5);">Hover messages to mute</span>
+</div>
 <div id="chat-messages" class="chat-messages"></div>
 <div class="chat-input-wrap">
 <input type="text" id="chat-input" placeholder="Say something..." onkeypress="if(event.key==='Enter') sendChat()">
@@ -197,11 +292,67 @@ body { background: var(--bg-main); color: #fff; min-height: 100vh; }
 </div>
 </div>
 
+<!-- WINNER POPUP -->
+<div id="winner-popup" class="winner-popup">
+<div class="winner-content">
+<div class="winner-icon">🎡</div>
+<div class="winner-title">🏆 Winner!</div>
+<div class="winner-name" id="winner-name">User</div>
+<div class="winner-prize" id="winner-prize">Special Mention!</div>
+<button class="winner-close" onclick="closeWinner()">Close</button>
+</div>
+</div>
+
+<!-- POLL MODAL -->
+<div id="poll-modal" class="modal">
+<div class="modal-content">
+<div class="modal-title">🗳️ Create Poll</div>
+<div class="modal-form">
+<label>Question</label>
+<input type="text" id="poll-question-input" placeholder="What's your favorite color?" maxlength="100">
+<label>Options (min 2, max 5)</label>
+<div class="poll-options-container" id="poll-options-container">
+<div class="poll-option-input">
+<input type="text" placeholder="Option 1" class="poll-opt" maxlength="50">
+</div>
+<div class="poll-option-input">
+<input type="text" placeholder="Option 2" class="poll-opt" maxlength="50">
+</div>
+</div>
+<button class="add-option-btn" onclick="addPollOption()">+ Add Option</button>
+</div>
+<div class="modal-buttons">
+<button class="modal-btn modal-btn-cancel" onclick="closeModal('poll-modal')">Cancel</button>
+<button class="modal-btn modal-btn-primary" onclick="createPoll()">🗳️ Create Poll</button>
+</div>
+</div>
+</div>
+
+<!-- WHEEL MODAL -->
+<div id="wheel-modal" class="modal">
+<div class="modal-content">
+<div class="modal-title">🎡 Spin the Wheel</div>
+<p style="color: rgba(255,255,255,0.6); margin-bottom: 16px; font-size: 14px;">Pick a random viewer as winner!</p>
+<div class="modal-form">
+<label>Prize (optional)</label>
+<input type="text" id="wheel-prize" placeholder="e.g., Special Mention, Shoutout" maxlength="50" value="a Special Mention!">
+</div>
+<div class="modal-buttons">
+<button class="modal-btn modal-btn-cancel" onclick="closeModal('wheel-modal')">Cancel</button>
+<button class="modal-btn modal-btn-primary" onclick="spinWheel()">🎡 Spin Now!</button>
+</div>
+</div>
+</div>
+
+<div id="toast" class="toast"></div>
+
 <script src="https://unpkg.com/peerjs@1.5.1/dist/peerjs.min.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script>
 const username = localStorage.getItem('f12_username');
 const userPhoto = localStorage.getItem('f12_photo');
+const userEmail = localStorage.getItem('f12_email');
+const myUserId = userEmail || username;
 if (username) document.getElementById('streamer-name').value = username;
 const savedTheme = localStorage.getItem('f12_theme');
 if (savedTheme && savedTheme !== 'default') document.documentElement.setAttribute('data-theme', savedTheme);
@@ -211,6 +362,15 @@ let localStream = null, peer = null, currentStreamId = null, streamerName = '';
 let micEnabled = true, camEnabled = true, audioContext = null, analyser = null;
 let streamStartTime = null, durationInterval = null;
 let totalLikes = 0, totalGifts = 0;
+let activePoll = null;
+let chatMutedUsers = [];
+
+function showToast(msg) {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3000);
+}
 
 async function startStream() {
     streamerName = document.getElementById('streamer-name').value.trim();
@@ -222,6 +382,14 @@ async function startStream() {
     if (!title) { status.className = 'status-msg error'; status.textContent = 'Please enter stream title!'; return; }
     startBtn.disabled = true;
     startBtn.textContent = '⏳ Starting...';
+    
+    socket.emit('user-online', {
+        name: streamerName,
+        avatar: streamerName.charAt(0).toUpperCase(),
+        photo: userPhoto,
+        userEmail: myUserId
+    });
+    
     try {
         localStream = await navigator.mediaDevices.getUserMedia({
             video: { width: { ideal: 1280 }, height: { ideal: 720 }, facingMode: 'user' },
@@ -346,10 +514,23 @@ socket.on('new-message', (data) => {
     const chatMessages = document.getElementById('chat-messages');
     const msgDiv = document.createElement('div');
     msgDiv.className = 'chat-message';
-    msgDiv.innerHTML = '<div class="chat-avatar">' + data.name.charAt(0).toUpperCase() + '</div><div><span class="chat-name">' + data.name + '</span><span class="chat-text">' + data.message + '</span><div class="chat-time">' + data.time + '</div></div>';
+    const isStreamer = data.name.includes('(Host)');
+    const muteBtn = (!isStreamer && data.userId) ? '<button class="chat-mute-btn" onclick="muteUser(\'' + data.userId + '\')">🔇 Mute</button>' : '';
+    const avatar = data.photo ? '<img src="' + data.photo + '">' : data.name.charAt(0).toUpperCase();
+    msgDiv.innerHTML = '<div class="chat-avatar">' + avatar + '</div><div class="chat-content"><span class="chat-name">' + data.name + '</span><span class="chat-text">' + data.message + '</span><div class="chat-time">' + data.time + '</div></div>' + muteBtn;
     chatMessages.appendChild(msgDiv);
     chatMessages.scrollTop = chatMessages.scrollHeight;
 });
+
+function muteUser(userId) {
+    if (chatMutedUsers.includes(userId)) {
+        showToast('User already muted');
+        return;
+    }
+    socket.emit('mute-user-chat', { userId });
+    chatMutedUsers.push(userId);
+    showToast('🔇 User muted in chat');
+}
 
 function sendChat() {
     const input = document.getElementById('chat-input');
@@ -369,7 +550,7 @@ function shareStream() {
 
 function copyLink() {
     const url = document.getElementById('share-url').textContent;
-    navigator.clipboard.writeText(url).then(() => alert('Link copied!'));
+    navigator.clipboard.writeText(url).then(() => showToast('🔗 Link copied!'));
 }
 
 function endStream() {
@@ -383,6 +564,86 @@ function endStream() {
         localStorage.setItem('f12_stream_count', streamCount);
         window.location.href = '/';
     }
+}
+
+// MODALS
+function openModal(id) { document.getElementById(id).classList.add('show'); }
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+
+// POLLS
+function addPollOption() {
+    const container = document.getElementById('poll-options-container');
+    if (container.children.length >= 5) { showToast('Max 5 options'); return; }
+    const num = container.children.length + 1;
+    const div = document.createElement('div');
+    div.className = 'poll-option-input';
+    div.innerHTML = '<input type="text" placeholder="Option ' + num + '" class="poll-opt" maxlength="50"><button onclick="this.parentElement.remove()">✕</button>';
+    container.appendChild(div);
+}
+
+function createPoll() {
+    const question = document.getElementById('poll-question-input').value.trim();
+    const options = Array.from(document.querySelectorAll('.poll-opt')).map(i => i.value.trim()).filter(v => v);
+    
+    if (!question) { showToast('Please enter a question'); return; }
+    if (options.length < 2) { showToast('Need at least 2 options'); return; }
+    
+    socket.emit('create-poll', { streamId: currentStreamId, question, options });
+    closeModal('poll-modal');
+    showToast('🗳️ Poll created!');
+    
+    document.getElementById('poll-question-input').value = '';
+}
+
+socket.on('new-poll', (poll) => {
+    activePoll = poll;
+    renderActivePoll(poll);
+});
+
+socket.on('poll-updated', (poll) => {
+    activePoll = poll;
+    renderActivePoll(poll);
+});
+
+function renderActivePoll(poll) {
+    document.getElementById('active-poll').classList.add('show');
+    document.getElementById('active-poll-q').textContent = poll.question;
+    const total = poll.options.reduce((sum, opt) => sum + opt.votes, 0);
+    document.getElementById('active-poll-results').innerHTML = poll.options.map(opt => {
+        const percent = total > 0 ? (opt.votes / total * 100).toFixed(0) : 0;
+        return '<div class="poll-result-item">' +
+            '<div class="poll-result-bar" style="width:' + percent + '%"></div>' +
+            '<div class="poll-result-content">' +
+            '<span class="poll-result-text">' + opt.text + '</span>' +
+            '<span class="poll-result-votes">' + opt.votes + ' (' + percent + '%)</span>' +
+            '</div></div>';
+    }).join('');
+}
+
+function closePoll() {
+    if (confirm('Close this poll?')) {
+        socket.emit('close-poll', { streamId: currentStreamId });
+        document.getElementById('active-poll').classList.remove('show');
+        activePoll = null;
+    }
+}
+
+// SPIN WHEEL
+function spinWheel() {
+    const prize = document.getElementById('wheel-prize').value.trim() || 'a Special Mention!';
+    socket.emit('spin-wheel', { streamId: currentStreamId, prize });
+    closeModal('wheel-modal');
+    showToast('🎡 Spinning wheel...');
+}
+
+socket.on('wheel-winner', (data) => {
+    document.getElementById('winner-name').textContent = data.winnerName;
+    document.getElementById('winner-prize').textContent = data.prize;
+    document.getElementById('winner-popup').classList.add('show');
+});
+
+function closeWinner() {
+    document.getElementById('winner-popup').classList.remove('show');
 }
 
 window.addEventListener('beforeunload', () => {

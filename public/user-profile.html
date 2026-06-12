@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Profile - F12 ORBIT</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+<style>
+:root { --accent: #ff0000; --accent2: #cc0000; --bg-main: #0a0a0a; --bg-card: rgba(20,20,20,0.5); --border: rgba(255,255,255,0.08); }
+[data-theme="blue"] { --accent: #4285f4; --accent2: #1a73e8; }
+[data-theme="green"] { --accent: #00ff88; --accent2: #00cc6a; }
+[data-theme="purple"] { --accent: #a855f7; --accent2: #7c3aed; }
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+body { background: var(--bg-main); color: #fff; min-height: 100vh; }
+.header { background: rgba(10,10,10,0.85); padding: 0 20px; height: 60px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+.logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: white; }
+.f12-logo-wrapper { display: inline-block; padding: 2px; border-radius: 18px; background: linear-gradient(90deg, #fff 0%, #d0d0d0 40%, #a8a8a8 49%, var(--accent) 51%, var(--accent2) 70%, #880000 100%); }
+.f12-logo-inner { display: inline-flex; align-items: center; padding: 6px 14px; background: #000; border-radius: 16px; }
+.f12-text-logo { font-family: 'Orbitron', sans-serif; font-size: 18px; font-weight: 900; letter-spacing: -1.5px; font-style: italic; display: flex; }
+.f12-text-logo .f { color: #fff; }
+.f12-text-logo .num { color: var(--accent); }
+.logo-text { font-size: 15px; font-weight: 800; }
+.logo-text span { color: var(--accent); }
+.back-btn { background: rgba(255,255,255,0.05); color: #fff; border: 1px solid var(--border); padding: 10px 18px; border-radius: 22px; text-decoration: none; font-size: 14px; font-weight: 600; }
+.container { max-width: 800px; margin: 0 auto; padding: 24px 20px; }
+.cover { width: 100%; height: 220px; background: linear-gradient(135deg, #1a1a2e, #16213e, var(--accent)); border-radius: 18px 18px 0 0; }
+.profile-card { background: var(--bg-card); border-radius: 0 0 18px 18px; padding: 18px 28px 28px; border: 1px solid var(--border); border-top: none; }
+.profile-pic-row { display: flex; align-items: flex-end; gap: 20px; margin-top: -70px; margin-bottom: 18px; }
+.profile-pic { width: 140px; height: 140px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent2)); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 54px; overflow: hidden; border: 5px solid var(--bg-main); flex-shrink: 0; }
+.profile-pic img { width: 100%; height: 100%; object-fit: cover; }
+.action-buttons { display: flex; gap: 10px; padding-bottom: 8px; flex-wrap: wrap; }
+.action-btn { padding: 10px 18px; border-radius: 22px; font-size: 13px; font-weight: 700; cursor: pointer; border: none; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s; }
+.action-btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: white; box-shadow: 0 4px 12px rgba(255,0,0,0.3); }
+.action-btn-secondary { background: rgba(255,255,255,0.08); color: white; border: 1px solid var(--border); }
+.action-btn-secondary:hover { background: rgba(255,255,255,0.15); }
+.action-btn-danger { background: rgba(255,0,0,0.1); color: #ff5252; border: 1px solid rgba(255,0,0,0.3); }
+.profile-name { font-size: 26px; font-weight: 800; display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+.verified-badge { color: #4285f4; font-size: 20px; }
+.level-badge { background: linear-gradient(135deg, #ffc107, #ff9800); padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 800; color: #000; display: inline-flex; align-items: center; gap: 4px; }
+.profile-email { color: rgba(255,255,255,0.5); font-size: 13px; margin-bottom: 8px; }
+.status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 11px; border-radius: 11px; font-size: 11px; font-weight: 600; background: rgba(0,255,136,0.15); color: #00ff88; border: 1px solid rgba(0,255,136,0.3); margin-bottom: 12px; }
+.status-badge.offline { background: rgba(108,117,125,0.15); color: #9ca3af; border-color: rgba(108,117,125,0.3); }
+.profile-bio { color: rgba(255,255,255,0.7); font-size: 15px; line-height: 1.6; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.stat-card { background: rgba(255,255,255,0.03); padding: 16px; border-radius: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
+.stat-icon { font-size: 24px; margin-bottom: 4px; }
+.stat-value { font-size: 22px; font-weight: 800; color: var(--accent); }
+.stat-label { font-size: 11px; color: rgba(255,255,255,0.5); text-transform: uppercase; margin-top: 4px; }
+.section { background: var(--bg-card); border-radius: 16px; padding: 24px; margin-top: 18px; border: 1px solid var(--border); }
+.section-title { font-size: 18px; font-weight: 800; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+.badges-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 10px; }
+.badge { padding: 14px 8px; background: rgba(255,255,255,0.03); border-radius: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
+.badge.earned { background: rgba(255,193,7,0.1); border-color: rgba(255,193,7,0.3); }
+.badge-icon { font-size: 32px; margin-bottom: 4px; }
+.badge.locked .badge-icon { filter: grayscale(1); opacity: 0.3; }
+.badge-name { font-size: 10px; font-weight: 600; }
+.badge.earned .badge-name { color: #ffc107; }
+.empty-state { text-align: center; padding: 60px 20px; }
+.empty-state .icon { font-size: 80px; opacity: 0.3; margin-bottom: 16px; }
+.empty-state h3 { font-size: 22px; margin-bottom: 8px; }
+.empty-state p { color: rgba(255,255,255,0.5); }
+
+.modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 9999; padding: 20px; }
+.modal.show { display: flex; }
+.modal-content { background: #1a1a1a; border-radius: 16px; padding: 28px; max-width: 400px; width: 100%; border: 1px solid var(--border); }
+.modal-title { font-size: 20px; font-weight: 800; margin-bottom: 16px; }
+.modal-reasons { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+.reason-option { padding: 12px 16px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 10px; cursor: pointer; font-size: 14px; transition: all 0.2s; }
+.reason-option:hover { background: rgba(255,255,255,0.1); border-color: var(--accent); }
+.reason-option.selected { background: rgba(255,0,0,0.15); border-color: var(--accent); color: var(--accent); }
+.modal-buttons { display: flex; gap: 10px; }
+.modal-btn { flex: 1; padding: 12px; border-radius: 10px; font-weight: 700; cursor: pointer; border: none; }
+.modal-btn-confirm { background: var(--accent); color: white; }
+.modal-btn-cancel { background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--border); }
+
+.toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, var(--accent), var(--accent2)); color: white; padding: 14px 24px; border-radius: 12px; font-weight: 600; z-index: 9999; display: none; }
+.toast.show { display: block; animation: slideUp 0.3s; }
+@keyframes slideUp { from { transform: translate(-50%, 30px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
+
+@media (max-width: 600px) {
+.logo-text { display: none; }
+.container { padding: 16px 14px; }
+.profile-card { padding: 14px 18px 22px; }
+.cover { height: 160px; }
+.profile-pic { width: 110px; height: 110px; font-size: 44px; margin-top: -55px; }
+.profile-pic-row { gap: 14px; }
+.profile-name { font-size: 22px; }
+.stats-grid { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+<a href="/" class="logo">
+<div class="f12-logo-wrapper">
+<div class="f12-logo-inner">
+<div class="f12-text-logo"><span class="f">F</span><span class="num">12</span></div>
+</div>
+</div>
+<div class="logo-text">ORBIT</div>
+</a>
+<a href="/" class="back-btn">← Back</a>
+</div>
+
+<div class="container">
+
+<div class="cover"></div>
+
+<div class="profile-card">
+
+<div class="profile-pic-row">
+<div class="profile-pic" id="profile-pic">U</div>
+<div class="action-buttons" id="action-buttons"></div>
+</div>
+
+<div class="profile-name">
+<span id="profile-name">Loading...</span>
+<span class="verified-badge" id="verified-badge" style="display:none;">✓</span>
+<span class="level-badge" id="level-badge" style="display:none;">⭐ Lv.1</span>
+</div>
+<div class="profile-email" id="profile-email"></div>
+<div class="status-badge" id="status-badge"><span style="width:7px;height:7px;border-radius:50%;background:#00ff88;display:inline-block;"></span><span id="status-text">Online</span></div>
+<div class="profile-bio" id="profile-bio">No bio</div>
+
+<div class="stats-grid">
+<div class="stat-card">
+<div class="stat-icon">🎬</div>
+<div class="stat-value" id="stat-streams">0</div>
+<div class="stat-label">Streams</div>
+</div>
+<div class="stat-card">
+<div class="stat-icon">👁️</div>
+<div class="stat-value" id="stat-views">0</div>
+<div class="stat-label">Total Views</div>
+</div>
+<div class="stat-card">
+<div class="stat-icon">⭐</div>
+<div class="stat-value" id="stat-level">1</div>
+<div class="stat-label">Level</div>
+</div>
+<div class="stat-card">
+<div class="stat-icon">📅</div>
+<div class="stat-value" id="stat-days">0</div>
+<div class="stat-label">Days</div>
+</div>
+</div>
+
+</div>
+
+<div class="section">
+<div class="section-title"><span>🏆</span><span>Achievements</span></div>
+<div class="badges-grid" id="badges-grid"></div>
+</div>
+
+</div>
+
+<!-- BLOCK MODAL -->
+<div id="block-modal" class="modal">
+<div class="modal-content">
+<div class="modal-title">🚫 Block this user?</div>
+<p style="color: rgba(255,255,255,0.6); margin-bottom: 20px; font-size: 14px;">They won't be able to message you or see your activity.</p>
+<div class="modal-buttons">
+<button class="modal-btn modal-btn-cancel" onclick="closeModal('block-modal')">Cancel</button>
+<button class="modal-btn modal-btn-confirm" onclick="confirmBlock()">Block</button>
+</div>
+</div>
+</div>
+
+<!-- REPORT MODAL -->
+<div id="report-modal" class="modal">
+<div class="modal-content">
+<div class="modal-title">⚠️ Report this user</div>
+<p style="color: rgba(255,255,255,0.6); margin-bottom: 16px; font-size: 14px;">Why are you reporting?</p>
+<div class="modal-reasons" id="report-reasons">
+<div class="reason-option" data-reason="Spam">📧 Spam or scam</div>
+<div class="reason-option" data-reason="Inappropriate">🔞 Inappropriate content</div>
+<div class="reason-option" data-reason="Harassment">😡 Harassment or bullying</div>
+<div class="reason-option" data-reason="Hate">💢 Hate speech</div>
+<div class="reason-option" data-reason="Other">❓ Other</div>
+</div>
+<div class="modal-buttons">
+<button class="modal-btn modal-btn-cancel" onclick="closeModal('report-modal')">Cancel</button>
+<button class="modal-btn modal-btn-confirm" onclick="confirmReport()">Submit Report</button>
+</div>
+</div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+const username = localStorage.getItem('f12_username');
+const userPhoto = localStorage.getItem('f12_photo');
+const userEmail = localStorage.getItem('f12_email');
+const myUserId = userEmail || username;
+
+if (!username) { window.location.href = '/login'; }
+
+const savedTheme = localStorage.getItem('f12_theme');
+if (savedTheme && savedTheme !== 'default') document.documentElement.setAttribute('data-theme', savedTheme);
+
+const pathParts = window.location.pathname.split('/');
+const profileUserId = decodeURIComponent(pathParts[pathParts.length - 1]);
+
+const socket = io();
+let profileData = null;
+let isFriend = false;
+let isBlocked = false;
+let selectedReason = null;
+
+socket.on('connect', () => {
+    socket.emit('user-online', {
+        name: username,
+        photo: userPhoto,
+        userEmail: myUserId
+    });
+});
+
+function showToast(msg) {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+function loadProfile() {
+    fetch('/api/user/' + encodeURIComponent(profileUserId))
+        .then(res => res.json())
+        .then(data => {
+            profileData = data;
+            renderProfile();
+        });
+}
+
+function renderProfile() {
+    if (!profileData || !profileData.name) {
+        document.querySelector('.container').innerHTML = '<div class="empty-state"><div class="icon">😔</div><h3>User Not Found</h3><p>This user does not exist or has not joined yet.</p></div>';
+        return;
+    }
+    
+    const pic = document.getElementById('profile-pic');
+    if (profileData.photo) pic.innerHTML = '<img src="' + profileData.photo + '">';
+    else pic.textContent = profileData.name.charAt(0).toUpperCase();
+    
+    document.getElementById('profile-name').textContent = profileData.name;
+    document.getElementById('profile-email').textContent = profileData.userId.includes('@') ? profileData.userId : 'Guest User';
+    document.getElementById('profile-bio').textContent = profileData.bio || 'No bio yet';
+    
+    if (profileData.userId.includes('@')) document.getElementById('verified-badge').style.display = 'inline';
+    
+    const level = profileData.level || 1;
+    const levelBadge = document.getElementById('level-badge');
+    levelBadge.style.display = 'inline-flex';
+    levelBadge.innerHTML = '⭐ Lv.' + level;
+    
+    const statusBadge = document.getElementById('status-badge');
+    const statusText = document.getElementById('status-text');
+    if (profileData.online) {
+        statusText.textContent = '🟢 Online';
+        statusBadge.classList.remove('offline');
+    } else {
+        statusText.textContent = '⚪ Offline';
+        statusBadge.classList.add('offline');
+    }
+    
+    document.getElementById('stat-streams').textContent = profileData.streams || 0;
+    document.getElementById('stat-views').textContent = profileData.totalViews || 0;
+    document.getElementById('stat-level').textContent = level;
+    
+    if (profileData.joinedAt) {
+        const days = Math.floor((new Date() - new Date(profileData.joinedAt)) / (1000 * 60 * 60 * 24));
+        document.getElementById('stat-days').textContent = days;
+    }
+    
+    renderBadges();
+    renderActions();
+}
+
+function renderBadges() {
+    const badges = [
+        { id: 'welcome', icon: '🌟', name: 'Welcome', earned: true },
+        { id: 'firststream', icon: '🎬', name: 'First Stream', earned: (profileData.streams || 0) >= 1 },
+        { id: 'popular', icon: '🔥', name: 'Popular', earned: (profileData.totalViews || 0) >= 100 },
+        { id: 'streamer', icon: '🎥', name: 'Streamer', earned: (profileData.streams || 0) >= 5 },
+        { id: 'veteran', icon: '👑', name: 'Veteran', earned: profileData.level >= 4 },
+        { id: 'legend', icon: '💎', name: 'Legend', earned: profileData.level >= 5 }
+    ];
+    
+    document.getElementById('badges-grid').innerHTML = badges.map(b => 
+        '<div class="badge ' + (b.earned ? 'earned' : 'locked') + '"><div class="badge-icon">' + b.icon + '</div><div class="badge-name">' + b.name + '</div></div>'
+    ).join('');
+}
+
+function renderActions() {
+    const friends = JSON.parse(localStorage.getItem('f12_friends') || '[]');
+    isFriend = friends.some(f => f.id === profileUserId);
+    const myBlocked = JSON.parse(localStorage.getItem('f12_blocked') || '[]');
+    isBlocked = myBlocked.includes(profileUserId);
+    
+    const container = document.getElementById('action-buttons');
+    
+    if (profileUserId === myUserId) {
+        container.innerHTML = '<a href="/profile" class="action-btn action-btn-primary">✏️ Edit Profile</a>';
+        return;
+    }
+    
+    let html = '';
+    
+    if (profileData.online && profileData.socketId) {
+        html += '<button class="action-btn action-btn-primary" onclick="messageUser()">💬 Message</button>';
+    }
+    
+    if (!isFriend && profileData.online && profileData.socketId) {
+        html += '<button class="action-btn action-btn-secondary" onclick="addFriend()">➕ Add Friend</button>';
+    } else if (isFriend) {
+        html += '<button class="action-btn action-btn-secondary">✓ Friends</button>';
+    }
+    
+    if (!isBlocked) {
+        html += '<button class="action-btn action-btn-secondary" onclick="openModal(\'block-modal\')">🚫 Block</button>';
+    } else {
+        html += '<button class="action-btn action-btn-secondary" onclick="unblockUser()">✓ Unblock</button>';
+    }
+    
+    html += '<button class="action-btn action-btn-danger" onclick="openModal(\'report-modal\')">⚠️ Report</button>';
+    
+    container.innerHTML = html;
+}
+
+function messageUser() {
+    if (profileData && profileData.socketId) {
+        localStorage.setItem('f12_message_target', JSON.stringify({ socketId: profileData.socketId, name: profileData.name }));
+        window.location.href = '/';
+    }
+}
+
+function addFriend() {
+    if (profileData && profileData.socketId) {
+        socket.emit('send-friend-request', { toSocketId: profileData.socketId });
+        showToast('Friend request sent!');
+    }
+}
+
+function openModal(id) { document.getElementById(id).classList.add('show'); }
+function closeModal(id) { document.getElementById(id).classList.remove('show'); selectedReason = null; document.querySelectorAll('.reason-option').forEach(r => r.classList.remove('selected')); }
+
+function confirmBlock() {
+    socket.emit('block-user', { userId: profileUserId });
+    const blocked = JSON.parse(localStorage.getItem('f12_blocked') || '[]');
+    if (!blocked.includes(profileUserId)) blocked.push(profileUserId);
+    localStorage.setItem('f12_blocked', JSON.stringify(blocked));
+    closeModal('block-modal');
+    showToast('User blocked');
+    setTimeout(() => renderActions(), 500);
+}
+
+function unblockUser() {
+    socket.emit('unblock-user', { userId: profileUserId });
+    const blocked = JSON.parse(localStorage.getItem('f12_blocked') || '[]');
+    localStorage.setItem('f12_blocked', JSON.stringify(blocked.filter(id => id !== profileUserId)));
+    showToast('User unblocked');
+    setTimeout(() => renderActions(), 500);
+}
+
+document.querySelectorAll('.reason-option').forEach(opt => {
+    opt.addEventListener('click', () => {
+        document.querySelectorAll('.reason-option').forEach(r => r.classList.remove('selected'));
+        opt.classList.add('selected');
+        selectedReason = opt.dataset.reason;
+    });
+});
+
+function confirmReport() {
+    if (!selectedReason) { showToast('Please select a reason'); return; }
+    socket.emit('report-user', { userId: profileUserId, reason: selectedReason });
+    closeModal('report-modal');
+    showToast('Report submitted. Thank you!');
+}
+
+socket.on('friend-request-status', (data) => showToast(data.message));
+socket.on('user-blocked', () => showToast('User blocked successfully'));
+socket.on('user-unblocked', () => showToast('User unblocked'));
+socket.on('report-submitted', (data) => showToast(data.message));
+
+loadProfile();
+</script>
+
+</body>
+</html>
