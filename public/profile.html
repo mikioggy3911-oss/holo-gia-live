@@ -7,10 +7,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-body { background: #0a0a0a; color: #fff; min-height: 100vh; }
+body { background: #0a0a0a; color: #fff; min-height: 100vh; padding-bottom: 80px; }
 .header { background: rgba(10,10,10,0.95); padding: 0 20px; height: 60px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.06); position: sticky; top: 0; z-index: 100; }
 .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: white; }
-.f12-logo-wrapper { display: inline-block; padding: 2px; border-radius: 18px; background: linear-gradient(90deg, #ffffff 0%, #d0d0d0 40%, #a8a8a8 49%, #ff3333 51%, #cc0000 70%, #880000 100%); }
+.f12-logo-wrapper { display: inline-block; padding: 2px; border-radius: 18px; background: linear-gradient(90deg, #fff 0%, #d0d0d0 40%, #a8a8a8 49%, #ff3333 51%, #cc0000 70%, #880000 100%); }
 .f12-logo-inner { display: inline-flex; align-items: center; padding: 6px 14px; background: #000; border-radius: 16px; }
 .f12-text-logo { font-family: 'Orbitron', sans-serif; font-size: 18px; font-weight: 900; letter-spacing: -1.5px; font-style: italic; display: flex; }
 .f12-text-logo .f { color: #fff; }
@@ -29,7 +29,8 @@ body { background: #0a0a0a; color: #fff; min-height: 100vh; }
 .profile-pic img { width: 100%; height: 100%; object-fit: cover; }
 .profile-pic-edit { position: absolute; bottom: 6px; right: 6px; background: #ff0000; color: white; width: 36px; height: 36px; border-radius: 50%; border: 3px solid #0a0a0a; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; }
 .profile-info { margin-top: 18px; }
-.profile-name { font-size: 24px; font-weight: 800; margin-bottom: 4px; }
+.profile-name { font-size: 24px; font-weight: 800; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+.verified-badge { color: #4285f4; font-size: 18px; }
 .profile-email { color: rgba(255,255,255,0.5); font-size: 13px; }
 .profile-bio { color: rgba(255,255,255,0.7); font-size: 14px; margin-top: 10px; line-height: 1.5; }
 .profile-stats { display: flex; gap: 22px; margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.06); }
@@ -50,6 +51,17 @@ body { background: #0a0a0a; color: #fff; min-height: 100vh; }
 .status-option.active { border-color: #ff0000; background: rgba(255,0,0,0.1); }
 .status-option-icon { font-size: 22px; margin-bottom: 4px; }
 .status-option-label { font-size: 12px; font-weight: 600; }
+
+/* BADGES SECTION */
+.badges-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 10px; }
+.badge-item { padding: 12px; background: rgba(255,255,255,0.03); border-radius: 11px; text-align: center; cursor: pointer; transition: all 0.2s; border: 1px solid rgba(255,255,255,0.05); }
+.badge-item.earned { background: rgba(255,193,7,0.1); border-color: rgba(255,193,7,0.3); }
+.badge-item:hover { transform: translateY(-3px); }
+.badge-icon { font-size: 32px; margin-bottom: 4px; }
+.badge-item.locked .badge-icon { filter: grayscale(1); opacity: 0.3; }
+.badge-name { font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.7); }
+.badge-item.earned .badge-name { color: #ffc107; }
+
 .btn-row { display: flex; gap: 10px; margin-top: 22px; }
 .btn { padding: 13px 24px; border-radius: 11px; font-size: 14px; font-weight: 700; cursor: pointer; border: none; flex: 1; text-decoration: none; text-align: center; display: flex; align-items: center; justify-content: center; }
 .btn-primary { background: linear-gradient(135deg, #ff0000, #cc0000); color: white; }
@@ -110,7 +122,10 @@ body { background: #0a0a0a; color: #fff; min-height: 100vh; }
 </div>
 
 <div class="profile-info">
-<div class="profile-name" id="display-name">User Name</div>
+<div class="profile-name">
+<span id="display-name">User Name</span>
+<span class="verified-badge" id="verified-badge" style="display:none;">✓</span>
+</div>
 <div class="profile-email" id="display-email"></div>
 <div class="status-badge"><span style="width:7px;height:7px;border-radius:50%;background:#00ff88;display:inline-block;"></span><span id="status-text">Online</span></div>
 <div class="profile-bio" id="display-bio"></div>
@@ -124,6 +139,19 @@ body { background: #0a0a0a; color: #fff; min-height: 100vh; }
 </div>
 
 <div class="success-msg" id="success-msg">✅ Profile updated! Returning to home...</div>
+
+<!-- ACHIEVEMENTS / BADGES -->
+<div class="edit-section">
+<div class="section-title"><span>🏆</span><span>Achievements</span></div>
+<div class="badges-grid">
+<div class="badge-item earned"><div class="badge-icon">🌟</div><div class="badge-name">Welcome</div></div>
+<div class="badge-item" id="badge-firststream"><div class="badge-icon">🎬</div><div class="badge-name">First Stream</div></div>
+<div class="badge-item" id="badge-popular"><div class="badge-icon">🔥</div><div class="badge-name">Popular</div></div>
+<div class="badge-item" id="badge-veteran"><div class="badge-icon">👑</div><div class="badge-name">Veteran</div></div>
+<div class="badge-item" id="badge-social"><div class="badge-icon">💬</div><div class="badge-name">Social</div></div>
+<div class="badge-item" id="badge-streamer"><div class="badge-icon">🎥</div><div class="badge-name">Streamer</div></div>
+</div>
+</div>
 
 <div class="edit-section">
 <div class="section-title"><span>✏️</span><span>Edit Profile</span></div>
@@ -203,10 +231,29 @@ function loadProfile() {
     document.getElementById('account-type').value = userEmail ? '🔵 Google' : '👤 Guest';
     document.getElementById('user-id').value = 'F12-' + (userEmail || username).substring(0, 8).toUpperCase();
     document.getElementById('member-since').value = new Date(memberSince).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    
+    // Show verified badge for Google accounts
+    if (userEmail) {
+        document.getElementById('verified-badge').style.display = 'inline';
+    }
+    
     const friends = JSON.parse(localStorage.getItem('f12_friends') || '[]');
+    const streams = parseInt(localStorage.getItem('f12_stream_count') || '0');
+    const views = parseInt(localStorage.getItem('f12_total_views') || '0');
+    
     document.getElementById('stat-friends').textContent = friends.length;
-    document.getElementById('stat-streams').textContent = localStorage.getItem('f12_stream_count') || '0';
-    document.getElementById('stat-views').textContent = localStorage.getItem('f12_total_views') || '0';
+    document.getElementById('stat-streams').textContent = streams;
+    document.getElementById('stat-views').textContent = views;
+    
+    // Check badge achievements
+    if (streams >= 1) document.getElementById('badge-firststream').classList.add('earned');
+    if (streams >= 5) document.getElementById('badge-streamer').classList.add('earned');
+    if (views >= 100) document.getElementById('badge-popular').classList.add('earned');
+    
+    const daysSince = (new Date() - new Date(memberSince)) / (1000 * 60 * 60 * 24);
+    if (daysSince >= 30) document.getElementById('badge-veteran').classList.add('earned');
+    
+    if (friends.length >= 5) document.getElementById('badge-social').classList.add('earned');
 }
 
 function selectStatus(element) {

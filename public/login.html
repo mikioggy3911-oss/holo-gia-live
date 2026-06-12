@@ -89,8 +89,9 @@ Continue with Google
 <button class="guest-btn" onclick="loginGuest()">Enter as Guest</button>
 <div class="features-list">
 <div class="feature-item"><span class="check">✓</span><span>HD Live Streaming</span></div>
+<div class="feature-item"><span class="check">✓</span><span>Likes & Reactions</span></div>
+<div class="feature-item"><span class="check">✓</span><span>Free Virtual Gifts</span></div>
 <div class="feature-item"><span class="check">✓</span><span>Direct Messaging</span></div>
-<div class="feature-item"><span class="check">✓</span><span>See who's online</span></div>
 </div>
 <div class="privacy-note">By continuing, you agree to F12 ORBIT's terms.<br>Your videos are NOT saved.</div>
 </div>
@@ -131,14 +132,11 @@ function handleGoogleSignIn(response) {
         }
         window.location.href = '/';
     } catch (e) {
-        console.error('Sign-in error:', e);
         alert('Sign-in failed. Please try again.');
     }
 }
 function manualGoogleSignIn() {
-    if (typeof google !== 'undefined') {
-        google.accounts.id.prompt();
-    }
+    if (typeof google !== 'undefined') { google.accounts.id.prompt(); }
 }
 window.addEventListener('load', () => {
     try {

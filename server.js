@@ -32,6 +32,7 @@ app.get('/api/streams', (req, res) => {
             streamerName: stream.streamerName,
             streamerPhoto: stream.streamerPhoto,
             viewers: stream.viewers,
+            likes: stream.likes || 0,
             startedAt: stream.startedAt,
             category: stream.category
         });
@@ -55,7 +56,6 @@ app.get('/api/online-users', (req, res) => {
 });
 
 io.on('connection', (socket) => {
-    console.log('Connected:', socket.id);
 
     socket.on('user-online', (data) => {
         onlineUsers.set(socket.id, {
@@ -71,10 +71,10 @@ io.on('connection', (socket) => {
     socket.on('update-profile', (data) => {
         const user = onlineUsers.get(socket.id);
         if (user) {
-            user.name = data.name || user.name;
-            user.photo = data.photo || user.photo;
-            user.bio = data.bio || user.bio;
-            user.status = data.status || user.status;
+            if (data.name) user.name = data.name;
+            if (data.photo) user.photo = data.photo;
+            if (data.bio !== undefined) user.bio = data.bio;
+            if (data.status) user.status = data.status;
             io.emit('users-updated');
         }
     });
@@ -104,12 +104,7 @@ io.on('connection', (socket) => {
 
     socket.on('typing', (data) => {
         const sender = onlineUsers.get(socket.id);
-        if (sender) {
-            io.to(data.toSocketId).emit('user-typing', {
-                fromSocketId: socket.id,
-                fromName: sender.name
-            });
-        }
+        if (sender) io.to(data.toSocketId).emit('user-typing', { fromSocketId: socket.id, fromName: sender.name });
     });
 
     socket.on('stop-typing', (data) => {
@@ -124,6 +119,7 @@ io.on('connection', (socket) => {
             streamerPhoto: data.streamerPhoto || null,
             streamerId: socket.id,
             viewers: 0,
+            likes: 0,
             startedAt: new Date().toISOString(),
             category: data.category || 'Chat',
             peerId: data.peerId
@@ -146,11 +142,37 @@ io.on('connection', (socket) => {
                 title: stream.title,
                 streamerName: stream.streamerName,
                 streamerPhoto: stream.streamerPhoto,
-                category: stream.category
+                category: stream.category,
+                likes: stream.likes
             });
         } else {
             socket.emit('stream-error', { message: 'Stream not found' });
         }
+    });
+
+    socket.on('like-stream', (data) => {
+        const stream = liveStreams.get(data.streamId);
+        if (stream) {
+            stream.likes++;
+            io.to(data.streamId).emit('stream-liked', {
+                likes: stream.likes,
+                fromName: data.fromName
+            });
+        }
+    });
+
+    socket.on('send-reaction', (data) => {
+        io.to(data.streamId).emit('new-reaction', {
+            emoji: data.emoji,
+            fromName: data.fromName
+        });
+    });
+
+    socket.on('send-gift', (data) => {
+        io.to(data.streamId).emit('new-gift', {
+            gift: data.gift,
+            fromName: data.fromName
+        });
     });
 
     socket.on('chat-message', (data) => {
@@ -177,9 +199,8 @@ io.on('connection', (socket) => {
             io.emit('users-updated');
         }
         if (socket.streamId) {
-            const streamId = socket.streamId;
-            io.to(streamId).emit('stream-ended', { message: 'Streamer disconnected' });
-            liveStreams.delete(streamId);
+            io.to(socket.streamId).emit('stream-ended', { message: 'Streamer disconnected' });
+            liveStreams.delete(socket.streamId);
             io.emit('streams-updated');
         }
         if (socket.watchingStream) {
@@ -194,5 +215,5 @@ io.on('connection', (socket) => {
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, '0.0.0.0', () => {
-    console.log('F12 ORBIT - Running on port ' + PORT);
+    console.log('F12 ORBIT v6.0 - Port ' + PORT);
 });

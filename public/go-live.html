@@ -6,7 +6,7 @@
 <title>Go Live - F12 ORBIT</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
 body { background: #0a0a0a; color: #fff; min-height: 100vh; }
 .header { background: rgba(10,10,10,0.85); padding: 0 20px; height: 60px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.06); }
 .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: white; }
@@ -31,14 +31,45 @@ body { background: #0a0a0a; color: #fff; min-height: 100vh; }
 .live-section { display: none; }
 .video-wrapper { position: relative; width: 100%; background: #000; border-radius: 16px; overflow: hidden; margin-bottom: 16px; border: 2px solid #ff0000; }
 .video-wrapper video { width: 100%; height: auto; max-height: 500px; display: block; }
-.live-overlay { position: absolute; top: 16px; left: 16px; display: flex; gap: 10px; z-index: 10; }
+.live-overlay { position: absolute; top: 16px; left: 16px; display: flex; gap: 10px; z-index: 10; flex-wrap: wrap; }
 .live-badge { background: #ff0000; padding: 6px 14px; border-radius: 6px; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
 .live-badge .dot { width: 8px; height: 8px; background: white; border-radius: 50%; animation: pulse 1s infinite; }
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-.viewer-badge { background: rgba(0,0,0,0.85); padding: 6px 14px; border-radius: 6px; font-size: 13px; }
+.viewer-badge { background: rgba(0,0,0,0.85); padding: 6px 14px; border-radius: 6px; font-size: 13px; display: flex; align-items: center; gap: 6px; }
 .audio-indicator { position: absolute; bottom: 16px; right: 16px; background: rgba(0,0,0,0.85); padding: 8px 14px; border-radius: 20px; display: flex; align-items: center; gap: 10px; z-index: 10; }
 .audio-bars { display: flex; gap: 3px; align-items: flex-end; height: 16px; }
 .audio-bar { width: 3px; background: #00ff00; border-radius: 2px; height: 3px; }
+
+/* FLOATING HEARTS FOR STREAMER */
+.hearts-stream { position: absolute; bottom: 80px; right: 20px; pointer-events: none; z-index: 15; width: 60px; height: 400px; overflow: hidden; }
+.floating-heart { position: absolute; bottom: 0; font-size: 30px; animation: floatUp 3s linear forwards; }
+@keyframes floatUp {
+    0% { bottom: 0; opacity: 1; transform: translateX(0) scale(1); }
+    100% { bottom: 400px; opacity: 0; transform: translateX(var(--x-drift, 30px)) scale(0.5); }
+}
+
+/* REACTIONS */
+.reactions-stream { position: absolute; bottom: 120px; left: 20px; pointer-events: none; z-index: 15; }
+.floating-reaction { position: absolute; font-size: 50px; animation: reactionFloat 2.5s ease-out forwards; }
+@keyframes reactionFloat {
+    0% { opacity: 0; transform: scale(0); }
+    20% { opacity: 1; transform: scale(1.5); }
+    100% { opacity: 0; transform: scale(2) translateY(-200px); }
+}
+
+/* GIFTS DISPLAY */
+.gifts-stream { position: absolute; bottom: 100px; left: 50%; transform: translateX(-50%); pointer-events: none; z-index: 16; }
+.gift-popup { background: rgba(0,0,0,0.85); padding: 16px 24px; border-radius: 16px; display: flex; align-items: center; gap: 12px; animation: giftPop 3s ease-out forwards; border: 2px solid #ff0000; box-shadow: 0 0 30px rgba(255,0,0,0.5); }
+@keyframes giftPop {
+    0% { opacity: 0; transform: scale(0) translateY(50px); }
+    20% { opacity: 1; transform: scale(1) translateY(0); }
+    80% { opacity: 1; transform: scale(1) translateY(0); }
+    100% { opacity: 0; transform: scale(0.8) translateY(-30px); }
+}
+.gift-emoji { font-size: 40px; }
+.gift-info { font-size: 14px; font-weight: 600; }
+.gift-sender { color: #ff0000; font-weight: 800; }
+
 .controls-card { background: rgba(20,20,20,0.5); border-radius: 12px; padding: 16px; margin-bottom: 16px; border: 1px solid rgba(255,255,255,0.08); }
 .control-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
 .ctrl-btn { background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.1); padding: 10px 20px; border-radius: 11px; font-size: 14px; font-weight: 600; cursor: pointer; flex: 1; min-width: 120px; }
@@ -48,17 +79,35 @@ body { background: #0a0a0a; color: #fff; min-height: 100vh; }
 .share-link-box.show { display: flex; }
 .share-link-box .url { flex: 1; color: #4285f4; font-size: 13px; word-break: break-all; font-family: monospace; }
 .copy-btn { background: #ff0000; color: white; border: none; padding: 6px 14px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 700; }
+
+/* STREAM STATS DASHBOARD */
+.stats-card { background: rgba(20,20,20,0.5); border-radius: 12px; padding: 16px; margin-bottom: 16px; border: 1px solid rgba(255,255,255,0.08); }
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.stat-box { background: rgba(255,255,255,0.03); padding: 14px; border-radius: 10px; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
+.stat-box-icon { font-size: 22px; margin-bottom: 4px; }
+.stat-box-value { font-size: 18px; font-weight: 800; color: #ff0000; }
+.stat-box-label { font-size: 11px; color: rgba(255,255,255,0.5); text-transform: uppercase; margin-top: 4px; }
+@media (max-width: 600px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+
 .chat-card { background: rgba(20,20,20,0.5); border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.08); }
 .chat-header { padding: 14px 16px; background: rgba(255,255,255,0.03); font-weight: 700; font-size: 14px; }
 .chat-messages { height: 300px; overflow-y: auto; padding: 12px 16px; }
 .chat-message { margin-bottom: 10px; display: flex; gap: 8px; }
-.chat-avatar { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, #ff0000, #cc0000); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; flex-shrink: 0; }
+.chat-avatar { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, #ff0000, #cc0000); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; flex-shrink: 0; overflow: hidden; }
+.chat-avatar img { width: 100%; height: 100%; object-fit: cover; }
 .chat-name { font-weight: 500; color: #4285f4; font-size: 13px; margin-right: 6px; }
 .chat-text { font-size: 14px; }
 .chat-time { font-size: 11px; color: #aaa; margin-top: 2px; }
-.chat-input-wrap { display: flex; padding: 12px; gap: 8px; background: rgba(255,255,255,0.03); }
+.chat-input-wrap { display: flex; padding: 12px; gap: 8px; background: rgba(255,255,255,0.03); align-items: center; position: relative; }
+.emoji-toggle { background: transparent; border: none; color: white; font-size: 22px; cursor: pointer; padding: 4px; }
 .chat-input-wrap input { flex: 1; padding: 10px 14px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; color: white; font-size: 14px; outline: none; }
 .chat-input-wrap button { background: #ff0000; color: white; border: none; padding: 8px 20px; border-radius: 20px; cursor: pointer; font-weight: 500; }
+
+.chat-emoji-picker { position: absolute; bottom: 60px; left: 10px; background: #1a1a1a; border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 12px; display: none; grid-template-columns: repeat(8, 1fr); gap: 4px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 100; }
+.chat-emoji-picker.show { display: grid; }
+.chat-emoji-picker .emoji-item { padding: 6px; cursor: pointer; border-radius: 8px; font-size: 20px; text-align: center; transition: all 0.15s; }
+.chat-emoji-picker .emoji-item:hover { background: rgba(255,255,255,0.1); transform: scale(1.3); }
+
 .status-msg { text-align: center; padding: 12px; margin: 10px 0; border-radius: 11px; display: none; font-size: 14px; }
 .status-msg.error { background: rgba(255,0,0,0.15); color: #ff5252; display: block; }
 @media (max-width: 768px) {
@@ -81,6 +130,7 @@ body { background: #0a0a0a; color: #fff; min-height: 100vh; }
 </a>
 <a href="/" class="back-btn">← Back</a>
 </div>
+
 <div class="container">
 <div id="setup-section">
 <div class="setup-card">
@@ -90,24 +140,54 @@ body { background: #0a0a0a; color: #fff; min-height: 100vh; }
 <div class="form-group"><label>Stream Title</label><input type="text" id="stream-title" placeholder="What's your stream about?" maxlength="100"></div>
 <div class="form-group"><label>Category</label>
 <select id="stream-category">
-<option value="Chat">Just Chatting</option>
-<option value="Gaming">Gaming</option>
-<option value="Music">Music</option>
-<option value="Education">Education</option>
-<option value="News">News</option>
-<option value="Sports">Sports</option>
+<option value="Chat">💬 Just Chatting</option>
+<option value="Gaming">🎮 Gaming</option>
+<option value="Music">🎵 Music</option>
+<option value="Education">📚 Education</option>
+<option value="News">📰 News</option>
+<option value="Sports">⚽ Sports</option>
+<option value="Cooking">🍳 Cooking</option>
 </select>
 </div>
 <div id="status" class="status-msg"></div>
 <button id="start-stream-btn" class="start-btn" onclick="startStream()">🔴 Start Live Stream</button>
 </div>
 </div>
+
 <div id="live-section" class="live-section">
+
+<!-- STATS DASHBOARD -->
+<div class="stats-card">
+<div class="stats-grid">
+<div class="stat-box">
+<div class="stat-box-icon">👁</div>
+<div class="stat-box-value" id="stat-viewers">0</div>
+<div class="stat-box-label">Viewers</div>
+</div>
+<div class="stat-box">
+<div class="stat-box-icon">❤️</div>
+<div class="stat-box-value" id="stat-likes">0</div>
+<div class="stat-box-label">Likes</div>
+</div>
+<div class="stat-box">
+<div class="stat-box-icon">🎁</div>
+<div class="stat-box-value" id="stat-gifts">0</div>
+<div class="stat-box-label">Gifts</div>
+</div>
+<div class="stat-box">
+<div class="stat-box-icon">⏱</div>
+<div class="stat-box-value" id="stat-duration">0:00</div>
+<div class="stat-box-label">Duration</div>
+</div>
+</div>
+</div>
+
 <div class="video-wrapper">
 <video id="local-video" autoplay muted playsinline></video>
 <div class="live-overlay">
 <div class="live-badge"><div class="dot"></div>LIVE</div>
-<div class="viewer-badge" id="viewer-count">👁 0 watching</div>
+<div class="viewer-badge">👁 <span id="viewer-count">0</span></div>
+<div class="viewer-badge">❤️ <span id="live-likes">0</span></div>
 </div>
 <div class="audio-indicator">
 <span>🎤</span>
@@ -115,7 +195,18 @@ body { background: #0a0a0a; color: #fff; min-height: 100vh; }
 <div class="audio-bar" id="bar1"></div><div class="audio-bar" id="bar2"></div><div class="audio-bar" id="bar3"></div><div class="audio-bar" id="bar4"></div><div class="audio-bar" id="bar5"></div>
 </div>
 </div>
+
+<!-- Floating Hearts -->
+<div class="hearts-stream" id="hearts-stream"></div>
+
+<!-- Floating Reactions -->
+<div class="reactions-stream" id="reactions-stream"></div>
+
+<!-- Gifts Display -->
+<div class="gifts-stream" id="gifts-stream"></div>
+
 </div>
+
 <div class="controls-card">
 <div class="control-buttons">
 <button class="ctrl-btn" id="mic-btn" onclick="toggleMic()">🎤 Mic ON</button>
@@ -128,25 +219,48 @@ body { background: #0a0a0a; color: #fff; min-height: 100vh; }
 <button class="copy-btn" onclick="copyLink()">Copy</button>
 </div>
 </div>
+
 <div class="chat-card">
 <div class="chat-header">💬 Live Chat</div>
 <div id="chat-messages" class="chat-messages"></div>
 <div class="chat-input-wrap">
+<div class="chat-emoji-picker" id="chat-emoji-picker">
+<div class="emoji-item" onclick="insertChatEmoji('😀')">😀</div>
+<div class="emoji-item" onclick="insertChatEmoji('😂')">😂</div>
+<div class="emoji-item" onclick="insertChatEmoji('🥰')">🥰</div>
+<div class="emoji-item" onclick="insertChatEmoji('😎')">😎</div>
+<div class="emoji-item" onclick="insertChatEmoji('🤔')">🤔</div>
+<div class="emoji-item" onclick="insertChatEmoji('😢')">😢</div>
+<div class="emoji-item" onclick="insertChatEmoji('🥳')">🥳</div>
+<div class="emoji-item" onclick="insertChatEmoji('❤️')">❤️</div>
+<div class="emoji-item" onclick="insertChatEmoji('🔥')">🔥</div>
+<div class="emoji-item" onclick="insertChatEmoji('👍')">👍</div>
+<div class="emoji-item" onclick="insertChatEmoji('👏')">👏</div>
+<div class="emoji-item" onclick="insertChatEmoji('🙏')">🙏</div>
+<div class="emoji-item" onclick="insertChatEmoji('💯')">💯</div>
+<div class="emoji-item" onclick="insertChatEmoji('🎉')">🎉</div>
+<div class="emoji-item" onclick="insertChatEmoji('⭐')">⭐</div>
+<div class="emoji-item" onclick="insertChatEmoji('🚀')">🚀</div>
+</div>
+<button class="emoji-toggle" onclick="toggleChatEmoji()">😀</button>
 <input type="text" id="chat-input" placeholder="Say something..." onkeypress="if(event.key==='Enter') sendChat()">
 <button onclick="sendChat()">Send</button>
 </div>
 </div>
 </div>
 </div>
+
 <script src="https://unpkg.com/peerjs@1.5.1/dist/peerjs.min.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script>
 const username = localStorage.getItem('f12_username');
 const userPhoto = localStorage.getItem('f12_photo');
-if (username) { document.getElementById('streamer-name').value = username; }
+if (username) document.getElementById('streamer-name').value = username;
 const socket = io();
 let localStream = null, peer = null, currentStreamId = null, streamerName = '';
 let micEnabled = true, camEnabled = true, audioContext = null, analyser = null;
+let streamStartTime = null, durationInterval = null;
+let totalLikes = 0, totalGifts = 0;
 
 async function startStream() {
     streamerName = document.getElementById('streamer-name').value.trim();
@@ -234,15 +348,70 @@ socket.on('stream-started', (data) => {
     currentStreamId = data.streamId;
     document.getElementById('setup-section').style.display = 'none';
     document.getElementById('live-section').style.display = 'block';
+    streamStartTime = Date.now();
+    durationInterval = setInterval(updateDuration, 1000);
 });
 
-socket.on('viewer-count', (data) => { document.getElementById('viewer-count').textContent = '👁 ' + data.count + ' watching'; });
+function updateDuration() {
+    if (!streamStartTime) return;
+    const elapsed = Math.floor((Date.now() - streamStartTime) / 1000);
+    const mins = Math.floor(elapsed / 60);
+    const secs = elapsed % 60;
+    document.getElementById('stat-duration').textContent = mins + ':' + (secs < 10 ? '0' : '') + secs;
+}
+
+socket.on('viewer-count', (data) => {
+    document.getElementById('viewer-count').textContent = data.count;
+    document.getElementById('stat-viewers').textContent = data.count;
+});
+
+socket.on('stream-liked', (data) => {
+    totalLikes = data.likes;
+    document.getElementById('live-likes').textContent = totalLikes;
+    document.getElementById('stat-likes').textContent = totalLikes;
+    createFloatingHeart();
+});
+
+function createFloatingHeart() {
+    const container = document.getElementById('hearts-stream');
+    const heart = document.createElement('div');
+    heart.className = 'floating-heart';
+    const hearts = ['❤️', '💖', '💕', '💗', '💝', '💘'];
+    heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+    heart.style.left = (Math.random() * 40) + 'px';
+    heart.style.setProperty('--x-drift', ((Math.random() - 0.5) * 60) + 'px');
+    container.appendChild(heart);
+    setTimeout(() => heart.remove(), 3000);
+}
+
+socket.on('new-reaction', (data) => {
+    const container = document.getElementById('reactions-stream');
+    const reaction = document.createElement('div');
+    reaction.className = 'floating-reaction';
+    reaction.textContent = data.emoji;
+    reaction.style.left = (Math.random() * 200) + 'px';
+    container.appendChild(reaction);
+    setTimeout(() => reaction.remove(), 2500);
+});
+
+socket.on('new-gift', (data) => {
+    totalGifts++;
+    document.getElementById('stat-gifts').textContent = totalGifts;
+    const container = document.getElementById('gifts-stream');
+    const giftEl = document.createElement('div');
+    giftEl.className = 'gift-popup';
+    giftEl.innerHTML = '<div class="gift-emoji">' + data.gift.emoji + '</div>' +
+        '<div class="gift-info"><span class="gift-sender">' + data.fromName + '</span> sent a ' + data.gift.name + '!</div>';
+    container.appendChild(giftEl);
+    setTimeout(() => giftEl.remove(), 3000);
+});
 
 socket.on('new-message', (data) => {
     const chatMessages = document.getElementById('chat-messages');
     const msgDiv = document.createElement('div');
     msgDiv.className = 'chat-message';
-    msgDiv.innerHTML = '<div class="chat-avatar">' + data.name.charAt(0).toUpperCase() + '</div><div><span class="chat-name">' + data.name + '</span><span class="chat-text">' + data.message + '</span><div class="chat-time">' + data.time + '</div></div>';
+    const avatar = data.photo ? '<img src="' + data.photo + '">' : data.name.charAt(0).toUpperCase();
+    msgDiv.innerHTML = '<div class="chat-avatar">' + avatar + '</div><div><span class="chat-name">' + data.name + '</span><span class="chat-text">' + data.message + '</span><div class="chat-time">' + data.time + '</div></div>';
     chatMessages.appendChild(msgDiv);
     chatMessages.scrollTop = chatMessages.scrollHeight;
 });
@@ -255,6 +424,21 @@ function sendChat() {
         input.value = '';
     }
 }
+
+function toggleChatEmoji() {
+    document.getElementById('chat-emoji-picker').classList.toggle('show');
+}
+
+function insertChatEmoji(emoji) {
+    document.getElementById('chat-input').value += emoji;
+    document.getElementById('chat-input').focus();
+}
+
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('.chat-emoji-picker') && !e.target.closest('.emoji-toggle')) {
+        document.getElementById('chat-emoji-picker').classList.remove('show');
+    }
+});
 
 function shareStream() {
     const box = document.getElementById('share-link-box');
@@ -274,6 +458,9 @@ function endStream() {
         if (localStream) localStream.getTracks().forEach(t => t.stop());
         if (peer) peer.destroy();
         if (audioContext) audioContext.close();
+        if (durationInterval) clearInterval(durationInterval);
+        const streamCount = parseInt(localStorage.getItem('f12_stream_count') || '0') + 1;
+        localStorage.setItem('f12_stream_count', streamCount);
         window.location.href = '/';
     }
 }
